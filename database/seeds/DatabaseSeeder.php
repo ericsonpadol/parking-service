@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
 
 use App\Vehicle;
 use App\Subscriber;
@@ -18,9 +19,10 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Vehicle::truncate();
+        User::truncate();
         Model::unguard();
 
         $this->call('VehicleSeed');
-        $this->call('SubscriberSeed');
+        $this->call('UserSeed');
     }
 }

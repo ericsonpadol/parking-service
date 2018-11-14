@@ -10,7 +10,12 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+//
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('vehicles', 'VehicleController', ['only' => ['index', 'show']]);
+Route::resource('subscribers', 'SubscriberController', ['only' => ['index', 'show']]);
+Route::resource('users', 'UserController', ['except' => ['store']]);
+Route::resource('users.vehicles', 'UserVehicleController');
