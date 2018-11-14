@@ -6,10 +6,13 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.2.*"
+        "laravel/framework": "5.2.*",
+        "phpdocumentor/reflection": "3.x@dev",
+        "dingo/api": "1.0.x@dev",
+        "fzaninotto/faker": "^1.8",
+        "friendsofphp/php-cs-fixer": "1.13.3"
     },
     "require-dev": {
-        "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
