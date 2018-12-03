@@ -4,18 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Vehicle;
-use App\Http\Requests;
 
 class UserVehicleController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id) {
+    public function index($id)
+    {
         $user = User::find($id);
 
         $response = !$user ?
@@ -30,34 +28,37 @@ class UserVehicleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
-        //
+    public function create()
+    {
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        //
+    public function store(Request $request)
+    {
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($userId, $vehiclePlate) {
+    public function show($userId, $vehiclePlate)
+    {
         $oUser = new User();
         $user = $oUser->getUserVehicle($userId, $vehiclePlate);
 
         $response = !$user || $user->isEmpty() ?
             response()->json(['message' => 'record not found!', 'code' => '404'], 404) :
             response()->json([
-                'data' => $user
+                'data' => $user,
             ], 200);
 
         return $response;
@@ -66,32 +67,34 @@ class UserVehicleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        //
+    public function edit($id)
+    {
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        //
+    public function update(Request $request, $id)
+    {
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        //
+    public function destroy($id)
+    {
     }
-
 }
