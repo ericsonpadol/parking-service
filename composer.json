@@ -10,7 +10,8 @@
         "phpdocumentor/reflection": "3.x@dev",
         "dingo/api": "1.0.x@dev",
         "fzaninotto/faker": "^1.8",
-        "friendsofphp/php-cs-fixer": "1.13.3"
+        "friendsofphp/php-cs-fixer": "1.13.3",
+        "tymon/jwt-auth": "^0.5.12"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
