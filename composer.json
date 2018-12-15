@@ -12,14 +12,14 @@
         "fzaninotto/faker": "^1.8",
         "friendsofphp/php-cs-fixer": "1.13.3",
         "tymon/jwt-auth": "^0.5.12",
-        "heroku/heroku-buildpack-php": "^147.0",
         "alrik11es/cowsayphp": "^1.2"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*"
+        "symfony/dom-crawler": "2.8.*|3.0.*",
+        "heroku/heroku-buildpack-php": "^147.0"
     },
     "autoload": {
         "classmap": [
