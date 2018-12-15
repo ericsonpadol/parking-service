@@ -21,7 +21,7 @@ Route::get('/', function () {
  */
 Route::group(['middleware' => ['api'], 'prefix' => 'latest-api'], function() {
     Route::resource('api', 'APIController');
-    Route::post('register', 'ApiController@register');
+    Route::post('register', 'APIController@register');
     Route::post('login', 'APIController@login');
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::get('get_user_details', 'APIController@getAuthenticatedUser');
@@ -52,6 +52,6 @@ $api->version('v1', function($api) {
 $api->version('v1', [], function($api) {
     $api->get('vehicles-dingo', 'App\Http\Controllers\VehicleController@index');
     $api->get('users-dingo', 'App\Http\Controllers\UserController@index');
-    $api->post('register-user', 'App\Http\Controllers\ApiController@register');
+    $api->post('register-user', 'App\Http\Controllers\APIController@register');
     $api->post('authenticate', 'App\Http\Controllers\APIController@login');
 });
