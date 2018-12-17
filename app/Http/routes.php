@@ -19,7 +19,7 @@ Route::get('/', function () {
 /**
  * JWT Routing
  */
-Route::group(['middleware' => ['api'], 'prefix' => 'latest-api'], function() {
+Route::group(['middleware' => ['api'], 'prefix' => 'parking-api'], function() {
     Route::resource('api', 'APIController');
     Route::post('register', 'APIController@register');
     Route::post('login', 'APIController@login');
@@ -28,6 +28,16 @@ Route::group(['middleware' => ['api'], 'prefix' => 'latest-api'], function() {
     });
 });
 
+
+/**
+ *  Parking Space Routing
+ */
+Route::group(['middleware' => ['api'], 'prefix' => 'parking-api'], function() {
+    Route::group(['middleware' => 'jwt-verify'], function() {
+        Route::resource('parking_space' , 'ParkingSpaceController', ['only' => ['index', 'show']]);
+        Route::resource('user.parkingspace', 'UserParkingSpaceController', ['except' => 'create', 'edit']);
+    });
+});
 
 /**
  * Default Resource Routing

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\ParkingSpace;
 use App\Http\Requests;
-use App\Http\Requests\RegisterNewUserRequest;
 
-class UserController extends Controller
+class ParkingSpaceController extends Controller
 {
 
     /**
@@ -16,9 +15,12 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $users = User::all();
+        //
+        $parkingSpaces = ParkingSpace::all();
 
-        return response()->json(['data' => $users], 200);
+        return response()->json([
+                    'data' => $parkingSpaces
+                        ], 200);
     }
 
     /**
@@ -37,10 +39,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        /**
-         * Note:
-         * That new user registration are found on the APIController
-         */
+        //
     }
 
     /**
@@ -70,17 +69,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RegisterNewUserRequest $request, $userId) {
-        $userAccount = User::find($userId);
-
-        if (!$userAccount) {
-            return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_404
-            ]);
-        }
-        
+    public function update(Request $request, $id) {
+        //
     }
 
     /**
