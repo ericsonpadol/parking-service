@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Copywrite;
 use App\Http\Requests;
 use App\Http\Requests\RegisterNewUserRequest;
 
@@ -80,7 +81,18 @@ class UserController extends Controller
                         'http_code' => Copywrite::HTTP_CODE_404
             ]);
         }
-        
+
+        $values = $request->all();
+
+        $userAccount->save($values);
+
+        return response()->json([
+            'result' => [
+                'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS .' '. $request->get('id'),
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                'http_code' => Copywrite::HTTP_CODE_200
+            ]
+        ], Copywrite::HTTP_CODE_200);
     }
 
     /**
