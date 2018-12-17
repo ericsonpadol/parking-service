@@ -1,5 +1,7 @@
 <?php
+
 use App\Copywrite;
+
 /*
   |--------------------------------------------------------------------------
   | Application Routes
@@ -14,13 +16,12 @@ use App\Copywrite;
 // Health Check
 Route::get('/', function () {
     $cow = Cowsayphp\Farm::create(\Cowsayphp\Farm\Cow::class);
-        echo '<pre>';
-        foreach ($_SERVER as $key => $spiels) {
-
-            $cowResponse = $cow->say($key .' => '. $spiels);
-            echo $cowResponse;
-        }
-         echo '</pre>';
+    echo '<pre>';
+    foreach ($_SERVER as $key => $spiels) {
+        $cowResponse = $cow->say($key . ' => ' . $spiels);
+        echo $cowResponse;
+    }
+    echo '</pre>';
 });
 
 /**
@@ -41,7 +42,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
  */
 Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::group(['middleware' => 'jwt-verify'], function() {
-        Route::resource('parking_space' , 'ParkingSpaceController', ['only' => ['index', 'show']]);
+        Route::resource('parking_space', 'ParkingSpaceController', ['only' => ['index', 'show']]);
         Route::resource('user.parkingspace', 'UserParkingSpaceController', ['except' => 'create', 'edit']);
     });
 });
@@ -50,12 +51,15 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
 /**
  * Profile Service Routing
  */
-//Route::group(['middleware' => ['api'], 'prefix' => 'parking-api']);
+Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+    Route::group(['middleware' => 'jwt-verify'], function() {
+        Route::resource('users', 'UserController', ['except' => ['store']]);
+    });
+});
 /**
  * Default Resource Routing
  */
 Route::resource('vehicles', 'VehicleController', ['only' => ['index', 'show']]);
-Route::resource('users', 'UserController', ['except' => ['store']]);
 Route::resource('users.vehicles', 'UserVehicleController');
 
 /*

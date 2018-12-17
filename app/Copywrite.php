@@ -30,6 +30,7 @@ class Copywrite extends Model
      */
     const HTTP_CODE_404 = 404; //not found code
     const HTTP_CODE_401 = 401; //unauthorized
+    const HTTP_CODE_400 = 400; //bad request
     const HTTP_CODE_422 = 422;
     const HTTP_CODE_200 = 200; //success code
     const HTTP_CODE_201 = 201;
