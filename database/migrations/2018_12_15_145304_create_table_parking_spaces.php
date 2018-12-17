@@ -12,7 +12,7 @@ class CreateTableParkingSpaces extends Migration
      * @return void
      */
     public function up() {
-        Schema::create('parking_spaces', function(Blueprint $table) {
+        Schema::create('parkingspaces', function(Blueprint $table) {
             $table->increments('id', 1);
             $table->text('address');
             $table->string('city', 255);
