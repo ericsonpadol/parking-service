@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Copywrite;
 use App\Http\Requests;
-use App\Http\Requests\RegisterNewUserRequest;
+use Validator;
 
 class UserController extends Controller
 {
@@ -71,7 +71,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RegisterNewUserRequest $request, $userId) {
+    public function update(Request $request, $userId) {
         $userAccount = User::find($userId);
 
         if (!$userAccount) {
@@ -82,17 +82,30 @@ class UserController extends Controller
             ]);
         }
 
-        $values = $request->all();
+        $values = $request->except(['password']);
 
-        $userAccount->save($values);
+        $validator = Validator::make($values, [
+                    'email' => 'email|max:255|unique:users,email',
+                    'mobile_number' => 'max:11|unique:users,mobile_number',
+                    'full_name' => 'string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'message' => $validator->errors(),
+            ], Copywrite::HTTP_CODE_400);
+        }
+
+        $userAccount->update($values);
 
         return response()->json([
-            'result' => [
-                'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS .' '. $request->get('id'),
-                'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                'http_code' => Copywrite::HTTP_CODE_200
-            ]
-        ], Copywrite::HTTP_CODE_200);
+                    'result' => [
+                        'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
+                        'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                        'http_code' => Copywrite::HTTP_CODE_200
+                    ]
+                        ], Copywrite::HTTP_CODE_200);
     }
 
     /**

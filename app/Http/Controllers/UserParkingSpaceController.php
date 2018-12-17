@@ -8,6 +8,7 @@ use App\User;
 use App\ParkingSpace;
 use App\Copywrite;
 use App\Http\Requests\CreateParkingSpaceRequest;
+use Validator;
 
 class UserParkingSpaceController extends Controller
 {
@@ -23,12 +24,15 @@ class UserParkingSpaceController extends Controller
         if (!$userAccount) {
             return response()->json([
                         'message' => Copywrite::USER_NOT_FOUND,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
                             ], Copywrite::HTTP_CODE_404);
         }
 
         return response()->json([
-                    'data' => $userAccount->parkingspaces
+                    'data' => $userAccount->parkingspaces,
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200
                         ], Copywrite::HTTP_CODE_200);
     }
 

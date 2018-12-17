@@ -19,7 +19,8 @@ class ParkingSpace extends Model
         'space_lon',
         'establishment_type',
         'description',
-        'user_id'
+        'user_id',
+        'parking_slot'
     ];
     protected $hidden = [
         'created_at',

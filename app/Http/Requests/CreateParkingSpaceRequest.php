@@ -26,6 +26,7 @@ class CreateParkingSpaceRequest extends Request
             //
             'city' => 'required|max:255',
             'establishment_type' => 'required',
+            'parking_slot' => 'required|string'
         ];
     }
 
