@@ -38,7 +38,7 @@ class CreateTableParkingSpaces extends Migration
      */
     public function down() {
         //
-        Schema::drop('parking_spaces');
+        Schema::drop('parkingspaces');
     }
 
 }
