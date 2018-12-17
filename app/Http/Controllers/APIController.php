@@ -27,7 +27,7 @@ class APIController extends Controller
         $user = User::first();
         $token = JWTAuth::fromUser($user);
         return response()->json(['result' => [
-                        'message' => Copywrite::USER_CREATED,
+                        'message' => Copywrite::USER_CREATED_SUCCESS,
                         'token' => $token,
                         'http_code' => Copywrite::HTTP_CODE_200,
                         'status' => Copywrite::RESPONSE_STATUS_SUCCESS
