@@ -13,6 +13,8 @@ class Copywrite extends Model
     const RESPONSE_STATUS_SUCCESS = 'success';
     const USER_CREATED_SUCCESS = 'new user created successfully';
     const USER_CREATED_FAILED = 'cannot create new user';
+    const DEFAULT_UPDATE_SUCCESS = 'updated successfully';
+    const DEFAULT_UPDATE_FAILED = 'cannot update';
     const PARKING_SPACE_CREATE_SUCCESS = 'new parking space added successfully';
     const PARKING_SPACE_CREATE_FAILED = 'cannot create new parking space';
 
@@ -35,9 +37,13 @@ class Copywrite extends Model
     /**
      * AUTHENTICATION BLOCK
      */
-
     const AUTH_USER_NOT_FOUND = 'user_not_found';
     const AUTH_TOKEN_EXPIRED = 'token_expired';
     const AUTH_TOKEN_INVALID = 'token_invalid';
     const AUTH_TOKEN_ABSENT = 'token_absent';
+
+    /**
+     * remember to put this on the app\config
+     */
+    const API_PREFIX = 'parking-api';
  }
