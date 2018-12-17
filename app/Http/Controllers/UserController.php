@@ -92,20 +92,17 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'message' => $validator->errors(),
-            ], Copywrite::HTTP_CODE_400);
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'message' => $validator->errors(),
+                            ], Copywrite::HTTP_CODE_400);
         }
 
         $userAccount->update($values);
 
         return response()->json([
-                    'result' => [
-                        'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
-                        'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                        'http_code' => Copywrite::HTTP_CODE_200
-                    ]
-                        ], Copywrite::HTTP_CODE_200);
+                    'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200], Copywrite::HTTP_CODE_200);
     }
 
     /**
