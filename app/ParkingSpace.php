@@ -8,7 +8,7 @@ class ParkingSpace extends Model
 {
 
     //configuration
-    protected $table = 'parking_spaces';
+    protected $table = 'parkingspaces';
     protected $primaryKey = 'id';
     protected $fillable = [
         'address',
