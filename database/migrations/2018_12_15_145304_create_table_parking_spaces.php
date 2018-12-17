@@ -13,7 +13,7 @@ class CreateTableParkingSpaces extends Migration
      */
     public function up() {
         Schema::create('parking_spaces', function(Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id', 1);
             $table->text('address');
             $table->string('city', 255);
             $table->integer('zipcode');
