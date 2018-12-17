@@ -13,7 +13,7 @@ class VehiclesTable extends Migration
     public function up()
     {
         Schema::create('vehicles', function (Blueprint $table) {
-            $table->increments('id', 1);
+            $table->increments('id');
             $table->string('plate_number')
                 ->unique();
             $table->string('color');
