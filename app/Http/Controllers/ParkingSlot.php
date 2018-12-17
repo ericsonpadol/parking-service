@@ -3,22 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+
 use App\Http\Requests;
-use App\Http\Requests\RegisterNewUserRequest;
 
-class UserController extends Controller
+class ParkingSlot extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        $users = User::all();
-
-        return response()->json(['data' => $users], 200);
+    public function index()
+    {
+        //
     }
 
     /**
@@ -26,7 +23,8 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //
     }
 
@@ -36,11 +34,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        /**
-         * Note:
-         * That new user registration are found on the APIController
-         */
+    public function store(Request $request)
+    {
+        //
     }
 
     /**
@@ -49,7 +45,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         //
     }
 
@@ -59,7 +56,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         //
     }
 
@@ -70,17 +68,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RegisterNewUserRequest $request, $userId) {
-        $userAccount = User::find($userId);
-
-        if (!$userAccount) {
-            return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_404
-            ]);
-        }
-        
+    public function update(Request $request, $id)
+    {
+        //
     }
 
     /**
@@ -89,8 +79,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //
     }
-
 }

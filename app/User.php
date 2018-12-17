@@ -32,6 +32,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Vehicle');
     }
 
+    public function parkingspaces() {
+        return $this->hasMany('App\ParkingSpace');
+    }
+
     public function getUserVehicle($userId, $vehiclePlate) {
         $vehicle = User::find($userId)->vehicles()->where('plate_number', '=', $vehiclePlate)->get();
 

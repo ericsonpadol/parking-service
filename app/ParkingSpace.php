@@ -4,17 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Vehicle extends Model
+class ParkingSpace extends Model
 {
+
     //configuration
-    protected $table = 'vehicles';
+    protected $table = 'parking_spaces';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'plate_number',
-        'color',
-        'model',
-        'brand',
-        'users_id'
+        'address',
+        'city',
+        'zipcode',
+        'building_name',
+        'space_lat',
+        'space_lon',
+        'establishment_type',
+        'description',
+        'user_id'
     ];
     protected $hidden = [
         'created_at',
@@ -22,7 +27,8 @@ class Vehicle extends Model
         'deleted_at'
     ];
 
-    public function maker() {
+    public function parkingspace() {
         return $this->belongsTo('App\User');
     }
+
 }
