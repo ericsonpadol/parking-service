@@ -22,7 +22,7 @@ class VehicleSeed extends Seeder
             'color' => $faker->safeColorName,
             'model' => $faker->word,
             'brand' => $faker->word,
-            'user_id' => $faker->numberBetween(1, 5)
+            'user_id' => $faker->numberBetween(1, 7+10)
             ];
 
             Vehicle::create($seed);
