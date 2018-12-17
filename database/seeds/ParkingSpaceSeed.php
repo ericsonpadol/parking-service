@@ -25,7 +25,7 @@ class ParkingSpaceSeed extends Seeder
                 'space_lon' => $faker->longitude,
                 'establishment_type' => $faker->randomElement(['resident', 'commercial', 'public']),
                 'description' => $faker->text($maxNbChars = 255),
-                'user_id' => $faker->numberBetween(1, 7+10),
+                'user_id' => ($faker->numberBetween(1, 5) * 10) + 1,
             ];
 
             ParkingSpace::create($seed);
