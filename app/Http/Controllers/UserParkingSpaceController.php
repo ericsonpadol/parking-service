@@ -125,11 +125,55 @@ class UserParkingSpaceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $userid
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $userId, $parkingSpaceId) {
         //
+        $userAccount = User::find($userId);
+
+        if (!$userAccount) {
+            return response()->json([
+                        'message' => Copywrite::USER_NOT_FOUND,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_404
+                            ], Copywrite::HTTP_CODE_404);
+        }
+
+        $parkingSpace = $userAccount->parkingspaces->find($parkingSpaceId);
+
+        if (!$parkingSpace) {
+            return response()->json([
+                        'message' => Copywrite::PARKING_SPACE_NOT_FOUND,
+                        'http_code' => Copywrite::HTTP_CODE_404,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ]);
+        }
+
+        $values = $request->all();
+
+        $validator = Validator::make($values, [
+                    'address' => 'filled|string|max:255',
+                    'city' => 'filled|string|max:255',
+                    'space_lat' => 'numeric|filled',
+                    'space_lon' => 'numeric|filled',
+                    'establishment' => 'filled',
+                    'parking_slot' => 'filled|string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'message' => $validator->errors(),
+                            ], Copywrite::HTTP_CODE_400);
+        }
+
+        $parkingSpace->update($values);
+
+        return response()->json([
+                    'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200], Copywrite::HTTP_CODE_200);
     }
 
     /**
@@ -138,8 +182,45 @@ class UserParkingSpaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($userId, $parkingSpaceId) {
         //
+        $userAccount = User::find($userId);
+
+        if (!$userAccount) {
+            return response()->json([
+                        'message' => Copywrite::USER_NOT_FOUND,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_404
+                            ], Copywrite::HTTP_CODE_404);
+        }
+
+        $parkingSpace = $userAccount->parkingspaces->find($parkingSpaceId);
+
+        if (!$parkingSpace) {
+            return response()->json([
+                        'message' => Copywrite::PARKING_SPACE_NOT_FOUND,
+                        'http_code' => Copywrite::HTTP_CODE_404,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ]);
+        }
+
+
+        if (sizeof($parkingSpace->user) > 0) {
+            return response()->json([
+                        'message' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_409
+                            ], Copywrite::HTTP_CODE_409);
+        }
+
+        $parkingSpace->delete();
+
+        return response()->json([
+                    'message' => Copywrite::PARKING_SPACE_DELETE_ALLOWED,
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200
+                        ], Copywrite::HTTP_CODE_200);
+
     }
 
 }
