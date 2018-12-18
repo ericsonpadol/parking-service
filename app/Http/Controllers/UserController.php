@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\ParkingSpace;
+use App\Vehicle;
 use App\Copywrite;
 use App\Http\Requests;
 use Validator;
@@ -79,14 +81,14 @@ class UserController extends Controller
                         'message' => Copywrite::USER_NOT_FOUND,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
-            ]);
+                            ], Copywrite::HTTP_CODE_404);
         }
 
-        $values = $request->except(['password']);
+        $values = $request->except(['password', 'email']);
 
         $validator = Validator::make($values, [
                     'email' => 'email|max:255|unique:users,email',
-                    'mobile_number' => 'max:11|unique:users,mobile_number',
+                    'mobile_number' => 'min:11|max:11|unique:users,mobile_number',
                     'full_name' => 'string|max:255'
         ]);
 
@@ -112,7 +114,35 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        //
+        $userAccount = User::find($id);
+
+        if (!$userAccount) {
+            return response()->json([
+                        'message' => Copywrite::USER_NOT_FOUND,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_404
+                            ], Copywrite::HTTP_CODE_404);
+        }
+
+        //validate user has no transactions
+        $parkingspaces = $userAccount->parkingspaces;
+        $vehicles = $userAccount->vehicles;
+
+        if (sizeof($parkingspaces) > 0 && sizeof($vehicles) > 0) {
+            return response()->json([
+                        'message' => str_replace(':useraccount:', $userAccount->email, Copywrite::USER_DELETE_RESTRICT),
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_409
+                            ], Copywrite::HTTP_CODE_409);
+        }
+
+        $userAccount->delete();
+
+        return response()->json([
+                    'message' => Copywrite::USER_DELETE_ALLOWED,
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200
+                        ], Copywrite::HTTP_CODE_200);
     }
 
 }

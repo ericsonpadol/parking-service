@@ -17,13 +17,16 @@ class Copywrite extends Model
     const DEFAULT_UPDATE_FAILED = 'cannot update';
     const PARKING_SPACE_CREATE_SUCCESS = 'new parking space added successfully';
     const PARKING_SPACE_CREATE_FAILED = 'cannot create new parking space';
-
+    const USER_DELETE_ALLOWED = 'user successfully deleted';
+    const PARKING_SPACE_DELETE_ALLOWED = 'parking space deleted successfully';
     /**
      * ERROR COPYWRITES
      */
     const USER_NOT_FOUND = 'user not found';
     const PARKING_SPACE_NOT_FOUND = 'parking space not found';
     const INVALID_CREDENTIALS = 'wrong email and password';
+    const USER_DELETE_RESTRICT = ':useraccount: has transactions and cannot be deleted';
+    const PARKING_SPACE_DELETE_RESTRICT = ':parkingspace: has transactions and cannot be deleted';
 
     /**
      * HTTP CODES
@@ -31,6 +34,7 @@ class Copywrite extends Model
     const HTTP_CODE_404 = 404; //not found code
     const HTTP_CODE_401 = 401; //unauthorized
     const HTTP_CODE_400 = 400; //bad request
+    const HTTP_CODE_409 = 409; //conflict
     const HTTP_CODE_422 = 422;
     const HTTP_CODE_200 = 200; //success code
     const HTTP_CODE_201 = 201;

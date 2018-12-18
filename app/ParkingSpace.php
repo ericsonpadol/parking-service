@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ParkingSpace extends Model
 {
-
+    use SoftDeletes;
     //configuration
+    protected $data = ['deleted_at'];
     protected $table = 'parkingspaces';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -28,8 +30,7 @@ class ParkingSpace extends Model
         'deleted_at'
     ];
 
-    public function parkingspace() {
+    public function user() {
         return $this->belongsTo('App\User');
     }
-
 }
