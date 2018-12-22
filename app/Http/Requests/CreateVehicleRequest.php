@@ -5,15 +5,15 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use App\Copywrite;
 
-class CreateParkingSpaceRequest extends Request
+class CreateVehicleRequest extends Request
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return true;
     }
 
@@ -22,18 +22,16 @@ class CreateParkingSpaceRequest extends Request
      *
      * @return array
      */
-    public function rules() {
+    public function rules()
+    {
         return [
-            //
-            'city' => 'required|max:255',
-            'establishment_type' => 'required',
-            'parking_slot' => 'required|string'
+            'plate_number' => 'required|max:11|alpha_num'
         ];
     }
 
     public function response(array $errors) {
         return response()->json([
-                    'message' => Copywrite::PARKING_SPACE_INVALID,
+                    'message' => Copywrite::VEHICLE_INVALID,
                     'code' => 422,
                     'trace_error' => [$errors],
                         ], 422);

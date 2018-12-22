@@ -19,6 +19,8 @@ class Copywrite extends Model
     const PARKING_SPACE_CREATE_FAILED = 'cannot create new parking space';
     const USER_DELETE_ALLOWED = 'user successfully deleted';
     const PARKING_SPACE_DELETE_ALLOWED = 'parking space deleted successfully';
+    const VEHICLE_CREATE_SUCCESS = 'new vehicle successfully created';
+
     /**
      * ERROR COPYWRITES
      */
@@ -27,6 +29,8 @@ class Copywrite extends Model
     const INVALID_CREDENTIALS = 'wrong email and password';
     const USER_DELETE_RESTRICT = ':useraccount: has transactions and cannot be deleted';
     const PARKING_SPACE_DELETE_RESTRICT = ':parkingspace: has transactions and cannot be deleted';
+    const PARKING_SPACE_INVALID = 'invalid parking spaces';
+    const VEHICLE_INVALID = 'invalid vehicle';
 
     /**
      * HTTP CODES
