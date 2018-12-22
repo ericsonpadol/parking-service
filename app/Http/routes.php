@@ -56,11 +56,16 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::resource('users', 'UserController', ['except' => ['store']]);
     });
 });
+
 /**
- * Default Resource Routing
+ * Vehicle Routing
  */
-Route::resource('vehicles', 'VehicleController', ['only' => ['index', 'show']]);
-Route::resource('users.vehicles', 'UserVehicleController');
+Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+    Route::group(['middleware' => 'jwt-verify'], function() {
+        Route::resource('vehicles', 'VehicleController', ['only' => 'index', 'show']);
+        Route::resource('user.vehicle', 'UserVehicleController', ['except' => 'create', 'edit']);
+    });
+});
 
 /*
  * Dingo Api Routes
