@@ -20,7 +20,7 @@ class UserVehicleController extends Controller {
         $user = User::find($id);
 
         $response = !$user ?
-                response()->json(['message' => 'user not found!', 'code' => '404'], 404) :
+                response()->json(['messages' => 'user not found!', 'code' => '404'], 404) :
                 response()->json(['data' => $user->vehicles], 200);
 
         return $response;
@@ -46,13 +46,13 @@ class UserVehicleController extends Controller {
         $useraccount = User::find($userId);
 
         if (!$useraccount) {
-            $message = [
+            $messages = [
                 'code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'message' => Copywrite::USER_NOT_FOUND,
+                'messages' => Copywrite::USER_NOT_FOUND,
             ];
 
-            return response()->json(compact('message'));
+            return response()->json(compact('messages'));
         }
 
         $values = $request->all();
@@ -60,7 +60,7 @@ class UserVehicleController extends Controller {
         $useraccount->vehicles()->create($values);
 
         return response()->json([
-                    'message' => Copywrite::PARKING_SPACE_CREATE_SUCCESS,
+                    'messages' => Copywrite::PARKING_SPACE_CREATE_SUCCESS,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_201
                         ], Copywrite::HTTP_CODE_201);
@@ -78,7 +78,7 @@ class UserVehicleController extends Controller {
         $user = $oUser->getUserVehicle($userId, $vehiclePlate);
 
         $response = !$user || $user->isEmpty() ?
-                response()->json(['message' => 'record not found!', 'code' => '404'], 404) :
+                response()->json(['messages' => 'record not found!', 'code' => '404'], 404) :
                 response()->json([
                     'data' => $user,
                         ], 200);
@@ -109,20 +109,20 @@ class UserVehicleController extends Controller {
         $useraccount = User::find($userId);
 
         if (!$useraccount) {
-            $message = [
+            $messages = [
                 'code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'message' => Copywrite::USER_NOT_FOUND,
+                'messages' => Copywrite::USER_NOT_FOUND,
             ];
 
-            return response()->json(compact('message'));
+            return response()->json(compact('messages'));
         }
 
         $vehicle = $useraccount->vehicles->find($vehicleId);
 
         if (!$vehicle) {
             return response()->json([
-                        'message' => Copywrite::VEHICLE_NOT_FOUND,
+                        'messages' => Copywrite::VEHICLE_NOT_FOUND,
                         'http_code' => Copywrite::HTTP_CODE_404,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED
             ]);
@@ -140,7 +140,7 @@ class UserVehicleController extends Controller {
         if ($validator->fails()) {
             return response()->json([
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'message' => $validator->errors(),
+                        'messages' => $validator->errors(),
                             ], Copywrite::HTTP_CODE_400);
         }
 
@@ -159,7 +159,27 @@ class UserVehicleController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($userId, $vehicleId) {
+        $userAccount = User::find($userId);
+
+        if (!$userAccount) {
+            return response()->json([
+                        'messages' => Copywrite::USER_NOT_FOUND,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_404
+                            ], Copywrite::HTTP_CODE_404);
+        }
+
+        $vehicle = $userAccount->vehicles->find($vehicleId);
+
+        if (!$vehicle) {
+            return response()->json([
+                        'messages' => Copywrite::VEHICLE_NOT_FOUND,
+                        'http_code' => Copywrite::HTTP_CODE_404,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ]);
+        }
+
 
     }
 
