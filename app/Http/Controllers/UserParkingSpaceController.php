@@ -23,7 +23,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$userAccount) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
+                        'messages' => Copywrite::USER_NOT_FOUND,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
                             ], Copywrite::HTTP_CODE_404);
@@ -55,13 +55,13 @@ class UserParkingSpaceController extends Controller
         $userAccount = User::find($userId);
 
         if (!$userAccount) {
-            $message = [
+            $messages = [
                 'code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'message' => Copywrite::USER_NOT_FOUND,
+                'messages' => Copywrite::USER_NOT_FOUND,
             ];
 
-            return response()->json(compact('message'));
+            return response()->json(compact('messages'));
         }
 
         $values = $request->all();
@@ -69,7 +69,7 @@ class UserParkingSpaceController extends Controller
         $userAccount->parkingspaces()->create($values);
 
         return response()->json([
-                    'message' => Copywrite::VEHICLE_CREATE_SUCCESS,
+                    'messages' => Copywrite::VEHICLE_CREATE_SUCCESS,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_201
                         ], Copywrite::HTTP_CODE_201);
@@ -88,7 +88,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$userAccount) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
+                        'messages' => Copywrite::USER_NOT_FOUND,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
             ]);
@@ -98,7 +98,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$parkingSpace) {
             return response()->json([
-                        'message' => Copywrite::PARKING_SPACE_NOT_FOUND,
+                        'messages' => Copywrite::PARKING_SPACE_NOT_FOUND,
                         'http_code' => Copywrite::HTTP_CODE_404,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED
             ]);
@@ -135,7 +135,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$userAccount) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
+                        'messages' => Copywrite::USER_NOT_FOUND,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
                             ], Copywrite::HTTP_CODE_404);
@@ -145,7 +145,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$parkingSpace) {
             return response()->json([
-                        'message' => Copywrite::PARKING_SPACE_NOT_FOUND,
+                        'messages' => Copywrite::PARKING_SPACE_NOT_FOUND,
                         'http_code' => Copywrite::HTTP_CODE_404,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED
             ]);
@@ -165,7 +165,7 @@ class UserParkingSpaceController extends Controller
         if ($validator->fails()) {
             return response()->json([
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'message' => $validator->errors(),
+                        'messages' => $validator->errors(),
                             ], Copywrite::HTTP_CODE_400);
         }
 
@@ -189,7 +189,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$userAccount) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
+                        'messages' => Copywrite::USER_NOT_FOUND,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
                             ], Copywrite::HTTP_CODE_404);
@@ -199,7 +199,7 @@ class UserParkingSpaceController extends Controller
 
         if (!$parkingSpace) {
             return response()->json([
-                        'message' => Copywrite::PARKING_SPACE_NOT_FOUND,
+                        'messages' => Copywrite::PARKING_SPACE_NOT_FOUND,
                         'http_code' => Copywrite::HTTP_CODE_404,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED
             ]);
@@ -208,7 +208,7 @@ class UserParkingSpaceController extends Controller
 
         if (sizeof($parkingSpace->user) > 0) {
             return response()->json([
-                        'message' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
+                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_409
                             ], Copywrite::HTTP_CODE_409);
@@ -217,7 +217,7 @@ class UserParkingSpaceController extends Controller
         $parkingSpace->delete();
 
         return response()->json([
-                    'message' => Copywrite::PARKING_SPACE_DELETE_ALLOWED,
+                    'messages' => Copywrite::PARKING_SPACE_DELETE_ALLOWED,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_200
                         ], Copywrite::HTTP_CODE_200);
