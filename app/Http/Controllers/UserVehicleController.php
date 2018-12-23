@@ -140,9 +140,9 @@ class UserVehicleController extends Controller {
 
         $validator = Validator::make($values, [
                     'plate_number' => 'string|max:11|alpha_num|unique:vehicles,plate_number',
-                    'color' => 'string|max:255|alpha',
-                    'model' => 'string|max:255|alpha_num',
-                    'brand' => 'string|max:255|alpha'
+                    'color' => 'string|max:255',
+                    'model' => 'string|max:255',
+                    'brand' => 'string|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -186,6 +186,14 @@ class UserVehicleController extends Controller {
                         'http_code' => Copywrite::HTTP_CODE_404,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED
             ]);
+        }
+
+        if (sizeof($vehicle->user) > 0) {
+            return response()->json([
+                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_409
+                            ], Copywrite::HTTP_CODE_409);
         }
     }
 
