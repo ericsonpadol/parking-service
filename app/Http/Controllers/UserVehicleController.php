@@ -17,13 +17,21 @@ class UserVehicleController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index($id) {
-        $user = User::find($id);
+        $userAccount = User::find($id);
 
-        $response = !$user ?
-                response()->json(['messages' => 'user not found!', 'code' => '404'], 404) :
-                response()->json(['data' => $user->vehicles], 200);
+        if (!$userAccount) {
+            return response()->json([
+                        'messages' => Copywrite::USER_NOT_FOUND,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_404
+                            ], Copywrite::HTTP_CODE_404);
+        }
 
-        return $response;
+        return response()->json([
+                    'data' => $userAccount->vehicles,
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200
+                        ], Copywrite::HTTP_CODE_200);
     }
 
     /**
@@ -179,8 +187,6 @@ class UserVehicleController extends Controller {
                         'status' => Copywrite::RESPONSE_STATUS_FAILED
             ]);
         }
-
-
     }
 
 }
