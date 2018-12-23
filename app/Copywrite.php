@@ -31,6 +31,7 @@ class Copywrite extends Model
     const PARKING_SPACE_DELETE_RESTRICT = ':parkingspace: has transactions and cannot be deleted';
     const PARKING_SPACE_INVALID = 'invalid parking spaces';
     const VEHICLE_INVALID = 'invalid vehicle';
+    const VEHICLE_NOT_FOUND = 'vehicle not found';
 
     /**
      * HTTP CODES

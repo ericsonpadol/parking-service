@@ -7,6 +7,7 @@ use App\User;
 use App\Vehicle;
 use App\Http\Requests\CreateVehicleRequest;
 use App\Copywrite;
+use Validator;
 
 class UserVehicleController extends Controller {
 
@@ -104,8 +105,51 @@ class UserVehicleController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $userId, $vehicleId) {
+        $useraccount = User::find($userId);
 
+        if (!$useraccount) {
+            $message = [
+                'code' => Copywrite::HTTP_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'message' => Copywrite::USER_NOT_FOUND,
+            ];
+
+            return response()->json(compact('message'));
+        }
+
+        $vehicle = $useraccount->vehicles->find($vehicleId);
+
+        if (!$vehicle) {
+            return response()->json([
+                        'message' => Copywrite::VEHICLE_NOT_FOUND,
+                        'http_code' => Copywrite::HTTP_CODE_404,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ]);
+        }
+
+        $values = $request->all();
+
+        $validator = Validator::make($values, [
+                    'plate_number' => 'string|max:11|alpha_num|unique:vehicles,plate_number',
+                    'color' => 'string|max:255|alpha',
+                    'model' => 'string|max:255|alpha_num',
+                    'brand' => 'string|max:255|alpha'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'message' => $validator->errors(),
+                            ], Copywrite::HTTP_CODE_400);
+        }
+
+        $vehicle->update($values);
+
+        return response()->json([
+                    'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200], Copywrite::HTTP_CODE_200);
     }
 
     /**
