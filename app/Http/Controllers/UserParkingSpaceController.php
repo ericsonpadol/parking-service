@@ -205,14 +205,14 @@ class UserParkingSpaceController extends Controller
             ]);
         }
 
-
-        if (sizeof($parkingSpace->user) > 0) {
-            return response()->json([
-                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_409
-                            ], Copywrite::HTTP_CODE_409);
-        }
+//replace this with booking transactions
+//        if (sizeof($parkingSpace->user) > 0) {
+//            return response()->json([
+//                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
+//                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+//                        'http_code' => Copywrite::HTTP_CODE_409
+//                            ], Copywrite::HTTP_CODE_409);
+//        }
 
         $parkingSpace->delete();
 
@@ -221,7 +221,6 @@ class UserParkingSpaceController extends Controller
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_200
                         ], Copywrite::HTTP_CODE_200);
-
     }
 
 }

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
 use App\User;
 use Faker\Factory as Faker;
 
@@ -16,7 +15,19 @@ class UserSeed extends Seeder
     public function run() {
         $faker = Faker::create();
 
-        for($x=0; $x < 6; $x++){
+        /**
+         * create user/seed for parking web connector
+         */
+        $userConnector = [
+            'mobile_number' => '00000000000',
+            'email' => 'parkit@gmail.com',
+            'password' => password_hash('reject', PASSWORD_DEFAULT),
+            'full_name' => 'connector-admin',
+        ];
+
+        User::create($userConnector);
+
+        for ($x = 0; $x < 6; $x++) {
             $seed = [
                 'mobile_number' => str_pad($faker->randomNumber(), 11, '09', STR_PAD_LEFT),
                 'email' => $faker->safeEmail,
@@ -27,4 +38,5 @@ class UserSeed extends Seeder
             User::create($seed);
         }
     }
+
 }

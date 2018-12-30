@@ -17,9 +17,10 @@ class Copywrite extends Model
     const DEFAULT_UPDATE_FAILED = 'cannot update';
     const PARKING_SPACE_CREATE_SUCCESS = 'new parking space added successfully';
     const PARKING_SPACE_CREATE_FAILED = 'cannot create new parking space';
-    const USER_DELETE_ALLOWED = 'user successfully deleted';
+    const USER_DELETE_ALLOWED = ':useraccount: successfully deleted';
     const PARKING_SPACE_DELETE_ALLOWED = 'parking space deleted successfully';
     const VEHICLE_CREATE_SUCCESS = 'new vehicle successfully created';
+    const VEHICLE_DELETE_ALLOWED = 'vehicle deleted successfully';
 
     /**
      * ERROR COPYWRITES
@@ -32,6 +33,7 @@ class Copywrite extends Model
     const PARKING_SPACE_INVALID = 'invalid parking spaces';
     const VEHICLE_INVALID = 'invalid vehicle';
     const VEHICLE_NOT_FOUND = 'vehicle not found';
+    const VEHICLE_DELETE_RESTRICT = ':vehicle: has transactions and cannot be deleted';
 
     /**
      * HTTP CODES
