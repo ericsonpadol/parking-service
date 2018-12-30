@@ -9,7 +9,8 @@ use App\Http\Requests\CreateVehicleRequest;
 use App\Copywrite;
 use Validator;
 
-class UserVehicleController extends Controller {
+class UserVehicleController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -188,13 +189,22 @@ class UserVehicleController extends Controller {
             ]);
         }
 
-        if (sizeof($vehicle->user) > 0) {
-            return response()->json([
-                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_409
-                            ], Copywrite::HTTP_CODE_409);
-        }
+        //replace this with booking transactions
+//        if (sizeof($vehicle->user) > 0) {
+//            return response()->json([
+//                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::VEHICLE_DELETE_RESTRICT),
+//                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+//                        'http_code' => Copywrite::HTTP_CODE_409
+//                            ], Copywrite::HTTP_CODE_409);
+//        }
+
+        $vehicle->delete();
+
+        return response()->json([
+                    'messages' => Copywrite::VEHICLE_DELETE_ALLOWED,
+                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'http_code' => Copywrite::HTTP_CODE_200
+                        ], Copywrite::HTTP_CODE_200);
     }
 
 }

@@ -10,7 +10,7 @@ class Vehicle extends Model
     use SoftDeletes;
 
     protected $date = ['deleted_at'];
-    
+
     //configuration
     protected $table = 'vehicles';
     protected $primaryKey = 'id';
@@ -23,8 +23,6 @@ class Vehicle extends Model
     ];
     protected $hidden = [
         'created_at',
-        'updated_at',
-        'deleted_at'
     ];
 
     public function maker() {
