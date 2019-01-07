@@ -72,7 +72,7 @@ class APIController extends Controller
 
         $mailbox = $emailHelper->createResetPasswordMail($mailParams);
 
-        $sendGrid = new SendGrid(env('SENDGRID_KEY'));
+        $sendGrid = new SendGrid(env('SECRET_MAIL'));
 
         $fireMail = $sendGrid->send($mailbox);
 
