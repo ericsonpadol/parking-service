@@ -36,14 +36,23 @@ class User extends Authenticatable
         'password', 'remember_token'
     ];
 
+    /**
+     * User & Vehicle Relationship
+     */
     public function vehicles() {
         return $this->hasMany('App\Vehicle');
     }
 
+    /**
+     * User & Parkingspace Relationship
+     */
     public function parkingspaces() {
         return $this->hasMany('App\ParkingSpace');
     }
 
+    /**
+     * 
+     */
     public function getUserVehicle($userId, $vehiclePlate) {
         $vehicle = User::find($userId)->vehicles()->where('plate_number', '=', $vehiclePlate)->get();
 
