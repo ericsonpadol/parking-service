@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Copywrite extends Model
 {
+
     /**
      * DEFAULT COPYWRITES
      */
@@ -55,7 +56,17 @@ class Copywrite extends Model
     const AUTH_TOKEN_ABSENT = 'token_absent';
 
     /**
+     * Mail Copywrite;
+     *
+     */
+    const MAIL_RESET_PASSWORD_SUBJECT = 'LGPARK IT: RESET PASSWORD NOTIFICATION';
+    const MAIL_RESET_PASSWORD_BODY_HTML = 'Hi <b>:full_name:</b>, <br><br> You have requested a password reset,'
+            . ' please use this reset token as your temporary password <b>:reset_token:</b> .'
+            . ' <br>Please ignore this email if you did not request a password change. ';
+
+    /**
      * remember to put this on the app\config
      */
     const API_PREFIX = 'parking-api';
- }
+
+}

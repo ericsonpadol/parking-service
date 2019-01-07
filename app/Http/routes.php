@@ -17,6 +17,7 @@ use App\Copywrite;
 Route::get('/', function () {
     $cow = Cowsayphp\Farm::create(\Cowsayphp\Farm\Cow::class);
     echo '<pre>';
+    echo '<b>PARKING SERVICE</b>';
     foreach ($_SERVER as $key => $spiels) {
         $cowResponse = $cow->say($key . ' => ' . $spiels);
         echo $cowResponse;
@@ -30,6 +31,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::resource('api', 'APIController');
     Route::post('register', 'APIController@register');
+    Route::post('reset_password', 'APIController@resetPassword');
     Route::post('login', 'APIController@login');
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::get('get_user_details', 'APIController@getAuthenticatedUser');
