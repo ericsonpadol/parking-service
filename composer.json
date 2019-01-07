@@ -14,7 +14,9 @@
         "tymon/jwt-auth": "^0.5.12",
         "alrik11es/cowsayphp": "^1.2",
         "barryvdh/laravel-cors": "0.9.2",
-        "guzzlehttp/guzzle": "6.3.2"
+        "guzzlehttp/guzzle": "6.3.2",
+        "mediaburst/clockworksms": "2.0.*",
+        "sendgrid/sendgrid": "~7"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
