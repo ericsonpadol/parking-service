@@ -12,7 +12,9 @@
         "fzaninotto/faker": "^1.8",
         "friendsofphp/php-cs-fixer": "1.13.3",
         "tymon/jwt-auth": "^0.5.12",
-        "alrik11es/cowsayphp": "^1.2"
+        "alrik11es/cowsayphp": "^1.2",
+        "barryvdh/laravel-cors": "0.9.2",
+        "guzzlehttp/guzzle": "6.3.2"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
