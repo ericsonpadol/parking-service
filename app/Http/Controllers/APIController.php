@@ -9,9 +9,25 @@ use App\Copywrite;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\RegisterNewUserRequest;
 use App\Http\Requests\LoginAuthenticateRequest;
+use App\Http\Requests\RequestResetPassword;
 
 class APIController extends Controller
 {
+
+    public function resetPassword(RequestResetPassword $request) {
+        $userInput = $request->only(['email']);
+
+        $verifiedUser = User::where('email', $userInput)->first();                
+                       
+        if (!$verifiedUser) {
+            return response()->json([
+                'message' => Copywrite::USER_NOT_FOUND,
+                'http_code' => Copywrite::HTTP_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_404);
+        }
+        
+    }
 
     public function register(RegisterNewUserRequest $request) {
         $userInput = $request->only([
