@@ -3,8 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use SendGrid\Mail\Mail as SendGridMailbox;
 use App\Copywrite;
+use Illuminate\Support\Facades\Mail;
 
 class MailHelper extends Model
 {
@@ -22,13 +22,20 @@ class MailHelper extends Model
         $fromReplace = array($mailParams['mail_to_name'], $mailParams['reset_token']);
         $emailContent = preg_replace($toReplace, $fromReplace, Copywrite::MAIL_RESET_PASSWORD_BODY_HTML);
 
-        $email = new SendGridMailbox();
-        $email->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        $email->setSubject(Copywrite::MAIL_RESET_PASSWORD_SUBJECT);
-        $email->addTo($mailParams['mail_to_email'], $mailParams['mail_to_name']);
-        $email->addContent('text/html', $emailContent);
+        $mailboxParams = [
+            'mail_content' => $emailContent,
+            'email_to' => $mailParams['mail_to_email'],
+            'name_to' => $mailParams['mail_to_name'],
+            'email_from' => env('MAIL_FROM_ADDRESS'),
+            'name_from' => env('MAIL_FROM_NAME')
+        ];
 
-        return $email;
+        $fireMailbox = Mail::send('reset_password_mail', $mailboxParams, function($message) use ($mailboxParams) {
+                    $message->from($mailboxParams['email_from'], $mailboxParams['name_from']);
+                    $message->to($mailboxParams['email_to'], $mailboxParams['name_to'])->subject(Copywrite::MAIL_RESET_PASSWORD_SUBJECT);
+                });
+
+        return $fireMailbox;
     }
 
 }

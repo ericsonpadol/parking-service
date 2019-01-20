@@ -24,6 +24,12 @@ class Copywrite extends Model
     const VEHICLE_DELETE_ALLOWED = 'vehicle deleted successfully';
 
     /**
+     * LOGGING
+     */
+    const LOG_RESET_TOKEN_SUCCESS = 'token generated successfully';
+    const LOG_RESET_TOKEN_FAIL = 'cannot generate reset token';
+
+    /**
      * ERROR COPYWRITES
      */
     const USER_NOT_FOUND = 'user not found';
@@ -60,9 +66,10 @@ class Copywrite extends Model
      *
      */
     const MAIL_RESET_PASSWORD_SUBJECT = 'LGPARK IT: RESET PASSWORD NOTIFICATION';
-    const MAIL_RESET_PASSWORD_BODY_HTML = 'Hi <b>:full_name:</b>, <br><br> You have requested a password reset,'
-            . ' please use this reset token as your temporary password <b>:reset_token:</b> .'
-            . ' <br>Please ignore this email if you did not request a password change. ';
+    const MAIL_RESET_PASSWORD_BODY_HTML = 'Hi <b>:full_name:</b>, <p>You have requested a password reset,'
+            . ' please use this reset token as your temporary password <b><span class="tokenize">:reset_token:</span></b>.</p>'
+            . ' <p class="mail_important">Please ignore this email if you did not request a password change. '
+            . ' <br> <b>Do not reply to this email</b>.</p>';
 
     /**
      * remember to put this on the app\config

@@ -7,11 +7,11 @@ use App\Http\Requests;
 use App\User;
 use App\Copywrite;
 use App\MailHelper;
+use App\CustomQueryBuilder;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\RegisterNewUserRequest;
 use App\Http\Requests\LoginAuthenticateRequest;
 use App\Http\Requests\RequestResetPassword;
-use SendGrid;
 
 //use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
 //use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
@@ -23,6 +23,9 @@ class APIController extends Controller
 
     public function resetPassword(RequestResetPassword $request) {
         $userInput = $request->only(['email']);
+        $sqlCustom = new CustomQueryBuilder;
+        $resetTable = 'reset_password';
+        $customColumns = ['email', 'reset_token'];
 
         $verifiedUser = User::where('email', $userInput)->first();
 
@@ -38,6 +41,10 @@ class APIController extends Controller
         $resetToken = str_random(6); //generate random token password
 
         $verifiedUser->password = password_hash($resetToken, PASSWORD_DEFAULT);
+
+        $params = [$verifiedUser->email, $resetToken];
+
+        $resetLog = $sqlCustom->resetPasswordQuery($params, $resetTable, $customColumns);
 
         $verifiedUser->update();
 
@@ -72,16 +79,10 @@ class APIController extends Controller
 
         $mailbox = $emailHelper->createResetPasswordMail($mailParams);
 
-        $sendGrid = new SendGrid(env('SECRET_MAIL'));
-
-        $fireMail = $sendGrid->send($mailbox);
-
         return response()->json([
                     'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $verifiedUser->email,
-                    'email_status_code' => $fireMail->statusCode(),
-                    'email_header' => $fireMail->headers(),
-                    'email_body' => $fireMail->body(),
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'reset_log' => $resetLog,
                     'http_code' => Copywrite::HTTP_CODE_200], Copywrite::HTTP_CODE_200);
     }
 
@@ -107,15 +108,31 @@ class APIController extends Controller
     }
 
     public function login(LoginAuthenticateRequest $request) {
+        $queryBuilder = new CustomQueryBuilder();
         $userInput = $request->only([
             'email',
             'password'
         ]);
 
+        $queryTable = 'reset_password';
+        //$params is a where clause since we are invoking a select method
+        $params = ['where_clause' => 'email=' . '"' . $userInput['email'] . '"'];
+
+        $customColumns = ['email', 'activation'];
+
+        //check reset password activation
+        $resetFound = $queryBuilder->getResetPasswordDetails($params, $queryTable, $customColumns);
+
+        //this always will return 1 row of array so hard coding array[0] is not a problem.
+        if ($resetFound[0]['activation'] == 0) {
+            
+        }
+
         if (!$token = JWTAuth::attempt($userInput)) {
             return response()->json([
                         'message' => Copywrite::INVALID_CREDENTIALS,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'reset_account' => $resetFound->activation,
                         'http_code' => Copywrite::HTTP_CODE_401,
                             ], Copywrite::HTTP_CODE_401);
         }
