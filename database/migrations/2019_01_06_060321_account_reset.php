@@ -13,9 +13,10 @@ class AccountReset extends Migration
      */
     public function up() {
         Schema::create('reset_password', function (Blueprint $table) {
-            $table->increments('id');            
+            $table->increments('id');
             $table->string('email')->index();
-            $table->string('reset_token')->index();            
+            $table->string('reset_token')->index();
+            $table->enum('activation', ['0', '1'])->default('0');
             $table->timestamp('created_at');
         });
     }

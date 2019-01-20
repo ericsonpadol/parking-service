@@ -5,12 +5,17 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\CustomQueryBuilder;
 
 class User extends Authenticatable
 {
 
     use SoftDeletes;
 
+    protected $resetPasswordTable = 'reset_password';
+    protected $resetPasswordColumns = [
+        'email', 'reset_token'
+    ];
     protected $date = [
         'deleted_at'
     ];
@@ -51,12 +56,16 @@ class User extends Authenticatable
     }
 
     /**
-     * 
+     *
      */
     public function getUserVehicle($userId, $vehiclePlate) {
         $vehicle = User::find($userId)->vehicles()->where('plate_number', '=', $vehiclePlate)->get();
 
         return $vehicle;
+    }
+
+    public function passwordResetLog(array $params) {
+        var_dump($params);
     }
 
 }

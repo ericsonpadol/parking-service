@@ -28,7 +28,7 @@ Route::get('/', function () {
 /**
  * JWT Routing
  */
-Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+Route::group(['middleware' => ['api','cors'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::resource('api', 'APIController');
     Route::post('register', 'APIController@register');
     Route::post('reset_password', 'APIController@resetPassword');
@@ -42,7 +42,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
 /**
  *  Parking Service Routing
  */
-Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+Route::group(['middleware' => ['api', 'cors'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::resource('parking_space', 'ParkingSpaceController', ['only' => ['index', 'show']]);
         Route::resource('user.parkingspace', 'UserParkingSpaceController', ['except' => 'create', 'edit']);
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
 /**
  * Vehicle Routing
  */
-Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+Route::group(['middleware' => ['api', 'cors'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::resource('vehicles', 'VehicleController', ['only' => 'index', 'show']);
         Route::resource('user.vehicle', 'UserVehicleController', ['except' => 'create', 'edit']);
