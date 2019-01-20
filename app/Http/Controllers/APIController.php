@@ -124,8 +124,8 @@ class APIController extends Controller
         $resetFound = $queryBuilder->getResetPasswordDetails($params, $queryTable, $customColumns);
 
         //this always will return 1 row of array so hard coding array[0] is not a problem.
-        if ($resetFound[0]['activation'] == 0) {
-            
+        if ($resetFound && $resetFound[0]['activation'] == 0) {
+
         }
 
         if (!$token = JWTAuth::attempt($userInput)) {
