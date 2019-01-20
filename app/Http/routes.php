@@ -13,6 +13,9 @@ use App\Copywrite;
   |
  */
 
+header('Access-Control-Allow-Origin: *');
+header( 'Access-Control-Allow-Headers: Authorization, Content-Type' );
+
 // Health Check
 Route::get('/', function () {
     $cow = Cowsayphp\Farm::create(\Cowsayphp\Farm\Cow::class);
