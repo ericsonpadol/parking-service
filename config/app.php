@@ -148,6 +148,11 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+        /**
+         * Package Service Provider
+         */
+        \Barryvdh\Cors\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */

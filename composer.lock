@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3af7b721c3b635147583a93332ca6aa6",
+    "content-hash": "4b18dd8363419bb93d6bcf3f219dd2e6",
     "packages": [
         {
             "name": "alrik11es/cowsayphp",
@@ -1974,6 +1974,121 @@
                 "diff"
             ],
             "time": "2017-05-22T07:24:03+00:00"
+        },
+        {
+            "name": "stevenmaguire/laravel-middleware-csp",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevenmaguire/laravel-middleware-csp.git",
+                "reference": "81f2ce43a5b40cdc77a7ac0f2eede6bf9bd3aee3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevenmaguire/laravel-middleware-csp/zipball/81f2ce43a5b40cdc77a7ac0f2eede6bf9bd3aee3",
+                "reference": "81f2ce43a5b40cdc77a7ac0f2eede6bf9bd3aee3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^1.1",
+                "illuminate/http": "^5.1",
+                "php": ">=5.5.9",
+                "stevenmaguire/middleware-csp": "^0.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*@dev",
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stevenmaguire\\Laravel\\Http\\Middleware\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steven Maguire",
+                    "email": "stevenmaguire@gmail.com",
+                    "homepage": "https://github.com/stevenmaguire",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Provides support for enforcing Content Security Policy with headers in Laravel responses.",
+            "homepage": "https://github.com/stevenmaguire/laravel-middleware-csp",
+            "keywords": [
+                "content security policy",
+                "headers",
+                "laravel",
+                "middleware",
+                "psr7"
+            ],
+            "time": "2015-08-07T18:25:52+00:00"
+        },
+        {
+            "name": "stevenmaguire/middleware-csp",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevenmaguire/middleware-csp-php.git",
+                "reference": "4bc1b6c6a40477e40eb4487420905e7961d27e54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevenmaguire/middleware-csp-php/zipball/4bc1b6c6a40477e40eb4487420905e7961d27e54",
+                "reference": "4bc1b6c6a40477e40eb4487420905e7961d27e54",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*@dev",
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stevenmaguire\\Http\\Middleware\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steven Maguire",
+                    "email": "stevenmaguire@gmail.com",
+                    "homepage": "https://github.com/stevenmaguire",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Provides support for enforcing Content Security Policy with headers in PSR 7 responses.",
+            "homepage": "https://github.com/stevenmaguire/middleware-csp-php",
+            "keywords": [
+                "content security policy",
+                "headers",
+                "middleware",
+                "psr7"
+            ],
+            "time": "2015-08-07T18:21:27+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
