@@ -15,7 +15,8 @@
         "alrik11es/cowsayphp": "^1.2",
         "barryvdh/laravel-cors": "0.9.2",
         "guzzlehttp/guzzle": "6.3.2",
-        "mediaburst/clockworksms": "2.0.*"
+        "mediaburst/clockworksms": "2.0.*",
+        "stevenmaguire/laravel-middleware-csp": "0.1.1"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",

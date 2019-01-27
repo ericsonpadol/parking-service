@@ -15,6 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -51,6 +52,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'jwt-auth' => \App\Http\Middleware\authJWT::class,
         'jwt-verify' => \App\Http\Middleware\JWTMiddleware::class,
-        'cors' => \App\Http\Middleware\CORS::class,
+        'secure.content' => \Stevenmaguire\Laravel\Http\Middleware\EnforceContentSecurity::class,
     ];
 }
