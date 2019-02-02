@@ -34,7 +34,7 @@ class Copywrite extends Model
      */
     const USER_NOT_FOUND = 'user not found';
     const PARKING_SPACE_NOT_FOUND = 'parking space not found';
-    const INVALID_CREDENTIALS = 'wrong email and password';
+    const INVALID_CREDENTIALS = 'invalid email and password';
     const USER_DELETE_RESTRICT = ':useraccount: has transactions and cannot be deleted';
     const PARKING_SPACE_DELETE_RESTRICT = ':parkingspace: has transactions and cannot be deleted';
     const PARKING_SPACE_INVALID = 'invalid parking spaces';
