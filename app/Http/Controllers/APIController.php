@@ -79,10 +79,14 @@ class APIController extends Controller
 
         $mailbox = $emailHelper->createResetPasswordMail($mailParams);
 
+        /**
+         * if $mailbox resulted to 1 it means email is fired successfully.
+         */
         return response()->json([
-                    'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $verifiedUser->email,
+                    'message' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $verifiedUser->email,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'reset_log' => $resetLog,
+                    'mail_result' => $mailbox,
                     'http_code' => Copywrite::HTTP_CODE_200], Copywrite::HTTP_CODE_200);
     }
 
@@ -114,6 +118,14 @@ class APIController extends Controller
             'password'
         ]);
 
+        if (!$token = JWTAuth::attempt($userInput)) {
+            return response()->json([
+                        'message' => Copywrite::INVALID_CREDENTIALS,
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'http_code' => Copywrite::HTTP_CODE_401,
+                            ], Copywrite::HTTP_CODE_401);
+        }
+
         $queryTable = 'reset_password';
         //$params is a where clause since we are invoking a select method
         $params = ['where_clause' => 'email=' . '"' . $userInput['email'] . '"'];
@@ -125,21 +137,14 @@ class APIController extends Controller
 
         //this always will return 1 row of array so hard coding array[0] is not a problem.
         if ($resetFound && $resetFound[0]['activation'] == 0) {
-
-        }
-
-        if (!$token = JWTAuth::attempt($userInput)) {
-            return response()->json([
-                        'message' => Copywrite::INVALID_CREDENTIALS,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'reset_account' => $resetFound->activation,
-                        'http_code' => Copywrite::HTTP_CODE_401,
-                            ], Copywrite::HTTP_CODE_401);
+            $resetTokenParams = ['email' => $userInput['email']];
+            $queryBuilder->activatePasswordToken($resetTokenParams);
         }
 
         return response()->json([
                     'token' => $token,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                    'reset_account' => $resetFound[0]['activation'],
                     'http_code' => Copywrite::HTTP_CODE_200,
                         ], Copywrite::HTTP_CODE_200);
     }

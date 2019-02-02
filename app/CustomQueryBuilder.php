@@ -9,8 +9,40 @@ use DB;
 class CustomQueryBuilder extends Model
 {
 
+    public function activatePasswordToken(array $params) {
+        $queryTable = 'reset_password';
+
+        //querystring to update the activation keys not to make it usable again.
+        $queryString = 'update ' . $queryTable . ' set activation = 1 where email = ?';
+
+        try {
+            $result = DB::table($queryTable)
+                    ->where(['email' => $params['email']])
+                    ->update(['activation' => 1]);
+
+            if ($result) {
+                return [
+                    'status' => Copywrite::DEFAULT_UPDATE_SUCCESS,
+                    'message' => Copywrite::LOG_RESET_TOKEN_SUCCESS
+                ];
+            } else {
+                return [
+                    'status' => Copywrite::DEFAULT_UPDATE_FAILED,
+                    'message' => Copywrite::LOG_RESET_TOKEN_FAIL
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine()
+            ];
+        }
+    }
+
     /**
-     *
+     * this function returns the reset password details.
      */
     public function getResetPasswordDetails(array $params, $queryTable, array $customColumns) {
         $columns = implode(',', $customColumns);
@@ -25,8 +57,10 @@ class CustomQueryBuilder extends Model
         $resetObject = array();
 
         foreach ($result as $row) {
-            $resetObject[$count] = ['email' => $row->email, 'activation' => $row->activation];
-            $count++;
+            if (property_exists($row, 'email') && property_exists($row, 'activation')) {
+                $resetObject[$count] = ['email' => $row->email, 'activation' => $row->activation];
+                $count++;
+            }
         }
 
         return $resetObject;
@@ -42,7 +76,7 @@ class CustomQueryBuilder extends Model
     public function resetPasswordQuery(array $params, $queryTable, array $customColumns) {
         $columns = implode(',', $customColumns);
 
-        //values modifier
+//values modifier
         $columnCount = count($customColumns);
 
         $pdoValues = [];
@@ -55,7 +89,7 @@ class CustomQueryBuilder extends Model
 
         $queryString = 'insert into ' . $queryTable . '(' . $columns . ') values(' . $pdoValuesString . ')';
 
-        //execute DB command
+//execute DB command
         try {
             $result = DB::insert($queryString, $params);
 
@@ -73,7 +107,7 @@ class CustomQueryBuilder extends Model
         } catch (Exception $e) {
             return [
                 'error_code' => $e->getCode(),
-                'error_message' => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'stack_trace' => $e->getTraceAsString(),
                 'line' => $e->getLine()
             ];
