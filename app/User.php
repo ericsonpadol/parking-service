@@ -63,9 +63,4 @@ class User extends Authenticatable
 
         return $vehicle;
     }
-
-    public function passwordResetLog(array $params) {
-        var_dump($params);
-    }
-
 }
