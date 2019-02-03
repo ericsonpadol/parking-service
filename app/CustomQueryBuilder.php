@@ -8,7 +8,9 @@ use DB;
 
 class CustomQueryBuilder extends Model
 {
-
+    /**
+     * this function activates the reset password token
+     */
     public function activatePasswordToken(array $params) {
         $queryTable = 'reset_password';
 
@@ -63,7 +65,9 @@ class CustomQueryBuilder extends Model
             }
         }
 
-        return $resetObject;
+        $response = $resetObject ? $resetObject : '';
+
+        return $response;
     }
 
     /**
