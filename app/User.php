@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\CustomQueryBuilder;
+use App\Copywrite;
 
 class User extends Authenticatable
 {
@@ -13,6 +14,7 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $resetPasswordTable = 'reset_password';
+    protected $userTable = 'users';
     protected $resetPasswordColumns = [
         'email', 'reset_token'
     ];
@@ -62,5 +64,26 @@ class User extends Authenticatable
         $vehicle = User::find($userId)->vehicles()->where('plate_number', '=', $vehiclePlate)->get();
 
         return $vehicle;
+    }
+
+    public function resetPassword(array $params, array $columns) {
+        try {
+
+            $result = User::where($columns)->update($params);
+
+            $response = $result > 0
+                    ? Copywrite::RESPONSE_STATUS_SUCCESS
+                    : Copywrite::RESPONSE_STATUS_FAILED;
+
+            return $response;
+
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine()
+            ];
+        }
     }
 }

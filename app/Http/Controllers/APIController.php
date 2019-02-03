@@ -128,7 +128,8 @@ class APIController extends Controller
 
         $queryTable = 'reset_password';
         //$params is a where clause since we are invoking a select method
-        $params = ['where_clause' => 'email=' . '"' . $userInput['email'] . '"'];
+        $params = ['where_clause' => 'email=' . '"' . $userInput['email'] . '" and '
+            . 'reset_token=' . '"' . $userInput['password'] . '"'];
 
         $customColumns = ['email', 'activation'];
 
@@ -141,10 +142,29 @@ class APIController extends Controller
             $queryBuilder->activatePasswordToken($resetTokenParams);
         }
 
+        if ($resetFound) {
+            switch ($resetFound[0]['activation']) {
+                case 0:
+                    $resetAccount = 0;
+                    break;
+
+                case 1:
+                    $resetAccount = 1;
+                    break;
+
+                default:
+                    $resetAccount = 2;
+            }
+        } else {
+            $resetAccount = 2;
+        }
+        //check wheter the password use is a reset token or not
+
+
         return response()->json([
                     'token' => $token,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'reset_account' => $resetFound[0]['activation'],
+                    'reset_account' => $resetAccount,
                     'http_code' => Copywrite::HTTP_CODE_200,
                         ], Copywrite::HTTP_CODE_200);
     }
