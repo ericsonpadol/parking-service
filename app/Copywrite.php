@@ -22,6 +22,7 @@ class Copywrite extends Model
     const PARKING_SPACE_DELETE_ALLOWED = 'parking space deleted successfully';
     const VEHICLE_CREATE_SUCCESS = 'new vehicle successfully created';
     const VEHICLE_DELETE_ALLOWED = 'vehicle deleted successfully';
+    const PASSWORD_UPDATE_SUCCESS = 'password changed successfully';
 
     /**
      * LOGGING
@@ -41,6 +42,7 @@ class Copywrite extends Model
     const VEHICLE_INVALID = 'invalid vehicle';
     const VEHICLE_NOT_FOUND = 'vehicle not found';
     const VEHICLE_DELETE_RESTRICT = ':vehicle: has transactions and cannot be deleted';
+    const PASSWORD_UPDATE_FAIL = 'fail to update your password';
 
     /**
      * HTTP CODES
@@ -49,6 +51,7 @@ class Copywrite extends Model
     const HTTP_CODE_401 = 401; //unauthorized
     const HTTP_CODE_400 = 400; //bad request
     const HTTP_CODE_409 = 409; //conflict
+    const HTTP_CODE_406 = 406; //Not Acceptable
     const HTTP_CODE_422 = 422;
     const HTTP_CODE_200 = 200; //success code
     const HTTP_CODE_201 = 201;

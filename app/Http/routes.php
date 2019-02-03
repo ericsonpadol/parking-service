@@ -56,6 +56,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
 Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::resource('users', 'UserController', ['except' => ['store']]);
+        Route::put('update_password', 'UserController@updatePassword');
     });
 });
 

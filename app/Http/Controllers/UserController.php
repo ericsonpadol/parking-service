@@ -12,6 +12,29 @@ use Validator;
 
 class UserController extends Controller
 {
+    /**
+     * update user password
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(Request $request) {
+        $oUser = new User();
+        $params = ['password' => password_hash($request['password'], PASSWORD_DEFAULT)];
+        $columns = ['id' => $request['user_id']];
+
+        $result = $oUser->resetPassword($params, $columns);
+
+        if ($result === 'failed') {
+            return response()->json([
+                'message' => Copywrite::PASSWORD_UPDATE_FAIL,
+                'status' => Copywrite::HTTP_CODE_406,
+            ], Copywrite::HTTP_CODE_406);
+        }
+
+        return response()->json([
+            'message' => Copywrite::PASSWORD_UPDATE_SUCCESS,
+            'status' => Copywrite::HTTP_CODE_200,
+        ], Copywrite::HTTP_CODE_200);
+    }
 
     /**
      * Display a listing of the resource.
@@ -21,7 +44,7 @@ class UserController extends Controller
     public function index() {
         $users = User::all();
 
-        return response()->json(['data' => $users], 200);
+        return response()->json(['data' => $users], Copywrite::HTTP_CODE_200);
     }
 
     /**
