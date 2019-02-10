@@ -5,15 +5,14 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTableParkingSpaces extends Migration
 {
-
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up() {
-        Schema::create('parkingspaces', function(Blueprint $table) {
+    public function up()
+    {
+        Schema::create('parkingspaces', function (Blueprint $table) {
             $table->increments('id', 1);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->text('address');
             $table->string('city', 255);
             $table->integer('zipcode');
@@ -34,12 +33,9 @@ class CreateTableParkingSpaces extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down() {
-        //
+    public function down()
+    {
         Schema::drop('parkingspaces');
     }
-
 }
