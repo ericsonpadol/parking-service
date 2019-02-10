@@ -1,0 +1,231 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "object(App\\User)#351 (29) {\n  [\"resetPasswordTable\":protected]=>\n  string(14) \"reset_password\"\n  [\"userTable\":protected]=>\n  string(5) \"users\"\n  [\"resetPasswordColumns\":protected]=>\n  array(2) {\n    [0]=>\n    string(5) \"email\"\n    [1]=>\n    string(11) \"reset_token\"\n  }\n  [\"date\":protected]=>\n  array(1) {\n    [0]=>\n    string(10) \"deleted_at\"\n  }\n  [\"fillable\":protected]=>\n  array(4) {\n    [0]=>\n    string(5) \"email\"\n    [1]=>\n    string(8) \"password\"\n    [2]=>\n    string(13) \"mobile_number\"\n    [3]=>\n    string(9) \"full_name\"\n  }\n  [\"hidden\":protected]=>\n  array(2) {\n    [0]=>\n    string(8) \"password\"\n    [1]=>\n    string(14) \"remember_token\"\n  }\n  [\"connection\":protected]=>\n  NULL\n  [\"table\":protected]=>\n  NULL\n  [\"primaryKey\":protected]=>\n  string(2) \"id\"\n  [\"keyType\":protected]=>\n  string(3) \"int\"\n  [\"perPage\":protected]=>\n  int(15)\n  [\"incrementing\"]=>\n  bool(true)\n  [\"timestamps\"]=>\n  bool(true)\n  [\"attributes\":protected]=>\n  array(10) {\n    [\"id\"]=>\n    int(7)\n    [\"mobile_number\"]=>\n    string(11) \"09090384720\"\n    [\"email\"]=>\n    string(24) \"arthur.wolff@example.org\"\n    [\"password\"]=>\n    string(60) \"$2y$10$dmXvDqT3xi3NsVvR1nJI5ulPALJ5afBfjcn/yOPqptBUWcwvTTn..\"\n    [\"full_name\"]=>\n    string(20) \"Sylvester Effertz IV\"\n    [\"password_reset\"]=>\n    string(1) \"0\"\n    [\"remember_token\"]=>\n    NULL\n    [\"created_at\"]=>\n    string(19) \"2019-02-10 12:05:35\"\n    [\"updated_at\"]=>\n    string(19) \"2019-02-10 12:05:35\"\n    [\"deleted_at\"]=>\n    NULL\n  }\n  [\"original\":protected]=>\n  array(10) {\n    [\"id\"]=>\n    int(7)\n    [\"mobile_number\"]=>\n    string(11) \"09090384720\"\n    [\"email\"]=>\n    string(24) \"arthur.wolff@example.org\"\n    [\"password\"]=>\n    string(60) \"$2y$10$dmXvDqT3xi3NsVvR1nJI5ulPALJ5afBfjcn/yOPqptBUWcwvTTn..\"\n    [\"full_name\"]=>\n    string(20) \"Sylvester Effertz IV\"\n    [\"password_reset\"]=>\n    string(1) \"0\"\n    [\"remember_token\"]=>\n    NULL\n    [\"created_at\"]=>\n    string(19) \"2019-02-10 12:05:35\"\n    [\"updated_at\"]=>\n    string(19) \"2019-02-10 12:05:35\"\n    [\"deleted_at\"]=>\n    NULL\n  }\n  [\"relations\":protected]=>\n  array(0) {\n  }\n  [\"visible\":protected]=>\n  array(0) {\n  }\n  [\"appends\":protected]=>\n  array(0) {\n  }\n  [\"guarded\":protected]=>\n  array(1) {\n    [0]=>\n    string(1) \"*\"\n  }\n  [\"dates\":protected]=>\n  array(0) {\n  }\n  [\"dateFormat\":protected]=>\n  NULL\n  [\"casts\":protected]=>\n  array(0) {\n  }\n  [\"touches\":protected]=>\n  array(0) {\n  }\n  [\"observables\":protected]=>\n  array(0) {\n  }\n  [\"with\":protected]=>\n  array(0) {\n  }\n  [\"morphClass\":protected]=>\n  NULL\n  [\"exists\"]=>\n  bool(true)\n  [\"wasRecentlyCreated\"]=>\n  bool(false)\n  [\"forceDeleting\":protected]=>\n  bool(false)\n}\n",
+			"settings":
+			{
+				"buffer_size": 2635,
+				"line_ending": "Windows",
+				"name": "object(App\\User)#351 (29) {"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/www/htdocs/parking-service",
+		"/C/www/htdocs/parking-service/app",
+		"/C/www/htdocs/parking-service/app/Http",
+		"/C/www/htdocs/parking-service/database",
+		"/C/www/htdocs/parking-service/database/migrations",
+		"/C/www/htdocs/parking-service/database/seeds"
+	],
+	"file_history":
+	[
+		"/C/www/htdocs/parking-service/database/migrations/2019_02_04_034444_create_parking_audit_logs.php",
+		"/C/www/htdocs/parking-service/database/seeds/DatabaseSeeder.php",
+		"/C/www/htdocs/parking-service/database/seeds/TopupSeed.php",
+		"/C/www/htdocs/parking-service/database/migrations/2019_02_03_133240_create_parkingspace_pricing_table.php",
+		"/C/www/htdocs/parking-service/database/seeds/ParkingSpaceSeed.php",
+		"/C/www/htdocs/parking-service/database/migrations/2019_02_03_120620_create_topups_table.php",
+		"/C/www/htdocs/parking-service/.env",
+		"/C/www/htdocs/parking-service/app/TopUps.php",
+		"/C/www/htdocs/parking-service/app/Http/routes.php",
+		"/C/www/htdocs/parking-service/database/seeds/UserSeed.php",
+		"/C/www/htdocs/parking-service/database/migrations/2019_01_06_060321_account_reset.php",
+		"/C/www/htdocs/parking-service/app/Vehicle.php",
+		"/C/www/htdocs/parking-service/database/migrations/2014_10_12_000000_create_users_table.php",
+		"/C/www/htdocs/parking-service/parking-service.sublime-project",
+		"/C/www/htdocs/parking-service/.env.dev",
+		"/C/zend/Apache24/htdocs/sesco_profiler/bower_components/angular/angular.js",
+		"/C/Users/ebpadol/Documents/Notes/mostplayedgames.com.txt"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"user"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2635,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1127,
+								1186
+							]
+						],
+						"settings":
+						{
+							"auto_name": "object(App\\User)#351 (29) {",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2322.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "parking-service.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 295.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -70,6 +70,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
     });
 });
 
+
 /*
  * Dingo Api Routes
  */
