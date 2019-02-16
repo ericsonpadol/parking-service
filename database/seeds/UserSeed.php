@@ -18,11 +18,20 @@ class UserSeed extends Seeder
         /**
          * create user/seed for parking web connector
          */
+        $options = [
+            'cost' => '11',
+            'salt' => openssl_random_pseudo_bytes(22)
+        ];
+
+        $activationSalt = md5('livesite');
+
         $userConnector = [
             'mobile_number' => '00000000000',
             'email' => 'parkit@gmail.com',
-            'password' => password_hash('reject', PASSWORD_DEFAULT),
+            'password' => password_hash('reject', PASSWORD_BCRYPT, $options),
             'full_name' => 'connector-admin',
+            'is_activated' => 'true',
+            'is_lock' => 'false'
         ];
 
         User::create($userConnector);
@@ -31,8 +40,9 @@ class UserSeed extends Seeder
             $seed = [
                 'mobile_number' => str_pad($faker->randomNumber(), 11, '09', STR_PAD_LEFT),
                 'email' => $faker->safeEmail,
-                'password' => password_hash('secret', PASSWORD_DEFAULT),
+                'password' => password_hash('secret', PASSWORD_BCRYPT, $options),
                 'full_name' => $faker->name,
+                'activation_token' => password_hash($faker->safeEmail, PASSWORD_BCRYPT).$activationSalt
             ];
 
             User::create($seed);

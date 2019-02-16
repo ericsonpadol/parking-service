@@ -14,6 +14,7 @@ class Copywrite extends Model
     const RESPONSE_STATUS_SUCCESS = 'success';
     const USER_CREATED_SUCCESS = 'new user created successfully';
     const USER_CREATED_FAILED = 'cannot create new user';
+    const USER_NOT_ACTIVATED = 'user is not activated';
     const DEFAULT_UPDATE_SUCCESS = 'updated successfully';
     const DEFAULT_UPDATE_FAILED = 'cannot update';
     const PARKING_SPACE_CREATE_SUCCESS = 'new parking space added successfully';
@@ -29,6 +30,10 @@ class Copywrite extends Model
      */
     const LOG_RESET_TOKEN_SUCCESS = 'token generated successfully';
     const LOG_RESET_TOKEN_FAIL = 'cannot generate reset token';
+    const LOGGER_INFO = 'logged info';
+    const LOGGER_WARN = 'logged warn';
+    const LOGGER_ERROR = 'logged error';
+
 
     /**
      * ERROR COPYWRITES
@@ -70,9 +75,22 @@ class Copywrite extends Model
      */
     const MAIL_RESET_PASSWORD_SUBJECT = 'LGPARK IT: RESET PASSWORD NOTIFICATION';
     const MAIL_RESET_PASSWORD_BODY_HTML = 'Hi <b>:full_name:</b>, <p>You have requested a password reset,'
-            . ' please use this reset token as your temporary password <b><span class="tokenize">:reset_token:</span></b>.</p>'
-            . ' <p class="mail_important">Please ignore this email if you did not request a password change. '
-            . ' <br> <b>Do not reply to this email</b>.</p>';
+        . ' please use this reset token as your temporary password <b><span class="tokenize">:reset_token:</span></b>.</p>'
+        . ' <p class="mail_important">Please ignore this email if you did not request a password change. '
+        . ' <br> <b>Do not reply to this email</b>.</p>';
+
+    const MAIL_ACTIVATION_SUBJECT = 'LGPARK IT: ACTIVATE YOUR ACCOUNT';
+    const MAIL_ACTIVATION_BODY_HTML = 'You\'re nearly there! <b>:full_name:</b>. <br>'
+        . 'We just need to verify your email address to complete your registration. <br><br>'
+        . '<a href=":activation_link:">:activation_spiel:</a> <br><br>'
+        . 'Please click the link to activate your account. <br>'
+        . 'If you have not registered to PARK IT, please ignore this email.';
+
+    /**
+     * Custom Spiel
+     */
+
+    const MAIL_ACTIVATION_SPIEL = 'Click to activate your account.';
 
     /**
      * remember to put this on the app\config

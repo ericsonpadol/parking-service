@@ -31,7 +31,11 @@ class User extends Authenticatable
         'email',
         'password',
         'mobile_number',
-        'full_name'
+        'full_name',
+        'is_activated',
+        'is_lock',
+        'is_lock_count',
+        'activation_token'
     ];
 
     /**
