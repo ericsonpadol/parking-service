@@ -12,6 +12,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\RegisterNewUserRequest;
 use App\Http\Requests\LoginAuthenticateRequest;
 use App\Http\Requests\RequestResetPassword;
+use App\ParkingAuditLog;
 
 //use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
 //use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
@@ -69,6 +70,7 @@ class APIController extends Controller
 //        } else {
 //            echo 'message failed: ' . $result['error_message'];
 //        }
+
         $mailParams = [
             'mail_to_name' => $verifiedUser->full_name,
             'mail_to_email' => $verifiedUser->email,
@@ -91,6 +93,7 @@ class APIController extends Controller
     }
 
     public function register(RegisterNewUserRequest $request) {
+        $logger = new ParkingAuditLog();
         $userInput = $request->only([
             'email',
             'full_name',
@@ -98,17 +101,65 @@ class APIController extends Controller
             'mobile_number',
         ]);
 
-        $userInput['password'] = password_hash($userInput['password'], PASSWORD_DEFAULT);
+        //hashing options
+        $options = [
+            'cost' => '10',
+            'salt' => openssl_random_pseudo_bytes(22)
+        ];
 
-        User::create($userInput);
+        $activationSalt = md5('livesite');
+        $activationString = md5(microtime().$userInput['email'].openssl_random_pseudo_bytes(60), FALSE).$activationSalt;
+
+        $defaultUserValues = [
+            'is_activated' => 'false',
+            'is_lock' => 'false',
+            'is_lock_count' => 0,
+            'activation_token' => $activationString,
+        ];
+
+        $mergeUserVals = array_merge($userInput, $defaultUserValues);
+
+        $mergeUserVals['password'] = password_hash($userInput['password'], PASSWORD_BCRYPT, $options);
+
+        $cUser = User::create($mergeUserVals);
+        //catch insert error if user is not successfully created
+        //pending changes will needs to be done asap
         $user = User::first();
         $token = JWTAuth::fromUser($user);
+
+        //fire an email that the user is not activated
+        if ($cUser['is_activated'] == 'false') {
+            $token = null;
+
+            $mailParams = [
+                'mail_fullname' => $request['full_name'],
+                'activation_spiel' => Copywrite::MAIL_ACTIVATION_SPIEL,
+                'activation_link' => url('user/verify') . '?active=' . $activationString . '&email=' . $request['email'],
+                'mail_to_email' => $request['email'],
+                'mail_to_name' => $request['full_name']
+            ];
+
+            $emailHelper = new MailHelper();
+            $fireMailbox = $emailHelper->accountVerificationMail($mailParams);
+
+        }
+
+        $logParams = [
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'action' => 'register',
+            'log' => $token ? Copywrite::USER_CREATED_SUCCESS : Copywrite::USER_NOT_ACTIVATED,
+            'user_id' => $cUser['id']
+        ];
+
+        $conversationId = $logger->auditLogger($logParams);
+
         return response()->json([
-                    'message' => Copywrite::USER_CREATED_SUCCESS,
+                    'message' => $token ? Copywrite::USER_CREATED_SUCCESS : Copywrite::USER_NOT_ACTIVATED,
+                    'conv_id' => $conversationId,
                     'token' => $token,
-                    'http_code' => Copywrite::HTTP_CODE_200,
+                    'http_code' => $token ? Copywrite::HTTP_CODE_200 : Copywrite::HTTP_CODE_401,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS
-                        ], Copywrite::HTTP_CODE_200);
+            ], $token ? Copywrite::HTTP_CODE_200 : Copywrite::HTTP_CODE_401);
     }
 
     public function login(LoginAuthenticateRequest $request) {
@@ -204,6 +255,17 @@ class APIController extends Controller
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_200,
                         ], Copywrite::HTTP_CODE_200);
+    }
+
+    /**
+     * this function will activate the created user account
+     * @param $request Request
+     * @return json
+     */
+    public function userVerify(Request $request) {
+        $activationSalt = md5('livesite');
+
+
     }
 
 }

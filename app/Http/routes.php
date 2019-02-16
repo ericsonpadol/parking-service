@@ -25,6 +25,9 @@ Route::get('/', function () {
     echo '</pre>';
 });
 
+//verification route
+Route::get('user/verify', 'ApiController@userVerify');
+
 /**
  * JWT Routing
  */
