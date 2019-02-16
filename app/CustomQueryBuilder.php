@@ -80,7 +80,7 @@ class CustomQueryBuilder extends Model
     public function resetPasswordQuery(array $params, $queryTable, array $customColumns) {
         $columns = implode(',', $customColumns);
 
-//values modifier
+        //values modifier
         $columnCount = count($customColumns);
 
         $pdoValues = [];
@@ -93,7 +93,7 @@ class CustomQueryBuilder extends Model
 
         $queryString = 'insert into ' . $queryTable . '(' . $columns . ') values(' . $pdoValuesString . ')';
 
-//execute DB command
+        //execute DB command
         try {
             $result = DB::insert($queryString, $params);
 
@@ -106,6 +106,53 @@ class CustomQueryBuilder extends Model
                 return [
                     'status' => Copywrite::DEFAULT_UPDATE_FAILED,
                     'message' => Copywrite::LOG_RESET_TOKEN_FAIL
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'error_code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine()
+            ];
+        }
+    }
+
+    /**
+     * This function is custom query for reset password logging
+     * @param Array $params values to be inserted on the database.
+     * @param Array $customColumns columns to be triggered on the database
+     * @param String $queryTable table to be triggered
+     * @return Array database trigger result
+     */
+    public function loggerQuery(array $params, $queryTable, $customColumns) {
+        $columns = implode(',', $customColumns);
+
+        //values modifier
+        $columnCount = count($customColumns);
+
+        $pdoValues = [];
+
+        for ($a = 0; $a < $columnCount; $a++) {
+            array_push($pdoValues, '?');
+        }
+
+        $pdoValuesString = implode(',', $pdoValues);
+
+        $queryString = 'insert into ' . $queryTable . '(' . $columns . ') values(' . $pdoValuesString . ')';
+
+        try {
+            $result = DB::insert($queryString, $params);
+
+            if ($result) {
+                return [
+                    'status' => Copywrite::DEFAULT_UPDATE_SUCCESS,
+                    'message' => Copywrite::LOGGER_INFO
+                ];
+            } else {
+                return [
+                    'status' => Copywrite::DEFAULT_UPDATE_FAILED,
+                    'message' => Copywrite::LOGGER_ERROR
                 ];
             }
         } catch (Exception $e) {

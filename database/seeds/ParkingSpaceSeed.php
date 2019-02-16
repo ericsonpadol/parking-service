@@ -6,16 +6,14 @@ use Faker\Factory as Faker;
 
 class ParkingSpaceSeed extends Seeder
 {
-
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run() {
+    public function run()
+    {
         $faker = Faker::create();
 
-        for ($x = 0; $x < 20; $x++) {
+        for ($x = 0; $x < 20; ++$x) {
             $seed = [
                 'address' => $faker->streetAddress,
                 'city' => $faker->city,
@@ -25,12 +23,11 @@ class ParkingSpaceSeed extends Seeder
                 'space_lon' => $faker->longitude,
                 'establishment_type' => $faker->randomElement(['resident', 'commercial', 'public']),
                 'description' => $faker->text($maxNbChars = 255),
-                'parking_slot' => $faker->randomLetter . $faker->numberBetween(1, 200),
+                'parking_slot' => $faker->randomLetter.$faker->numberBetween(1, 200),
                 'user_id' => ($faker->numberBetween(1, 5) * 10) + 1,
             ];
 
             ParkingSpace::create($seed);
         }
     }
-
 }

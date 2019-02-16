@@ -18,8 +18,8 @@ class MailHelper extends Model
 
     public function createResetPasswordMail(array $mailParams) {
 
-        $toReplace = array('/:full_name:/', '/:reset_token:/');
-        $fromReplace = array($mailParams['mail_to_name'], $mailParams['reset_token']);
+        $toReplace = ['/:full_name:/', '/:reset_token:/'];
+        $fromReplace = [$mailParams['mail_to_name'], $mailParams['reset_token']];
         $emailContent = preg_replace($toReplace, $fromReplace, Copywrite::MAIL_RESET_PASSWORD_BODY_HTML);
 
         $mailboxParams = [
@@ -38,4 +38,24 @@ class MailHelper extends Model
         return $fireMailbox;
     }
 
+    public function accountVerificationMail(array $mailParams) {
+        $toReplace = ['/:full_name:/', '/:activation_spiel:/', '/:activation_link:/'];
+        $fromReplace = [$mailParams['mail_fullname'], $mailParams['activation_spiel'], $mailParams['activation_link']];
+        $emailContent = preg_replace($toReplace, $fromReplace, Copywrite::MAIL_ACTIVATION_BODY_HTML);
+
+        $mailboxParams = [
+            'mail_content' => $emailContent,
+            'email_to' => $mailParams['mail_to_email'],
+            'name_to' => $mailParams['mail_to_name'],
+            'email_from' => env('MAIL_FROM_ADDRESS'),
+            'name_from' => env('MAIL_FROM_NAME')
+        ];
+
+        $fireMailbox = Mail::send('account_activation_mail', $mailboxParams, function($message) use ($mailboxParams) {
+            $message->from($mailboxParams['email_from'], $mailboxParams['name_from']);
+            $message->to($mailboxParams['email_to'], $mailboxParams['name_to'])->subject(Copywrite::MAIL_ACTIVATION_SUBJECT);
+        });
+
+        return $fireMailbox;
+    }
 }

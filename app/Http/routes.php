@@ -25,6 +25,9 @@ Route::get('/', function () {
     echo '</pre>';
 });
 
+//verification route
+Route::get('user/verify', 'ApiController@userVerify');
+
 /**
  * JWT Routing
  */
@@ -69,6 +72,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::resource('user.vehicle', 'UserVehicleController', ['except' => 'create', 'edit']);
     });
 });
+
 
 /*
  * Dingo Api Routes
