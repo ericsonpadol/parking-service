@@ -103,12 +103,10 @@ class APIController extends Controller
 
         //hashing options
         $options = [
-            'cost' => '10',
-            'salt' => openssl_random_pseudo_bytes(22)
+            'cost' => '11',
         ];
 
-        $activationSalt = md5('livesite');
-        $activationString = md5(microtime().$userInput['email'].openssl_random_pseudo_bytes(60), FALSE).$activationSalt;
+        $activationString = md5(microtime().$userInput['email'].openssl_random_pseudo_bytes(60), FALSE);
 
         $defaultUserValues = [
             'is_activated' => 'false',

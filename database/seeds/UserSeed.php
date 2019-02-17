@@ -20,7 +20,6 @@ class UserSeed extends Seeder
          */
         $options = [
             'cost' => '11',
-            'salt' => openssl_random_pseudo_bytes(22)
         ];
 
         $activationSalt = md5('livesite');
@@ -42,7 +41,7 @@ class UserSeed extends Seeder
                 'email' => $faker->safeEmail,
                 'password' => password_hash('secret', PASSWORD_BCRYPT, $options),
                 'full_name' => $faker->name,
-                'activation_token' => password_hash($faker->safeEmail, PASSWORD_BCRYPT).$activationSalt
+                'activation_token' => password_hash($faker->safeEmail, PASSWORD_BCRYPT)
             ];
 
             User::create($seed);
