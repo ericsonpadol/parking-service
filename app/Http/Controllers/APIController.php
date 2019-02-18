@@ -106,7 +106,9 @@ class APIController extends Controller
             'cost' => '11',
         ];
 
-        $activationString = md5(microtime().$userInput['email'].openssl_random_pseudo_bytes(60), FALSE);
+        $activationSaltString = md5(openssl_random_pseudo_bytes(60));
+        $activationString = md5(microtime().$userInput['email'].openssl_random_pseudo_bytes(60), FALSE) .
+            $activationSaltString;
 
         $defaultUserValues = [
             'is_activated' => 'false',
@@ -132,7 +134,7 @@ class APIController extends Controller
             $mailParams = [
                 'mail_fullname' => $request['full_name'],
                 'activation_spiel' => Copywrite::MAIL_ACTIVATION_SPIEL,
-                'activation_link' => url('user/verify') . '?active=' . $activationString . '&email=' . $request['email'],
+                'activation_link' => url('user/verify') . '?active=' . $activationString,
                 'mail_to_email' => $request['email'],
                 'mail_to_name' => $request['full_name']
             ];
@@ -171,6 +173,7 @@ class APIController extends Controller
             return response()->json([
                         'message' => Copywrite::INVALID_CREDENTIALS,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'status_code' => Copywrite::STATUS_CODE_101,
                         'http_code' => Copywrite::HTTP_CODE_401,
                             ], Copywrite::HTTP_CODE_401);
         }
@@ -194,18 +197,18 @@ class APIController extends Controller
         if ($resetFound) {
             switch ($resetFound[0]['activation']) {
                 case 0:
-                    $resetAccount = 0;
+                    $resetAccount = Copywrite::STATUS_CODE_103;
                     break;
 
                 case 1:
-                    $resetAccount = 1;
+                    $resetAccount = Copywrite::STATUS_CODE_104;
                     break;
 
                 default:
-                    $resetAccount = 2;
+                    $resetAccount = Copywrite::STATUS_CODE_100;
             }
         } else {
-            $resetAccount = 2;
+            $resetAccount = Copywrite::STATUS_CODE_100;
         }
         //check wheter the password use is a reset token or not
 
@@ -213,7 +216,7 @@ class APIController extends Controller
         return response()->json([
                     'token' => $token,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'reset_account' => $resetAccount,
+                    'status_code' => $resetAccount,
                     'http_code' => Copywrite::HTTP_CODE_200,
                         ], Copywrite::HTTP_CODE_200);
     }
@@ -261,9 +264,34 @@ class APIController extends Controller
      * @return json
      */
     public function userVerify(Request $request) {
-        $activationSalt = md5('livesite');
+        $uriRequest = $request->only([
+            'active'
+        ]);
 
+        $found = User::verifyUserAccount($uriRequest);
+        $result = $found['result'];
 
+        if ($found['status'] === 'failed') {
+            $params = [
+                'message' => $found['message'],
+                'title' => Copywrite::MAIL_ACTIVATED_TITLE_FAIL,
+                'http_code' => Copywrite::HTTP_CODE_400,
+
+            ];
+        } else {
+            //activate the account
+            $toReplace = ['/:full_name:/'];
+            $fromReplace  = [$result->full_name];
+            $mailActivatedTitleSuccess = preg_replace($toReplace, $fromReplace, Copywrite::MAIL_ACTIVATED_TITLE_SUCCESS);
+
+            $params = [
+                'title' => $mailActivatedTitleSuccess,
+                'message' => Copywrite::MAIL_ACTIVATED_BODY,
+                'http_code' => Copywrite::HTTP_CODE_200
+            ];
+        }
+
+        return view('account_verification', $params);
     }
 
 }
