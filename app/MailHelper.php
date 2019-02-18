@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Copywrite;
+use App\CustomConfig;
 use Illuminate\Support\Facades\Mail;
 
 class MailHelper extends Model

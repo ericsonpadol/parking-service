@@ -24,6 +24,7 @@ class Copywrite extends Model
     const VEHICLE_CREATE_SUCCESS = 'new vehicle successfully created';
     const VEHICLE_DELETE_ALLOWED = 'vehicle deleted successfully';
     const PASSWORD_UPDATE_SUCCESS = 'password changed successfully';
+    const ACTIVATION_STATUS_SUCCESS = 'user account activated';
 
     /**
      * LOGGING
@@ -48,6 +49,9 @@ class Copywrite extends Model
     const VEHICLE_NOT_FOUND = 'vehicle not found';
     const VEHICLE_DELETE_RESTRICT = ':vehicle: has transactions and cannot be deleted';
     const PASSWORD_UPDATE_FAIL = 'fail to update your password';
+    const ACTIVATION_CODE_FAIL = 'broken activation code';
+    const ACTIVATION_STATUS_FAIL = 'fail to activate user account';
+
 
     /**
      * HTTP CODES
@@ -60,6 +64,16 @@ class Copywrite extends Model
     const HTTP_CODE_422 = 422;
     const HTTP_CODE_200 = 200; //success code
     const HTTP_CODE_201 = 201;
+
+    /**
+     * STATUS CODES
+     */
+    const STATUS_CODE_101 = 101; //wrong username and password
+    const STATUS_CODE_100 = 100; //successful login
+    const STATUS_CODE_102 = 102; //inactive user account
+    const STATUS_CODE_103 = 103; //reset account
+    const STATUS_CODE_104 = 104; //account is using temp password
+    const STATUS_CODE_105 = 105; //account is activated
 
     /**
      * AUTHENTICATION BLOCK
@@ -91,6 +105,9 @@ class Copywrite extends Model
      */
 
     const MAIL_ACTIVATION_SPIEL = 'Click to activate your account.';
+    const MAIL_ACTIVATED_TITLE_FAIL = 'Ooppss! Something just broke.';
+    const MAIL_ACTIVATED_TITLE_SUCCESS = 'Welcome <b>:full_name:</b> to PARK-IT!';
+    const MAIL_ACTIVATED_BODY = 'We\'re so happy you have joined us. You\'re account is now activated.';
 
     /**
      * remember to put this on the app\config
