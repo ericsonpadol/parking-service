@@ -169,7 +169,17 @@ class APIController extends Controller
             'password'
         ]);
 
+        //check first if account is lock or activated
+        $found = User::isAccountActive($userInput);
+
+        if ($found['status'] === 'failed') {
+            return response()->json($found, Copywrite::HTTP_CODE_401);
+        }
+
         if (!$token = JWTAuth::attempt($userInput)) {
+            //increment lock counter
+            User::setLockCounter($userInput);
+
             return response()->json([
                         'message' => Copywrite::INVALID_CREDENTIALS,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
@@ -194,6 +204,7 @@ class APIController extends Controller
             $queryBuilder->activatePasswordToken($resetTokenParams);
         }
 
+        //check wheter the password use is a reset token or not
         if ($resetFound) {
             switch ($resetFound[0]['activation']) {
                 case 0:
@@ -210,8 +221,9 @@ class APIController extends Controller
         } else {
             $resetAccount = Copywrite::STATUS_CODE_100;
         }
-        //check wheter the password use is a reset token or not
 
+        //unlock account every successful login
+        User::unlockAccount($userInput);
 
         return response()->json([
                     'token' => $token,

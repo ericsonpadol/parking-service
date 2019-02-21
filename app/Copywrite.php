@@ -25,6 +25,7 @@ class Copywrite extends Model
     const VEHICLE_DELETE_ALLOWED = 'vehicle deleted successfully';
     const PASSWORD_UPDATE_SUCCESS = 'password changed successfully';
     const ACTIVATION_STATUS_SUCCESS = 'user account activated';
+    const UNLOCK_STATUS_SUCCESS = 'congratulations, you\'re account is unlocked.';
 
     /**
      * LOGGING
@@ -51,6 +52,10 @@ class Copywrite extends Model
     const PASSWORD_UPDATE_FAIL = 'fail to update your password';
     const ACTIVATION_CODE_FAIL = 'broken activation code';
     const ACTIVATION_STATUS_FAIL = 'fail to activate user account';
+    const ACCOUNT_ERROR = 'account was locked out due to multiple failed logon ' .
+        'attempts that occurred in a short period of time. This may occur if an unauthorized user attempts.' .
+        'Please wait for 20 mins to login again.';
+
 
 
     /**
@@ -64,6 +69,7 @@ class Copywrite extends Model
     const HTTP_CODE_422 = 422;
     const HTTP_CODE_200 = 200; //success code
     const HTTP_CODE_201 = 201;
+    const HTTP_CODE_500 = 500; //internal server error
 
     /**
      * STATUS CODES
@@ -74,6 +80,9 @@ class Copywrite extends Model
     const STATUS_CODE_103 = 103; //reset account
     const STATUS_CODE_104 = 104; //account is using temp password
     const STATUS_CODE_105 = 105; //account is activated
+    const STATUS_CODE_106 = 106; //account is locked
+    const STATUS_CODE_500 = 500; //internal server error
+    const STATUS_CODE_108 = 108; //unlock account
 
     /**
      * AUTHENTICATION BLOCK
