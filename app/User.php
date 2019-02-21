@@ -103,7 +103,7 @@ class User extends Authenticatable
             DB::table($table)->where('email', $params['email'])
                 ->update([
                     'is_lock_count' => 0,
-                    'is_lock' => false
+                    'is_lock' => 'false'
                 ]);
 
         } catch(Exception $e) {
@@ -134,7 +134,7 @@ class User extends Authenticatable
 
             } else {
 
-                $lockoutTime = strtotime(date("H:i:s"))+1800; //15 minutes lockout period
+                $lockoutTime = strtotime(date("H:i:s"))+1800; //30 minutes lockout period
                 $lockoutPeriod = date('H:i:s', $lockoutTime);
 
                 //lock the account
