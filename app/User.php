@@ -97,11 +97,14 @@ class User extends Authenticatable
     /**
      *
      */
-    public static function unlockAccount($table = 'users', array $params = []) {
+    public static function unlockAccount(array $params = [], $table = 'users') {
         try {
 
-            DB::table($table)->where()
-                ->update();
+            DB::table($table)->where('email', $params['email'])
+                ->update([
+                    'is_lock_count' => 0,
+                    'is_lock' => false
+                ]);
 
         } catch(Exception $e) {
             return [
@@ -116,7 +119,7 @@ class User extends Authenticatable
     /**
      *
      */
-    public static function setLockCounter($table = 'users', array $params = []) {
+    public static function setLockCounter(array $params = [], $table = 'users') {
         try {
             //get the lock counter and check if it is 3
 
@@ -124,13 +127,24 @@ class User extends Authenticatable
                 ['email', $params['email']]
             ])->first();
 
-            if ($isLockCount['is_lock_count'] < 3) {
+            if ($isLockCount->is_lock_count < 3) {
                 //update the counter
-            } else {
-                //lock the account
-            }
+                DB::table($table)->where('email', $params['email'])
+                    ->increment('is_lock_count');
 
-            return [];
+            } else {
+
+                $lockoutTime = strtotime(date("H:i:s"))+1800; //15 minutes lockout period
+                $lockoutPeriod = date('H:i:s', $lockoutTime);
+
+                //lock the account
+                DB::table($table)->where('email', $params['email'])
+                    ->update([
+                        'is_lock' => 'true',
+                        'is_lock_count' => 0,
+                        'lockout' => $lockoutPeriod,
+                    ]);
+            }
 
         } catch(Exception $e) {
             return [
@@ -152,6 +166,16 @@ class User extends Authenticatable
             $result = DB::table($table)->where([
                 ['email', $params['email']]
             ])->first();
+
+            if ($result->is_lock == 'true' && strtotime($result->lockout) < strtotime(date('H:i:s'))) {
+                //reset the lockout counter and reset the is lock identifier and reset the time
+                DB::table($table)->where('email', $params['email'])
+                    ->update([
+                        'is_lock' => 'false',
+                        'is_lock_count' => 0,
+                        'lockout' => '00:00:00'
+                    ]);
+            }
 
             if ($result->is_lock == 'true' || $result->is_activated == 'false') {
                 return [
