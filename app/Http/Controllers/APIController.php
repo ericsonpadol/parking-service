@@ -169,7 +169,15 @@ class APIController extends Controller
             'password'
         ]);
 
+        //check first if account is lock or activated
+        $found = User::isAccountActive($userInput);
+
+        if ($found['status'] === 'failed') {
+            return response()->json($found, Copywrite::HTTP_CODE_401);
+        }
+
         if (!$token = JWTAuth::attempt($userInput)) {
+
             return response()->json([
                         'message' => Copywrite::INVALID_CREDENTIALS,
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
