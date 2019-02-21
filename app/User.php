@@ -88,11 +88,94 @@ class User extends Authenticatable
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
                 'stack_trace' => $e->getTraceAsString(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
             ];
         }
     }
 
+    /**
+     *
+     */
+    public static function unlockAccount($table = 'users', array $params = []) {
+        try {
+
+            DB::table($table)->where()
+                ->update();
+
+        } catch(Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+    /**
+     *
+     */
+    public static function setLockCounter($table = 'users', array $params = []) {
+        try {
+            //get the lock counter and check if it is 3
+
+            $isLockCount = DB::table($table)->where([
+                ['email', $params['email']]
+            ])->first();
+
+            if ($isLockCount['is_lock_count'] < 3) {
+                //update the counter
+            } else {
+                //lock the account
+            }
+
+            return [];
+
+        } catch(Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+
+    /**
+     *
+     */
+    public static function isAccountActive(array $params = [], $table = 'users') {
+        try {
+
+            $result = DB::table($table)->where([
+                ['email', $params['email']]
+            ])->first();
+
+            if ($result->is_lock == 'true' || $result->is_activated == 'false') {
+                return [
+                    'message' => Copywrite::ACCOUNT_ERROR,
+                    'status_code' => Copywrite::STATUS_CODE_106,
+                    'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                    'http_code' => Copywrite::HTTP_CODE_401
+                ];
+            }
+
+        } catch(Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+
+    /**
+     *
+     */
     public static function verifyUserAccount(array $params = [], $table = 'users') {
         try {
             $result = DB::table($table)->where([
@@ -137,7 +220,8 @@ class User extends Authenticatable
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
                 'stack_trace' => $e->getTraceAsString(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
             ];
         }
     }
