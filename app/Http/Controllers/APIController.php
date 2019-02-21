@@ -157,9 +157,9 @@ class APIController extends Controller
                     'message' => $token ? Copywrite::USER_CREATED_SUCCESS : Copywrite::USER_NOT_ACTIVATED,
                     'conv_id' => $conversationId,
                     'token' => $token,
-                    'http_code' => $token ? Copywrite::HTTP_CODE_200 : Copywrite::HTTP_CODE_401,
+                    'http_code' => Copywrite::HTTP_CODE_200,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS
-            ], $token ? Copywrite::HTTP_CODE_200 : Copywrite::HTTP_CODE_401);
+            ], Copywrite::HTTP_CODE_200);
     }
 
     public function login(LoginAuthenticateRequest $request) {
