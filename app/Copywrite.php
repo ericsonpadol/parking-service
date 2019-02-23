@@ -54,6 +54,7 @@ class Copywrite extends Model
     const PASSWORD_UPDATE_FAIL = 'fail to update your password';
     const ACTIVATION_CODE_FAIL = 'broken activation code';
     const ACTIVATION_STATUS_FAIL = 'fail to activate user account';
+    const ACCOUNT_ACTIVATION_ERROR = 'please check your email and activate your account.';
     const ACCOUNT_ERROR = 'account was locked out due to multiple failed logon ' .
         'attempts that occurred in a short period of time. This may occur if an unauthorized user attempts.' .
         'Please wait for 30 mins to login again.';
