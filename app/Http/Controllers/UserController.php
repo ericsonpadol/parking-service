@@ -13,6 +13,89 @@ use Validator;
 class UserController extends Controller
 {
     /**
+     *
+     */
+    public function verifySecurityQuestions($id, Request $request) {
+        $oUser = new User();
+        $userInput = $request->only([
+            'secques_id',
+            'answer_value'
+        ]);
+
+        $params = [
+            'user_id' => $id,
+            'secques_id' => $userInput['secques_id'],
+            'answer_value' => $userInput['answer_value']
+        ];
+
+        //validate security questions
+        $result = $oUser->verifySecurityQuestions($params);
+
+        if ($result['status'] === 'failed') {
+            return response()->json($result,  Copywrite::HTTP_CODE_500);
+        }
+
+        return response()->json([
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'status_code' => Copywrite::STATUS_CODE_200,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200);;
+    }
+
+    /**
+     *
+     */
+    public function getSecurityQuestions($id) {
+        $oUser = new User();
+
+        $params = ['user_id' => $id];
+
+        $result = $oUser->getSecurityQuestions($params);
+
+        if ($result['status'] === 'failed') {
+            return response()->json($result, Copywrite::HTTP_CODE_500);
+        }
+
+        return response()->json([
+            'data' => $result,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::STATUS_CODE_200);
+    }
+
+    /**
+     *
+     */
+    public function storeSecurityQuestions(Request $request) {
+        $userInput = $request->only([
+                'secques_id',
+                'user_id',
+                'answer_value',
+            ]);
+
+        $now = date("Y-m-d H:i:s");
+
+        $oUser = new User();
+        $columns = ['secques_id', 'user_id', 'answer_value', 'created_at', 'updated_at'];
+        $params = [
+            $userInput['secques_id'],
+            $userInput['user_id'],
+            md5($userInput['answer_value']),
+            $now,
+            $now,
+        ];
+
+        $result = $oUser->setAnswerSecurityQuestions($params, $columns);
+
+        if ($result['status'] === 'failed') {
+            return response()->json($result, Copywrite::HTTP_CODE_500);
+        }
+
+        return response()->json($result, Copywrite::HTTP_CODE_200);
+    }
+
+    /**
      * update user password
      * @return \Illuminate\Http\Response
      */
