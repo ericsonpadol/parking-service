@@ -27,10 +27,16 @@ Route::get('/', function () {
 
 //none token based routes
 Route::get('user/verify', 'APIController@userVerify');
-Route::post('user/security_question', 'UserController@storeSecurityQuestions');
-Route::get('user/{id}/security_question', 'UserController@getSecurityQuestions');
-Route::post('user/{id}/security_question', 'UserController@verifySecurityQuestions');
-Route::resource('user_security', 'AccountSecurityController', ['only' => ['index', 'create']]);
+
+/**
+ * none token based routing
+ */
+Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+    Route::post('user/security_question', 'UserController@storeSecurityQuestions');
+    Route::get('user/{id}/security_question', 'UserController@getSecurityQuestions');
+    Route::post('user/{id}/security_question', 'UserController@verifySecurityQuestions');
+    Route::resource('user_security', 'AccountSecurityController', ['only' => ['index', 'create']]);
+});
 
 /**
  * JWT Routing

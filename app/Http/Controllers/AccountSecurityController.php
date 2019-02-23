@@ -20,7 +20,7 @@ class AccountSecurityController extends Controller
 
         return response()->json([
             'data' => $listSecurityQuestions,
-            'status' => Copywrite::DEFAULT_UPDATE_SUCCESS,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
             'http_code' => Copywrite::HTTP_CODE_200,
             'status_code' => Copywrite::STATUS_CODE_200
         ]);
