@@ -11,6 +11,7 @@ class Copywrite extends Model
      * DEFAULT COPYWRITES
      */
     const RESPONSE_STATUS_FAILED = 'failed';
+    const SECURITY_QUESTION_SUCCESS = 'security questions saved';
     const RESPONSE_STATUS_SUCCESS = 'success';
     const USER_CREATED_SUCCESS = 'new user created successfully';
     const USER_CREATED_FAILED = 'cannot create new user';
@@ -40,6 +41,7 @@ class Copywrite extends Model
     /**
      * ERROR COPYWRITES
      */
+    const SERVER_DOWNTIME = 'server is down';
     const USER_NOT_FOUND = 'user not found';
     const PARKING_SPACE_NOT_FOUND = 'parking space not found';
     const INVALID_CREDENTIALS = 'invalid email and password';
@@ -83,6 +85,7 @@ class Copywrite extends Model
     const STATUS_CODE_106 = 106; //account is locked
     const STATUS_CODE_500 = 500; //internal server error
     const STATUS_CODE_108 = 108; //unlock account
+    const STATUS_CODE_200 = 200; //OK
 
     /**
      * AUTHENTICATION BLOCK

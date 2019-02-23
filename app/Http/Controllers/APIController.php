@@ -14,8 +14,8 @@ use App\Http\Requests\LoginAuthenticateRequest;
 use App\Http\Requests\RequestResetPassword;
 use App\ParkingAuditLog;
 
-//use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
-//use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
+// use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
+// use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
 
 
 
@@ -53,23 +53,23 @@ class APIController extends Controller
          * send password via mobile text
          */
         //clockwork sms object
-//        $sms = new SMSGenerator(env('SMS_KEY'));
-//
-//        //params
-//        $smsParams = [
-//            'to' => '639472421651',
-//            'message' => 'This is your reset token ' . $resetToken
-//        ];
-//
-//        $result = $sms->send($smsParams);
-//
-//        var_dump($result);
-//
-//        if ($result['success']) {
-//            echo 'message fired: ' . $result['id'];
-//        } else {
-//            echo 'message failed: ' . $result['error_message'];
-//        }
+    //    $sms = new SMSGenerator(env('SMS_KEY'));
+
+    //    //params
+    //    $smsParams = [
+    //        'to' => '00639472421651',
+    //        'message' => 'This is your reset token ' . $resetToken
+    //    ];
+
+    //    $result = $sms->send($smsParams);
+
+    //    var_dump($result);
+
+    //    if ($result['success']) {
+    //        echo 'message fired: ' . $result['id'];
+    //    } else {
+    //        echo 'message failed: ' . $result['error_message'];
+    //    }
 
         $mailParams = [
             'mail_to_name' => $verifiedUser->full_name,
