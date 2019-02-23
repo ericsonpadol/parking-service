@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\CustomQueryBuilder;
 use App\Copywrite;
+use App\AccountSecurity;
 use DB;
 
 class User extends Authenticatable
@@ -237,6 +238,125 @@ class User extends Authenticatable
                 'result' => $result,
                 'status_code' => Copywrite::STATUS_CODE_105,
                 'status' => Copywrite::DEFAULT_UPDATE_SUCCESS
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+
+    /***
+     *
+     */
+    public function setAnswerSecurityQuestions(array $params = [],
+        array $customColumns = [], $table = 'tbl_ref_answersecques') {
+        try {
+            $columns = implode(',', $customColumns);
+
+            $columnCount = count($customColumns);
+
+            $pdoValues = [];
+
+            for ($a=0; $a < $columnCount; $a++) {
+                array_push($pdoValues, '?');
+            }
+
+            $pdoValuesString = implode(',', $pdoValues);
+
+            $sql = 'insert into ' . $table . ' ( ' . $columns . ' ) values (' . $pdoValuesString . ') ';
+
+            $result = DB::insert($sql, $params);
+
+            if (!$result) {
+                return [
+                    'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                    'status_code' => Copywrite::STATUS_CODE_500,
+                    'http_code' => Copywrite::HTTP_CODE_500,
+                    'message' => Copywrite::SERVER_DOWNTIME
+                ];
+            }
+
+            return [
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                'status_code' => Copywrite::STATUS_CODE_200,
+                'http_code' => Copywrite::HTTP_CODE_200,
+                'message' => Copywrite::SECURITY_QUESTION_SUCCESS
+            ];
+
+        } catch(Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+
+    /**
+     *
+     */
+    public function getSecurityQuestions(array $params = [], $table = 'tbl_ref_answersecques') {
+        try {
+
+            $result = DB::table($table)->where('user_id', $params['user_id'])->get();
+
+            if (!$result) {
+                return [
+                    'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                    'status_code' => Copywrite::HTTP_CODE_404,
+                    'http_code' => Copywrite::HTTP_CODE_404,
+                    'message' => Copywrite::USER_NOT_FOUND
+                ];
+            }
+
+            return [
+                'data' => $result,
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+
+    /**
+     *
+     */
+    public function verifySecurityQuestions(array $params = [], $table = 'tbl_ref_answersecques') {
+        try {
+
+            $result = DB::table($table)->where([
+                ['secques_id', $params['secques_id']],
+                ['user_id', $params['user_id']],
+                ['answer_value', md5($params['answer_value'])]
+                ])->get();
+
+            if (!$result) {
+                return [
+                    'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                    'status_code' => Copywrite::HTTP_CODE_404,
+                    'http_code' => Copywrite::HTTP_CODE_404,
+                    'message' => Copywrite::USER_NOT_FOUND
+                ];
+            }
+
+            return [
+                'data' => $result,
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS
             ];
 
         } catch (Exception $e) {
