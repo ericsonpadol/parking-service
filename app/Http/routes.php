@@ -25,8 +25,12 @@ Route::get('/', function () {
     echo '</pre>';
 });
 
-//verification route
+//none token based routes
 Route::get('user/verify', 'APIController@userVerify');
+Route::post('user/security_question', 'UserController@storeSecurityQuestions');
+Route::get('user/{id}/security_question', 'UserController@getSecurityQuestions');
+Route::post('user/{id}/security_question', 'UserController@verifySecurityQuestions');
+Route::resource('user_security', 'AccountSecurityController', ['only' => ['index', 'create']]);
 
 /**
  * JWT Routing
@@ -60,10 +64,6 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::resource('users', 'UserController', ['except' => ['store']]);
         Route::put('update_password', 'UserController@updatePassword');
-        Route::post('user/security_question', 'UserController@storeSecurityQuestions');
-        Route::get('user/{id}/security_question', 'UserController@getSecurityQuestions');
-        Route::post('user/{id}/security_question', 'UserController@verifySecurityQuestions');
-        Route::resource('user_security', 'AccountSecurityController', ['only' => ['index', 'create']]);
     });
 });
 
