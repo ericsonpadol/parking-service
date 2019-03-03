@@ -24,9 +24,6 @@ class LoginAuthenticateRequest extends Request
     public function rules()
     {
         return [
-            //
-            'email' => 'required|email|max:255',
-            'password' => 'required',
         ];
     }
 

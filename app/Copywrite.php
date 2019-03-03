@@ -42,9 +42,10 @@ class Copywrite extends Model
      * ERROR COPYWRITES
      */
     const SERVER_DOWNTIME = 'server is down';
+    const PASSWORD_FORMAT_ERROR = 'Password requires one uppercase, one numeric, one special character';
     const USER_NOT_FOUND = 'user not found';
     const PARKING_SPACE_NOT_FOUND = 'parking space not found';
-    const INVALID_CREDENTIALS = 'invalid email and password';
+    const INVALID_CREDENTIALS = 'invalid email and password, you have only 3 tries before your account locks out';
     const USER_DELETE_RESTRICT = ':useraccount: has transactions and cannot be deleted';
     const PARKING_SPACE_DELETE_RESTRICT = ':parkingspace: has transactions and cannot be deleted';
     const PARKING_SPACE_INVALID = 'invalid parking spaces';
@@ -69,7 +70,7 @@ class Copywrite extends Model
     const HTTP_CODE_400 = 400; //bad request
     const HTTP_CODE_409 = 409; //conflict
     const HTTP_CODE_406 = 406; //Not Acceptable
-    const HTTP_CODE_422 = 422;
+    const HTTP_CODE_422 = 422; //Unprocessable Entity
     const HTTP_CODE_200 = 200; //success code
     const HTTP_CODE_201 = 201;
     const HTTP_CODE_500 = 500; //internal server error
@@ -77,7 +78,7 @@ class Copywrite extends Model
     /**
      * STATUS CODES
      */
-    const STATUS_CODE_101 = 101; //wrong username and password
+    const STATUS_CODE_101 = 101; //unsuccessful login
     const STATUS_CODE_100 = 100; //successful login
     const STATUS_CODE_102 = 102; //inactive user account
     const STATUS_CODE_103 = 103; //reset account

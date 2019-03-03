@@ -13,7 +13,7 @@ use App\Http\Requests\RegisterNewUserRequest;
 use App\Http\Requests\LoginAuthenticateRequest;
 use App\Http\Requests\RequestResetPassword;
 use App\ParkingAuditLog;
-
+use Validator;
 // use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
 // use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
 
@@ -21,7 +21,9 @@ use App\ParkingAuditLog;
 
 class APIController extends Controller
 {
-
+    /**
+     *
+     */
     public function resetPassword(RequestResetPassword $request) {
         $userInput = $request->only(['email']);
         $sqlCustom = new CustomQueryBuilder;
@@ -94,6 +96,26 @@ class APIController extends Controller
 
     public function register(RegisterNewUserRequest $request) {
         $logger = new ParkingAuditLog();
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users|max:255',
+            'password' => 'required|min:8|regex:/(\d+)(\W+)([a-zA-Z]+)/u',
+            'mobile_number' => 'required|unique:users|min:11',
+            'full_name' => 'required'
+
+        ], [
+            'password.regex' => Copywrite::PASSWORD_FORMAT_ERROR
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_101,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422);
+        }
+
         $userInput = $request->only([
             'email',
             'full_name',
@@ -162,12 +184,26 @@ class APIController extends Controller
             ], Copywrite::HTTP_CODE_200);
     }
 
-    public function login(LoginAuthenticateRequest $request) {
+    public function login(Request $request) {
         $queryBuilder = new CustomQueryBuilder();
         $userInput = $request->only([
             'email',
             'password'
         ]);
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_101,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422);
+        }
 
         //check first if account is lock or activated
         $found = User::isAccountActive($userInput);
