@@ -180,7 +180,7 @@ class User extends Authenticatable
 
             if ($result->is_lock == 'true' || $result->is_activated == 'false') {
                 return [
-                    'message' => Copywrite::ACCOUNT_ERROR,
+                    'message' => $result->is_lock == 'true' ? Copywrite::ACCOUNT_ERROR : Copywrite::ACCOUNT_ACTIVATION_ERROR,
                     'status_code' => Copywrite::STATUS_CODE_106,
                     'status' => Copywrite::RESPONSE_STATUS_FAILED,
                     'http_code' => Copywrite::HTTP_CODE_401

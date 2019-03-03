@@ -23,10 +23,7 @@ class RegisterNewUserRequest extends Request
      */
     public function rules() {
         return [
-            'mobile_number' => 'required',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required',
-            'full_name' => 'required',
+
         ];
     }
 
