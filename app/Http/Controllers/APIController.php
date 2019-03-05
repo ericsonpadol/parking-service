@@ -99,7 +99,7 @@ class APIController extends Controller
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|min:8|regex:/(\d+)(\W+)([a-zA-Z]+)/u',
+            'password' => 'required|min:8|regex:/(\d+)/u|regex:/([a-z]+)/u|regex:/([A-Z]+)/u|regex:/(\W+)/u',
             'mobile_number' => 'required|unique:users|min:11',
             'full_name' => 'required'
 
@@ -262,11 +262,11 @@ class APIController extends Controller
         User::unlockAccount($userInput);
 
         return response()->json([
-                    'token' => $token,
-                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'status_code' => $resetAccount,
-                    'http_code' => Copywrite::HTTP_CODE_200,
-                        ], Copywrite::HTTP_CODE_200);
+            'token' => $token,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'status_code' => $resetAccount,
+            'http_code' => Copywrite::HTTP_CODE_200,
+        ], Copywrite::HTTP_CODE_200);
     }
 
     public function getAuthenticatedUser() {
