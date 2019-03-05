@@ -123,6 +123,50 @@ class Copywrite extends Model
     const MAIL_ACTIVATED_TITLE_SUCCESS = 'Welcome <b>:full_name:</b> to PARK-IT!';
     const MAIL_ACTIVATED_BODY = 'We\'re so happy you have joined us. You\'re account is now activated.';
 
+    /***
+     * EULA
+     */
+
+    const EULA_TITLE = 'PARK-IT EULA';
+    const EULA_HEADER = 'End-User License Agreement ("Agreement")';
+    const EULA_HEADER_DESC = '<b>Last updated:</b> (add date)
+    Please read this End-User License Agreement ("Agreement") carefully before clicking the "I Agree" button, downloading or using My Application (change this) ("Application").
+    By clicking the "I Agree" button, downloading or using the Application, you are agreeing to be bound by the terms and conditions of this Agreement.
+    If you do not agree to the terms of this Agreement, do not click on the "I Agree" button and do not download or use the Application.
+    ';
+    const EULA_LICENSE_HEADER = 'License';
+    const EULA_LICENSE_CONTENT = 'My Company (change this) grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the '
+    . 'Application solely for your personal, non-commercial purposes strictly in accordance with the terms of this Agreement.
+    ';
+    const EULA_RESTRICTION_HEADER = 'Restrictions';
+    const EULA_RESTRICTION_CONTENT = 'You agree not to, and you will not permit others to:
+    a) license, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the Application or make the Application available to any third party.
+    ';
+    const EULA_MODS_TO_APPLICATION_HEADER = '<b>Modifications to Application</b>';
+    const EULA_MODS_TO_APPLICATION_CONTENT = 'My Company (change this) reserves the right to modify, suspend or discontinue, temporarily or permanently, the Application or any service to which it connects, with or without notice and without liability to you.
+    <br>The Modifications to Application section is for apps that will be updated or regularly maintained. For the full disclosure section, create your own EULA.
+    ';
+    const EULA_TERM_AND_TERMINATION_HEADER = '<b>Term and Termination</b>';
+    const EULA_TERM_AND_TERMINATION_CONTENT = 'This Agreement shall remain in effect until terminated by you or My Company (change this).
+    <br>My Company (change this) may, in its sole discretion, at any time and for any or no reason, suspend or terminate this Agreement with or without prior notice.
+    <br>This Agreement will terminate immediately, without prior notice from My Company (change this), in the event that you fail to comply with any provision of this Agreement. '
+    . 'You may also terminate this Agreement by deleting the Application and all copies thereof from your mobile device or from your desktop.
+    <br>Upon termination of this Agreement, you shall cease all use of the Application and delete all copies of the Application from your mobile device or from your desktop.
+    ';
+    const EULA_SEVERABILITY_HEADER = '<b>Severability</b>';
+    const EULA_SEVERABILITY_CONTENT = 'If any provision of this Agreement is held to be unenforceable or invalid, such '
+    . 'provision will be changed and interpreted to accomplish the objectives of such provision to the greatest '
+    . 'extent possible under applicable law and the remaining provisions will continue in full force and effect.';
+    const EULA_AMENDMENTS_AGREEMENT_HEADER = '<b>Amendments to this Agreement</b>';
+    const EULA_AMENDMENTS_AGREEMENT_CONTENT = 'My Company (change this) reserves the right, at its sole discretion, '
+    . 'to modify or replace this Agreement at any time. If a revision is material we will provide at least 30 '
+    . '(changes this) days\' notice prior to any new terms taking effect. What constitutes a material change '
+    . 'will be determined at our sole discretion.
+    ';
+    const EULA_CONTACT_INFORMATION_HEADER = '<b>Contact Information</b>';
+    const EULA_CONTACT_INFORMATION_CONTENT = 'If you have any questions about this Agreement, please contact us.
+    ';
+
     /**
      * remember to put this on the app\config
      */

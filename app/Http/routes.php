@@ -25,8 +25,9 @@ Route::get('/', function () {
     echo '</pre>';
 });
 
-//none token based routes
+//none token based routes via web
 Route::get('user/verify', 'APIController@userVerify');
+Route::get('eula', 'AccountSecurityController@generateEula');
 
 /**
  * none token based routing

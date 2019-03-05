@@ -9,6 +9,37 @@ use App\Http\Requests;
 
 class AccountSecurityController extends Controller
 {
+
+    /**
+     *  Generate EULA Template
+     *
+     * @return Response
+     */
+    public function generateEula() {
+        $eulaCopywrite = [
+            'eula_title' => Copywrite::EULA_TITLE,
+            'eula_header' => Copywrite::EULA_HEADER,
+            'eula_header_desc' => Copywrite::EULA_HEADER_DESC,
+            'eula_license_header' => Copywrite::EULA_LICENSE_HEADER,
+            'eula_license_content' => Copywrite::EULA_LICENSE_CONTENT,
+            'eula_restriction_header' => Copywrite::EULA_RESTRICTION_HEADER,
+            'eula_restriction_content' => Copywrite::EULA_RESTRICTION_CONTENT,
+            'eula_mods_to_application_header' => Copywrite::EULA_MODS_TO_APPLICATION_HEADER,
+            'eula_mods_to_application_content' => Copywrite::EULA_MODS_TO_APPLICATION_CONTENT,
+            'eula_term_and_termination_header' => Copywrite::EULA_TERM_AND_TERMINATION_HEADER,
+            'eula_term_and_termination_content' => Copywrite::EULA_TERM_AND_TERMINATION_CONTENT,
+            'eula_severability_header' => Copywrite::EULA_TERM_AND_TERMINATION_HEADER,
+            'eula_severability_content' => Copywrite::EULA_SEVERABILITY_CONTENT,
+            'eula_amends_agreements_header' => Copywrite::EULA_AMENDMENTS_AGREEMENT_HEADER,
+            'eula_amends_agreements_content' => Copywrite::EULA_AMENDMENTS_AGREEMENT_CONTENT,
+            'eula_contact_info_header' => Copywrite::EULA_CONTACT_INFORMATION_HEADER,
+            'eula_contact_info_content' => Copywrite::EULA_CONTACT_INFORMATION_CONTENT
+        ];
+
+        return view('eula', $eulaCopywrite);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
