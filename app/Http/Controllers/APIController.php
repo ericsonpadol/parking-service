@@ -100,7 +100,7 @@ class APIController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users|max:255',
             'password' => 'required|min:8|regex:/(\d+)/u|regex:/([a-z]+)/u|regex:/([A-Z]+)/u|regex:/(\W+)/u',
-            'mobile_number' => 'required|unique:users|min:11',
+            'mobile_number' => 'required|unique:users|min:11|max:11',
             'full_name' => 'required'
 
         ], [
@@ -146,7 +146,7 @@ class APIController extends Controller
         $cUser = User::create($mergeUserVals);
         //catch insert error if user is not successfully created
         //pending changes will needs to be done asap
-        $user = User::first();
+        $user = User::orderBy('created_at', 'DESC')->first();
         $token = JWTAuth::fromUser($user);
 
         //fire an email that the user is not activated
@@ -176,6 +176,7 @@ class APIController extends Controller
         $conversationId = $logger->auditLogger($logParams);
 
         return response()->json([
+                    'user_id' => $user->id,
                     'message' => $token ? Copywrite::USER_CREATED_SUCCESS : Copywrite::USER_NOT_ACTIVATED,
                     'conv_id' => $conversationId,
                     'token' => $token,
