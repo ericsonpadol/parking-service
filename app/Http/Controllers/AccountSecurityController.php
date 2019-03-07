@@ -9,11 +9,10 @@ use App\Http\Requests;
 
 class AccountSecurityController extends Controller
 {
-
     /**
      *  Generate EULA Template
      *
-     * @return Response
+     * @return html_view
      */
     public function generateEula() {
         $eulaCopywrite = [
@@ -86,7 +85,13 @@ class AccountSecurityController extends Controller
      */
     public function show($id)
     {
-        //
+        //recover the security questions
+        $oAccountSec = new AccountSecurity();
+
+        $userSecQues = $oAccountSec->getAccountSecurityQuestions($id);
+
+        return response()->json($userSecQues);
+
     }
 
     /**

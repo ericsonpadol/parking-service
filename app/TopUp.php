@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TopUps extends Model
+class TopUp extends Model
 {
     //configurations
     protected $table = 'topups';

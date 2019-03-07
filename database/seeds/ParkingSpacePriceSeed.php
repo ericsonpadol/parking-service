@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\ParkingSpacePrice;
 
-class ParkingSpacePricingSeed extends Seeder
+class ParkingSpacePriceSeed extends Seeder
 {
     /**
      * Run the database seeds.

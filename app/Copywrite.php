@@ -41,6 +41,8 @@ class Copywrite extends Model
     /**
      * ERROR COPYWRITES
      */
+    const MOBILE_NUMBER_NOT_FOUND = 'mobile number not found';
+    const INVALID_MOBILE_NUMBER = 'invalid mobile number';
     const SERVER_DOWNTIME = 'server is down';
     const PASSWORD_FORMAT_ERROR = 'Password requires one uppercase, one numeric, one special character';
     const USER_NOT_FOUND = 'user not found';
@@ -59,6 +61,7 @@ class Copywrite extends Model
     const ACCOUNT_ERROR = 'account was locked out due to multiple failed logon ' .
         'attempts that occurred in a short period of time. This may occur if an unauthorized user attempts.' .
         'Please wait for 30 mins to login again.';
+    const ACCOUNT_SECURITY_QUESTION_NOT_FOUND = 'no security questions found';
 
 
 
@@ -87,6 +90,7 @@ class Copywrite extends Model
     const STATUS_CODE_106 = 106; //account is locked
     const STATUS_CODE_500 = 500; //internal server error
     const STATUS_CODE_108 = 108; //unlock account
+    const STATUS_CODE_404 = 404; //object not found
     const STATUS_CODE_200 = 200; //OK
 
     /**

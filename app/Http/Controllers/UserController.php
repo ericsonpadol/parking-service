@@ -13,14 +13,69 @@ use Validator;
 class UserController extends Controller
 {
     /**
-     *
+     * recover user account
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function accountRecovery(Request $request) {
+        //validate request
+        $validator = Validator::make($request->all(),
+        [
+            'mobile_number' => 'required|min:11|max:11'
+        ], [
+            'mobile_number.min' => Copywrite::INVALID_MOBILE_NUMBER,
+            'mobile_number.max' => Copywrite::INVALID_MOBILE_NUMBER
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422);
+        }
+
+        $input = $request->only([
+            'mobile_number'
+        ]);
+
+        $found = User::where(['mobile_number' => $input['mobile_number']])->first();
+
+        if (!$found) {
+            return response()->json([
+                'message' => Copywrite::MOBILE_NUMBER_NOT_FOUND,
+                'http_code' => Copywrite::HTTP_CODE_404,
+                'status_code' => Copywrite::STATUS_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_404);
+        }
+
+        return response()->json([
+            'user_id' => $found->id,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ], Copywrite::HTTP_CODE_200);
+    }
+
+    /**
+     * verify user security question
+     * @param Request $request
+     * @param String $id
+     * @return \Illuminate\Http\Response
      */
     public function verifySecurityQuestions($id, Request $request) {
         $oUser = new User();
         $userInput = $request->only([
-            'secques_id',
-            'answer_value'
+            'data',
+            'shadow'
         ]);
+
+        $countData = count($userInput['data']);
+
+        //service is always expecting 3 security questions if request contains < 3 security questions
+        //return an error
+
 
         $params = [
             'user_id' => $id,

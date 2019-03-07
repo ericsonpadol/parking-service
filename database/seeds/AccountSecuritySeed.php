@@ -5,7 +5,6 @@ use App\AccountSecurity;
 
 class AccountSecuritySeed extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -35,5 +34,4 @@ class AccountSecuritySeed extends Seeder
 
 
     }
-
 }

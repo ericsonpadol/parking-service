@@ -128,7 +128,11 @@ class User extends Authenticatable
                 ['email', $params['email']]
             ])->first();
 
-            if ($isLockCount->is_lock_count < 3) {
+            if (!$isLockCount) {
+                return false;
+            }
+
+            if ($isLockCount->is_lock_count < 2) {
                 //update the counter
                 DB::table($table)->where('email', $params['email'])
                     ->increment('is_lock_count');
@@ -167,6 +171,10 @@ class User extends Authenticatable
             $result = DB::table($table)->where([
                 ['email', $params['email']]
             ])->first();
+
+            if(!$result) {
+                return $result;
+            }
 
             if ($result->is_lock == 'true' && strtotime($result->lockout) < strtotime(date('H:i:s'))) {
                 //reset the lockout counter and reset the is lock identifier and reset the time
@@ -255,7 +263,7 @@ class User extends Authenticatable
      *
      */
     public function setAnswerSecurityQuestions(array $params = [],
-        array $customColumns = [], $table = 'tbl_ref_answersecques') {
+        array $customColumns = [], $table = 'accountsecurity_user') {
         try {
             $columns = implode(',', $customColumns);
 
@@ -303,7 +311,7 @@ class User extends Authenticatable
     /**
      *
      */
-    public function getSecurityQuestions(array $params = [], $table = 'tbl_ref_answersecques') {
+    public function getSecurityQuestions(array $params = [], $table = 'accountsecurity_user') {
         try {
 
             $result = DB::table($table)->where('user_id', $params['user_id'])->get();
@@ -334,9 +342,13 @@ class User extends Authenticatable
     }
 
     /**
+     * verify user security questions
      *
+     * @param Array $params
+     * @param String $table
+     * @return Array
      */
-    public function verifySecurityQuestions(array $params = [], $table = 'tbl_ref_answersecques') {
+    public function verifySecurityQuestions(array $params = [], $table = 'accountsecurity_user') {
         try {
 
             $result = DB::table($table)->where([
