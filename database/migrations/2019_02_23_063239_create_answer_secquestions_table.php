@@ -12,7 +12,7 @@ class CreateAnswerSecquestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_ref_answersecques', function (Blueprint $table) {
+        Schema::create('accountsecurity_user', function (Blueprint $table) {
             $table->increments('id');
             $table->char('secques_id', 11);
             $table->integer('user_id');
