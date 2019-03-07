@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\TopUps;
+use App\TopUp;
 use Faker\Factory as Faker;
 
-class TopupSeed extends Seeder
+class TopUpSeed extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -22,8 +21,7 @@ class TopupSeed extends Seeder
                'topup_value' => $value[$x],
             ];
 
-            TopUps::create($seed);
+            TopUp::create($seed);
         }
     }
-
 }

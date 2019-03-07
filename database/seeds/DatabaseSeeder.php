@@ -5,8 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Vehicle;
 use App\ParkingSpace;
-use App\TopUps;
+use App\TopUp;
 use App\ParkingSpacePrice;
+use App\AccountSecurity;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,14 +21,16 @@ class DatabaseSeeder extends Seeder
         Vehicle::truncate();
         User::truncate();
         ParkingSpace::truncate();
-        TopUps::truncate();
+        TopUp::truncate();
         ParkingSpacePrice::truncate();
+        AccountSecurity::truncate();
         Model::unguard();
 
         $this->call('UserSeed');
         $this->call('VehicleSeed');
-        $this->call('TopUps');
-        $this->call('ParkingSpacePrice');
-        $this->call('ParkingSpace');
+        $this->call('TopUpSeed');
+        $this->call('ParkingSpacePriceSeed');
+        $this->call('ParkingSpaceSeed');
+        $this->call('AccountSecuritySeed');
     }
 }
