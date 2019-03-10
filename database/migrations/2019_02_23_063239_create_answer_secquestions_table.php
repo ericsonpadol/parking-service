@@ -28,6 +28,6 @@ class CreateAnswerSecquestionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('tbl_ref_answersecques');
+        Schema::drop('accountsecurity_user');
     }
 }
