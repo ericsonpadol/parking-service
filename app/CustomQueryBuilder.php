@@ -14,9 +14,6 @@ class CustomQueryBuilder extends Model
     public function activatePasswordToken(array $params) {
         $queryTable = 'reset_password';
 
-        //querystring to update the activation keys not to make it usable again.
-        $queryString = 'update ' . $queryTable . ' set activation = 1 where email = ?';
-
         try {
             $result = DB::table($queryTable)
                     ->where(['email' => $params['email']])
