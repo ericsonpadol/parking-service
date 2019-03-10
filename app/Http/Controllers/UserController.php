@@ -109,7 +109,6 @@ class UserController extends Controller
         }
 
         $keys = array_map(create_function('$o', 'return $o;'), $result['data']);
-        // $valueKey = array_map(create_function('$x', 'return $x;'), $keys);
 
         //create reset token
         $resetToken = str_random(6); //generated random token
