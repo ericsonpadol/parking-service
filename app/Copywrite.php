@@ -62,6 +62,10 @@ class Copywrite extends Model
         'attempts that occurred in a short period of time. This may occur if an unauthorized user attempts.' .
         'Please wait for 30 mins to login again.';
     const ACCOUNT_SECURITY_QUESTION_NOT_FOUND = 'no security questions found';
+    const APP_CANNOT_PROCESS_SECQUESTIONS = 'cannot process the security questions';
+    const INVALID_ANSWER_SECURITY_QUESTIONS = 'wrong answer to security question :secques:';
+    const INVALID_PARAMETER = 'no data found';
+    const ACCOUNT_SECURITY_ANSWER_NOT_FOUND = 'security questions answer cannot be blank';
 
 
 
@@ -90,6 +94,7 @@ class Copywrite extends Model
     const STATUS_CODE_106 = 106; //account is locked
     const STATUS_CODE_500 = 500; //internal server error
     const STATUS_CODE_108 = 108; //unlock account
+    const STATUS_CODE_109 = 109; //invalid request
     const STATUS_CODE_404 = 404; //object not found
     const STATUS_CODE_200 = 200; //OK
 
@@ -118,10 +123,16 @@ class Copywrite extends Model
         . 'Please click the link to activate your account. <br>'
         . 'If you have not registered to PARK IT, please ignore this email.';
 
+    const MAIL_ACCOUNT_RECOVERY_SUBJECT = 'LGPARK IT: ACCOUNT RECOVERY';
+    const MAIL_ACCOUNT_RECOVERY_BODY_HTML = 'Hi <b>:full_name:</b>,<br><br>'
+        . 'You recently requested to recover here is your account details. <br><br>'
+        . '<b>Email:</b> :email_address:<br>'
+        . '<b>Temporary Password:</b> :reset_token:<br><br>'
+        . 'If you did not request a password reset, please ignore this email';
+
     /**
      * Custom Spiel
      */
-
     const MAIL_ACTIVATION_SPIEL = 'Click to activate your account.';
     const MAIL_ACTIVATED_TITLE_FAIL = 'Ooppss! Something just broke.';
     const MAIL_ACTIVATED_TITLE_SUCCESS = 'Welcome <b>:full_name:</b> to PARK-IT!';
@@ -130,7 +141,6 @@ class Copywrite extends Model
     /***
      * EULA
      */
-
     const EULA_TITLE = 'PARK-IT EULA';
     const EULA_HEADER = 'End-User License Agreement ("Agreement")';
     const EULA_HEADER_DESC = '<b>Last updated:</b> (add date)
