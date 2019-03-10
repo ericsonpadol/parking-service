@@ -15,7 +15,7 @@ class CustomQueryBuilder extends Model
         $queryTable = 'reset_password';
 
         //querystring to update the activation keys not to make it usable again.
-        $queryString = 'update ' . $queryTable . ' set activation = 1 where email = ?';
+        //$queryString = 'update ' . $queryTable . ' set activation = 1 where email = ?';
 
         try {
             $result = DB::table($queryTable)

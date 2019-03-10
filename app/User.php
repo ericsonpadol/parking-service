@@ -348,21 +348,36 @@ class User extends Authenticatable
      * @param String $table
      * @return Array
      */
-    public function verifySecurityQuestions(array $params = [], $table = 'accountsecurity_user') {
+    public function verifySecurityQuestions(array $params = [],
+        $table = 'accountsecurity_user',
+        $accountsecTbl = 'accountsecurities',
+        $userTbl = 'users') {
         try {
-
-            $result = DB::table($table)->where([
-                ['secques_id', $params['secques_id']],
-                ['user_id', $params['user_id']],
-                ['answer_value', md5($params['answer_value'])]
+            $result = DB::table($table)
+                ->join($userTbl, $table . '.user_id', '=', $userTbl . '.id')
+                ->select($table . '.*', $userTbl . '.email', $userTbl . '.full_name')
+                ->where([
+                    ['secques_id', $params['secques_id']],
+                    ['user_id', $params['user_id']],
+                    ['answer_value', md5($params['answer_value'])]
                 ])->get();
 
             if (!$result) {
+                //get wrong security question id
+                $secques = DB::table($accountsecTbl)
+                    ->select('value')
+                    ->where('sec_id', $params['secques_id'])
+                    ->get();
+
+                $toReplace = ['/:secques:/'];
+                //@EBP 03092019: this will result only to one wrong answer so forcing to look into array index[0] should not break any logic
+                $fromReplace = [$secques[0]->value];
+                $copyString = preg_replace($toReplace, $fromReplace, Copywrite::INVALID_ANSWER_SECURITY_QUESTIONS);
                 return [
                     'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                    'status_code' => Copywrite::HTTP_CODE_404,
-                    'http_code' => Copywrite::HTTP_CODE_404,
-                    'message' => Copywrite::USER_NOT_FOUND
+                    'status_code' => Copywrite::STATUS_CODE_109,
+                    'http_code' => Copywrite::HTTP_CODE_400,
+                    'message' => $copyString
                 ];
             }
 
