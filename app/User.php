@@ -366,9 +366,6 @@ class User extends Authenticatable
             var_dump($params);
             $result = DB::table($table)
                 ->join($userTbl, $userTbl . '.id', '=',  $table . '.user_id')
-                ->where(array(
-                array('user_id', $params['user_id'])
-            ))
             ->select($userTbl . '.id', $userTbl . '.email', $userTbl . '.full_name', $table . '.user_id')
             ->get();
 
