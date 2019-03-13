@@ -311,10 +311,16 @@ class User extends Authenticatable
     /**
      *
      */
-    public function getSecurityQuestions(array $params = [], $table = 'accountsecurity_user') {
+    public function getSecurityQuestions(array $params = [],
+        $table = 'accountsecurity_user',
+        $tblAccountSec = 'accountsecurities') {
         try {
 
-            $result = DB::table($table)->where('user_id', $params['user_id'])->get();
+            $result = DB::table($table)
+                ->join($tblAccountSec, $table . '.secques_id', '=', $tblAccountSec . '.sec_id')
+                ->select($table . '.*', $tblAccountSec . '.value')
+                ->where('user_id', $params['user_id'])
+                ->get();
 
             if (!$result) {
                 return [
@@ -327,7 +333,9 @@ class User extends Authenticatable
 
             return [
                 'data' => $result,
-                'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+                'http_code' => Copywrite::HTTP_CODE_200,
+                'status_code' => Copywrite::STATUS_CODE_200
             ];
 
         } catch (Exception $e) {
