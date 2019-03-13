@@ -364,16 +364,10 @@ class User extends Authenticatable
         try {
             Log::info('Verify Question Parameters: ', $params);
             var_dump($params);
-            $result = DB::table($table)
-                ->select($table . '.secques_id',
-                    $userTbl . '.email',
-                    $userTbl . '.full_name')
-                ->join($userTbl, $table . '.user_id',
-                    '=', $userTbl . '.id')
-                ->get();
+            $result = DB::table($table)->where('user_id', $params['user_id'])->get();
 
             var_dump($result);
-            Log::error('Verify Question Result:', $result);
+            Log::info('Verify Question Result:', $result);
 
             if (!$result) {
                 //get wrong security question id
