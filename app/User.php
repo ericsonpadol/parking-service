@@ -9,6 +9,7 @@ use App\CustomQueryBuilder;
 use App\Copywrite;
 use App\AccountSecurity;
 use DB;
+use Log;
 
 class User extends Authenticatable
 {
@@ -361,6 +362,8 @@ class User extends Authenticatable
         $accountsecTbl = 'accountsecurities',
         $userTbl = 'users') {
         try {
+            Log::info('Verify Question Parameters: ', $params);
+
             $result = DB::table($table)
                 ->join($userTbl, $table . '.user_id', '=', $userTbl . '.id')
                 ->select($table . '.*', $userTbl . '.email', $userTbl . '.full_name')
@@ -369,6 +372,7 @@ class User extends Authenticatable
                     ['user_id', $params['user_id']],
                     ['answer_value', md5($params['answer_value'])]
                 ])->get();
+            Log::error('Verify Question Result:', $result);
 
             if (!$result) {
                 //get wrong security question id
