@@ -165,12 +165,7 @@ class UserController extends Controller
             return response()->json($result, Copywrite::HTTP_CODE_500);
         }
 
-        return response()->json([
-            'data' => $result,
-            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-            'http_code' => Copywrite::HTTP_CODE_200,
-            'status_code' => Copywrite::HTTP_CODE_200
-        ], Copywrite::STATUS_CODE_200);
+        return response()->json($result, Copywrite::STATUS_CODE_200);
     }
 
     /**
