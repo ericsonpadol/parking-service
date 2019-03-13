@@ -104,7 +104,7 @@ class UserController extends Controller
 
             $result = $oUser->verifySecurityQuestions($params);
             if ($result['status'] === 'failed') {
-                return response()->json($result,  Copywrite::HTTP_CODE_500);
+                return response()->json($result,  Copywrite::HTTP_CODE_400);
             }
         }
 
