@@ -371,7 +371,7 @@ class User extends Authenticatable
                     ['secques_id', $params['secques_id']],
                     ['user_id', $params['user_id']],
                     ['answer_value', md5($params['answer_value'])]
-                ])->get();
+                ])->first();
 
             var_dump($result);
             Log::error('Verify Question Result:', $result);
