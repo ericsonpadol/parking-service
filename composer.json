@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^5.6.32",
+        "php": "^5.6.*",
         "laravel/framework": "5.2.*",
         "phpdocumentor/reflection": "3.x@dev",
         "dingo/api": "1.0.x@dev",
