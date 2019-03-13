@@ -359,12 +359,17 @@ class User extends Authenticatable
      */
     public function verifySecurityQuestions(array $params = [],
         $table = 'accountsecurity_user',
-        $accountsecTbl = 'accountsecurities',
         $userTbl = 'users') {
         try {
             Log::info('Verify Question Parameters: ', $params);
             var_dump($params);
-            $result = DB::table($table)->where('user_id', $params['user_id'])->get();
+            $result = DB::table($table)
+                ->join($userTbl, $userTbl . '.id', '=',  $table . '.user_id')
+                ->where([
+                ['user_id', $params['user_id']]
+            ])
+            ->select($userTbl . '.id', $userTbl . '.email', $userTbl . '.full_name', $table . '.user_id')
+            ->get();
 
             var_dump($result);
             Log::info('Verify Question Result:', $result);
