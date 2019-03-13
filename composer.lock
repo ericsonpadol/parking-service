@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f822ee593aa87577ee1888df019d74e6",
+    "content-hash": "4b18dd8363419bb93d6bcf3f219dd2e6",
     "packages": [
         {
             "name": "alrik11es/cowsayphp",
@@ -3844,6 +3844,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2015-10-02T06:51:40+00:00"
         },
         {
@@ -4340,7 +4341,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "5.6.32"
+        "php": ">=5.5.9"
     },
     "platform-dev": []
 }
