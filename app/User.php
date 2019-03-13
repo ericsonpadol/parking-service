@@ -365,7 +365,7 @@ class User extends Authenticatable
             Log::info('Verify Question Parameters: ', $params);
             var_dump($params);
             $result = DB::table($table)
-                ->select($table . '.*',
+                ->select($table . '.secques_id',
                     $userTbl . '.email',
                     $userTbl . '.full_name')
                 ->join($userTbl, $table . '.user_id',
