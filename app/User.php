@@ -365,13 +365,9 @@ class User extends Authenticatable
             Log::info('Verify Question Parameters: ', $params);
             var_dump($params);
             $result = DB::table($table)
-                ->join($userTbl, $table . '.user_id', '=', $userTbl . '.id')
                 ->select($table . '.*', $userTbl . '.email', $userTbl . '.full_name')
-                ->where([
-                    ['secques_id', $params['secques_id']],
-                    ['user_id', $params['user_id']],
-                    ['answer_value', md5($params['answer_value'])]
-                ])->first();
+                ->join($userTbl, $table . '.user_id', '=', $userTbl . '.id')
+                ->get();
 
             var_dump($result);
             Log::error('Verify Question Result:', $result);
