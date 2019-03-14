@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b18dd8363419bb93d6bcf3f219dd2e6",
+    "content-hash": "4a2fe353139ce5ab68569d44134c979f",
     "packages": [
         {
             "name": "alrik11es/cowsayphp",
