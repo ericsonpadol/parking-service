@@ -377,7 +377,9 @@ class User extends Authenticatable
         try {
 
             $whereClause = array(
-                [$table . '.user_id', '=', $params['user_id']]
+                [$table . '.user_id', '=', $params['user_id']],
+                [$table . '.secques_id', '=', $params['secques_id']],
+                [$table . '.answer_value', '=', md5($params['answer_value'])]
             );
 
             $result = DB::table($table)
