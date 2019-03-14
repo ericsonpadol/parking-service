@@ -52,7 +52,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * User Constructor
+     */
+    public function __construct() {
+        DB::connection()->enableQueryLog();
+    }
+
+    /**
      * User & Vehicle Relationship
+     * @return object
      */
     public function vehicles() {
         return $this->hasMany('App\Vehicle');
@@ -373,7 +381,7 @@ class User extends Authenticatable
                 ->select($userTbl . '.id', $userTbl . '.email', $userTbl . '.full_name', $table . '.user_id')
                 ->where($whereClause)
                 ->get();
-
+            var_dump(DB::getQueryLog());
             var_dump($result);
             Log::info('Verify Question Result:', $result);
 
