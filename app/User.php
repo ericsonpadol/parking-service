@@ -10,6 +10,8 @@ use App\Copywrite;
 use App\AccountSecurity;
 use DB;
 use Log;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class User extends Authenticatable
 {
@@ -19,6 +21,7 @@ class User extends Authenticatable
     protected $resetPasswordTable = 'reset_password';
     protected $dataResult = '';
     protected $userTable = 'users';
+    private $_logger = '';
     protected $resetPasswordColumns = [
         'email', 'reset_token'
     ];
@@ -56,6 +59,8 @@ class User extends Authenticatable
      */
     public function __construct() {
         DB::connection()->enableQueryLog();
+        $this->_logger = new Logger('user-module');
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
     }
 
     /**
@@ -370,19 +375,22 @@ class User extends Authenticatable
         $userTbl = 'users',
         $accountsecTbl = 'accountsecurities') {
         try {
+
             $whereClause = array(
                 [$table . '.user_id', '=', $params['user_id']]
             );
-            Log::info('Verify Question Parameters: ', $params);
-            var_dump($params);
-            var_dump($whereClause);
+
             $result = DB::table($table)
                 ->join($userTbl, $userTbl . '.id', '=',  $table . '.user_id')
                 ->select($userTbl . '.id', $userTbl . '.email', $userTbl . '.full_name', $table . '.user_id')
                 ->where($whereClause)
                 ->get();
-            var_dump(DB::getQueryLog());
-            var_dump($result);
+            //stream logging
+            $this->_logger->addInfo('Verify Question Query : ' . serialize(DB::getQueryLog()));
+            $this->_logger->addInfo('Verify Question Result:' . serialize($result));
+
+            //local logging
+            Log::info('Verify Question Query:', DB::getQueryLog());
             Log::info('Verify Question Result:', $result);
 
             if (!$result) {
