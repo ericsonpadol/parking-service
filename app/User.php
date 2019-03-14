@@ -362,14 +362,16 @@ class User extends Authenticatable
         $userTbl = 'users',
         $accountsecTbl = 'accountsecurities') {
         try {
+            $whereClause = array(
+                [$table . '.user_id', '=', $params['user_id']]
+            );
             Log::info('Verify Question Parameters: ', $params);
             var_dump($params);
+            var_dump($whereClause);
             $result = DB::table($table)
                 ->join($userTbl, $userTbl . '.id', '=',  $table . '.user_id')
                 ->select($userTbl . '.id', $userTbl . '.email', $userTbl . '.full_name', $table . '.user_id')
-                ->where(array(
-                    [$table . '.user_id', '=', $params['user_id']]
-                ))
+                ->where($whereClause)
                 ->get();
 
             var_dump($result);
