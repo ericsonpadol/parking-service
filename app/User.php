@@ -19,6 +19,7 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $resetPasswordTable = 'reset_password';
+    protected $primaryKey = 'id';
     protected $dataResult = '';
     protected $userTable = 'users';
     private $_logger = '';
@@ -57,7 +58,9 @@ class User extends Authenticatable
     /**
      * User Constructor
      */
-    public function __construct() {
+    public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
+
         DB::connection()->enableQueryLog();
         $this->_logger = new Logger('user-module');
         $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
