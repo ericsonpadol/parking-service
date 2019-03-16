@@ -10,6 +10,9 @@ use App\Copywrite;
 use App\Http\Requests;
 use App\MailHelper;
 use Validator;
+use Log;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class UserController extends Controller
 {
@@ -236,7 +239,7 @@ class UserController extends Controller
     public function updatePassword(Request $request) {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
-            'password' => 'required'
+            'password' => 'required|min:8|regex:/(\d+)/u|regex:/([a-z]+)/u|regex:/([A-Z]+)/u|regex:/(\W+)/u',
         ]);
 
         if ($validator->fails()) {
