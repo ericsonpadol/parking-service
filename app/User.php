@@ -68,7 +68,7 @@ class User extends Authenticatable
 
     /**
      * User & Vehicle Relationship
-     * @return object
+     * @return Object
      */
     public function vehicles() {
         return $this->hasMany('App\Vehicle');
@@ -76,18 +76,35 @@ class User extends Authenticatable
 
     /**
      * User & Parkingspace Relationship
+     *
+     * @return Object
      */
     public function parkingspaces() {
         return $this->hasMany('App\ParkingSpace');
     }
 
     /**
+     * get user specific vehicle
      *
+     * @return Array
      */
-    public function getUserVehicle($userId, $vehiclePlate) {
-        $vehicle = User::find($userId)->vehicles()->where('plate_number', '=', $vehiclePlate)->get();
+    public function getUserVehicle($userId, $vehicleId) {
+        $vehicle = User::find($userId)->vehicles()->where('id', '=', $vehicleId)->get();
 
-        return $vehicle;
+        /**
+         * @EBP 03162019 : looking at array index 0 is ok since, the return is expecting 1 data always
+         */
+        if ($vehicle->isEmpty()) {
+            return [
+                'message' => Copywrite::VEHICLE_NOT_FOUND,
+                'http_code' => Copywrite::HTTP_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ];
+        }
+
+        return [
+            'data' => $vehicle
+        ];
     }
 
     public function resetPassword(array $params, array $columns) {
@@ -156,7 +173,7 @@ class User extends Authenticatable
 
             } else {
 
-                $lockoutTime = strtotime(date("H:i:s"))+1800; //30 minutes lockout period
+                $lockoutTime = strtotime(date("H:i:s"))+120; //30 minutes lockout period
                 $lockoutPeriod = date('H:i:s', $lockoutTime);
 
                 //lock the account
