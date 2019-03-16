@@ -146,7 +146,7 @@ class UserController extends Controller
 
         return response()->json([
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-            'status_code' => Copywrite::STATUS_CODE_200,
+            'status_code' => Copywrite::STATUS_CODE_104,
             'http_code' => Copywrite::HTTP_CODE_200,
             'mail_result' => $mailbox
         ], Copywrite::HTTP_CODE_200);
