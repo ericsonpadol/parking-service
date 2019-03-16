@@ -64,12 +64,25 @@ class UserVehicleController extends Controller
             return response()->json(compact('messages'));
         }
 
+        $validator = Validator::make($request->all(), [
+            'plate_number' => 'required|unique:plate_number|alpha_num|max:7|min:6'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422);
+        }
+
         $values = $request->all();
 
         $useraccount->vehicles()->create($values);
 
         return response()->json([
-                    'messages' => Copywrite::PARKING_SPACE_CREATE_SUCCESS,
+                    'messages' => Copywrite::VEHICLE_CREATE_SUCCESS,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_201
                         ], Copywrite::HTTP_CODE_201);
@@ -87,7 +100,7 @@ class UserVehicleController extends Controller
         $user = $oUser->getUserVehicle($userId, $vehiclePlate);
 
         $response = !$user || $user->isEmpty() ?
-                response()->json(['messages' => 'record not found!', 'code' => '404'], 404) :
+                response()->json(['message' => 'record not found!', 'code' => '404'], 404) :
                 response()->json([
                     'data' => $user,
                         ], 200);

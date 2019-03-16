@@ -181,6 +181,7 @@ class APIController extends Controller
                     'conv_id' => $conversationId,
                     'token' => $token,
                     'http_code' => Copywrite::HTTP_CODE_200,
+                    'mail_result' => $fireMailbox,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS
             ], Copywrite::HTTP_CODE_200);
     }
