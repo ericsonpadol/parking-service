@@ -25,7 +25,7 @@ class CreateVehicleRequest extends Request
     public function rules()
     {
         return [
-            'plate_number' => 'required|max:11|alpha_num'
+
         ];
     }
 
