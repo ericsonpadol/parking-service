@@ -8,9 +8,15 @@ use App\Vehicle;
 use App\Http\Requests\CreateVehicleRequest;
 use App\Copywrite;
 use Validator;
+use Log;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use DB;
 
 class UserVehicleController extends Controller
 {
+    //configurations
+    private $_logger = '';
 
     /**
      * Display a listing of the resource.
@@ -26,6 +32,14 @@ class UserVehicleController extends Controller
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'http_code' => Copywrite::HTTP_CODE_404
                             ], Copywrite::HTTP_CODE_404);
+        }
+
+        if ($userAccount->vehicles->isEmpty()) {
+            return response()->json([
+                'message' => Copywrite::VEHICLE_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404);
         }
 
         return response()->json([
@@ -65,7 +79,10 @@ class UserVehicleController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'plate_number' => 'required|unique:plate_number|alpha_num|max:7|min:6'
+            'plate_number' => 'required|unique:plate_number|alpha_num|max:7|min:6',
+            'color' => 'required',
+            'model' => 'required',
+            'brand' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -82,7 +99,7 @@ class UserVehicleController extends Controller
         $useraccount->vehicles()->create($values);
 
         return response()->json([
-                    'messages' => Copywrite::VEHICLE_CREATE_SUCCESS,
+                    'message' => Copywrite::VEHICLE_CREATE_SUCCESS,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_201
                         ], Copywrite::HTTP_CODE_201);
@@ -95,15 +112,20 @@ class UserVehicleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($userId, $vehiclePlate) {
-        $oUser = new User();
-        $user = $oUser->getUserVehicle($userId, $vehiclePlate);
+    public function show($userId, $vechicleId) {
+        //check if user is available
+        $found = User::find($userId);
 
-        $response = !$user || $user->isEmpty() ?
-                response()->json(['message' => 'record not found!', 'code' => '404'], 404) :
-                response()->json([
-                    'data' => $user,
-                        ], 200);
+        if (!$found) {
+            return response()->json([
+                'message' => Copywrite::USER_NOT_FOUND,
+                'http_code' => Copywrite::HTTP_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_404);
+        }
+
+        $oUser = new User();
+        $response = $oUser->getUserVehicle($userId, $vechicleId);
 
         return $response;
     }
@@ -134,12 +156,15 @@ class UserVehicleController extends Controller
             $messages = [
                 'code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'messages' => Copywrite::USER_NOT_FOUND,
+                'message' => Copywrite::USER_NOT_FOUND,
             ];
 
             return response()->json(compact('messages'));
         }
 
+        $values = $request->all();
+
+        //get request
         $vehicle = $useraccount->vehicles->find($vehicleId);
 
         if (!$vehicle) {
@@ -150,8 +175,6 @@ class UserVehicleController extends Controller
             ]);
         }
 
-        $values = $request->all();
-
         $validator = Validator::make($values, [
                     'plate_number' => 'string|max:11|alpha_num|unique:vehicles,plate_number',
                     'color' => 'string|max:255',
@@ -161,12 +184,23 @@ class UserVehicleController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'messages' => $validator->errors(),
-                            ], Copywrite::HTTP_CODE_400);
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422);
         }
 
         $vehicle->update($values);
+
+        //log transaction
+        DB::connection()->enableQueryLog();
+        $this->_logger = new Logger('vehicles-update');
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+
+        //stream logging
+        $this->_logger->addInfo('Request: ' . serialize($values));
+        $this->_logger->addInfo();
 
         return response()->json([
                     'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
