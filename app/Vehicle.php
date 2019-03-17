@@ -15,6 +15,7 @@ class Vehicle extends Model
     protected $table = 'vehicles';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'id',
         'plate_number',
         'color',
         'model',
