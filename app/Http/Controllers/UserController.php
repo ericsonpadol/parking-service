@@ -24,7 +24,7 @@ class UserController extends Controller
     public function __construct() {
         $this->_sqlCustom = new CustomQueryBuilder();
         $this->_streamLogger = new Logger($this);
-        $this->_streamLogger->pushHandler(new StreamHandler(env('STREAM_LOG'), LOGGER::INFO));
+        $this->_streamLogger->pushHandler(new StreamHandler(config('stream_logger'), LOGGER::INFO));
     }
 
     /**
