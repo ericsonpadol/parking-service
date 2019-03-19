@@ -13,9 +13,20 @@ use Validator;
 use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use App\CustomQueryBuilder;
 
 class UserController extends Controller
 {
+    //configuration
+    private $_streamLogger;
+    private $_sqlCustom;
+
+    public function __construct() {
+        $this->_sqlCustom = new CustomQueryBuilder();
+        $this->_streamLogger = new Logger($this);
+        $this->_streamLogger->pushHandler(new StreamHandler(env('STREAM_LOG'), LOGGER::INFO));
+    }
+
     /**
      * recover user account
      * @param Request $request
@@ -63,6 +74,22 @@ class UserController extends Controller
     }
 
     /**
+     *  private function to get the user security information from the database return object
+     *  this is used method verifySecurityQuestions
+     * @param mixed $value
+     * @return mixed
+     */
+    private function _getSecurityInformation($value) {
+        $o = array();
+
+        foreach($value as $v) {
+            array_push($o, $v);
+        }
+
+        return $o;
+    }
+
+    /**
      * verify user security question
      * @param Request $request
      * @param String $id
@@ -106,19 +133,26 @@ class UserController extends Controller
             }
 
             $result = $oUser->verifySecurityQuestions($params);
+
             if ($result['status'] === 'failed') {
                 return response()->json($result,  Copywrite::HTTP_CODE_400);
             }
         }
 
-        $keys = array_map(create_function('$o', 'return $o;'), $result['data']);
+        function _getSecurityInformation($value) {
+            return $value;
+        }
+
+        $keys = array_map(array($this, '_getSecurityInformation'), $result['data']);
+
+        $securityinfo = current($keys);
 
         //create reset token
         $resetToken = str_random(6); //generated random token
 
         //update password from generated token
         $params = [
-            'password' => password_hash($resetToken, PASSWORD_DEFAULT)
+            'password' => password_hash($resetToken, PASSWORD_DEFAULT),
         ];
 
         $columns = [
@@ -126,6 +160,22 @@ class UserController extends Controller
         ];
 
         $result = $oUser->resetPassword($params, $columns);
+
+        //create a reset password log
+        $resetPasswordLogs = array();
+        $resetTable = 'reset_password';
+        $customColumns = ['email', 'reset_token'];
+        foreach($securityinfo as $key=>$resetValues) {
+           if ($key === 1) {
+            $resetPasswordLogs = [
+                $resetValues,
+                $resetToken
+            ];
+           }
+
+
+        }
+        $resetLog = $this->_sqlCustom->resetPasswordQuery($resetPasswordLogs, $resetTable, $customColumns);
 
         if ($result === 'failed') {
             return response()->json([
@@ -135,9 +185,10 @@ class UserController extends Controller
         }
 
         //mailbox parameters
+        //@EBP : it's ok to index the array values here since the $mailParams is always expecting a value.
         $mailParams = [
-            'mail_to_name' => $keys[0]->full_name,
-            'mail_to_email' => $keys[0]->email,
+            'mail_to_name' => $securityinfo[2],
+            'mail_to_email' => $securityinfo[1],
             'reset_token' => $resetToken
         ];
 
@@ -148,7 +199,8 @@ class UserController extends Controller
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
             'status_code' => Copywrite::STATUS_CODE_104,
             'http_code' => Copywrite::HTTP_CODE_200,
-            'mail_result' => $mailbox
+            'mail_result' => $mailbox,
+            'reset_log' => $resetLog
         ], Copywrite::HTTP_CODE_200);
     }
 
