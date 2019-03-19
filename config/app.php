@@ -14,8 +14,6 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-    'stream_logger' => 'php://stderr',
-
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
