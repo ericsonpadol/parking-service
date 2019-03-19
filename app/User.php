@@ -422,6 +422,15 @@ class User extends Authenticatable
                     ->where('sec_id', $params['secques_id'])
                     ->get();
 
+               if (!$secques) {
+                    return [
+                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                        'status_code' => Copywrite::STATUS_CODE_109,
+                        'http_code' => Copywrite::HTTP_CODE_404,
+                        'message' => Copywrite::ACCOUNT_SECURITY_QUESTION_NOT_FOUND
+                    ];
+               }
+
                 $toReplace = ['/:secques:/'];
                 //@EBP 03092019: this will result only to one wrong answer so forcing to look into array index[0] should not break any logic
                 $fromReplace = [$secques[0]->value];
