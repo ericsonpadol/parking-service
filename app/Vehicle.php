@@ -13,14 +13,16 @@ class Vehicle extends Model
 
     //configuration
     protected $table = 'vehicles';
+    protected $tblUsers = 'users';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'id',
         'plate_number',
         'color',
         'model',
         'brand',
-        'users_id'
+        'users_id',
+        'id',
+        'image_uri'
     ];
     protected $hidden = [
         'created_at',

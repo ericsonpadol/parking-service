@@ -19,6 +19,7 @@ class VehiclesTable extends Migration
             $table->string('color');
             $table->string('model');
             $table->string('brand');
+            $table->text('image_uri')->nullable();
             $table->integer('user_id')
                 ->unsigned();
             $table->foreign('user_id')

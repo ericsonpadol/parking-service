@@ -14,6 +14,11 @@ use App\Http\Requests\LoginAuthenticateRequest;
 use App\Http\Requests\RequestResetPassword;
 use App\ParkingAuditLog;
 use Validator;
+use DB;
+use Log;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 // use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
 // use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
 
@@ -21,8 +26,19 @@ use Validator;
 
 class APIController extends Controller
 {
+    private $_logger = '';
+
+    public function __construct()
+    {
+        DB::connection()->enableQueryLog();
+        $this->_logger = new Logger(APIController::class);
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    }
+
     /**
-     *
+     * reset password method
+     * @param Request
+     * @return Response
      */
     public function resetPassword(RequestResetPassword $request) {
         $userInput = $request->only(['email']);
@@ -101,8 +117,8 @@ class APIController extends Controller
             'email' => 'required|email|unique:users|max:255',
             'password' => 'required|min:8|regex:/(\d+)/u|regex:/([a-z]+)/u|regex:/([A-Z]+)/u|regex:/(\W+)/u',
             'mobile_number' => 'required|unique:users|min:11|max:11',
-            'full_name' => 'required'
-
+            'full_name' => 'required',
+            'image_uri' => 'url'
         ], [
             'password.regex' => Copywrite::PASSWORD_FORMAT_ERROR
         ]);
@@ -121,6 +137,7 @@ class APIController extends Controller
             'full_name',
             'password',
             'mobile_number',
+            'image_uri'
         ]);
 
         //hashing options
@@ -144,6 +161,7 @@ class APIController extends Controller
         $mergeUserVals['password'] = password_hash($userInput['password'], PASSWORD_BCRYPT, $options);
 
         $cUser = User::create($mergeUserVals);
+
         //catch insert error if user is not successfully created
         //pending changes will needs to be done asap
         $user = User::orderBy('created_at', 'DESC')->first();

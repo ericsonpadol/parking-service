@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ParkingSpace;
 use App\Http\Requests;
+use App\Copywrite;
 
 class ParkingSpaceController extends Controller
 {
@@ -19,8 +20,11 @@ class ParkingSpaceController extends Controller
         $parkingSpaces = ParkingSpace::all();
 
         return response()->json([
-                    'data' => $parkingSpaces
-                        ], 200);
+            'data' => $parkingSpaces,
+            'status_code' => Copywrite::STATUS_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200);
     }
 
     /**
