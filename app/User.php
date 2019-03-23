@@ -61,13 +61,13 @@ class User extends Authenticatable
     /**
      * User Constructor
      */
-    // public function __construct(array $attributes = []) {
-    //     parent::__construct($attributes);
+    public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
 
-    //     DB::connection()->enableQueryLog();
-    //     $this->_logger = new Logger('user-module');
-    //     $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
-    // }
+        DB::connection()->enableQueryLog();
+        $this->_logger = new Logger('user-module');
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    }
 
     /**
      * User & Vehicle Relationship
