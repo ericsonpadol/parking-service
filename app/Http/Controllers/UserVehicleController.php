@@ -18,6 +18,12 @@ class UserVehicleController extends Controller
     //configurations
     private $_logger = '';
 
+    public function __construct()
+    {
+        DB::connection()->enableQueryLog();
+        $this->_logger = new Logger('vehicles-update');
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    }
     /**
      * Display a listing of the resource.
      *
@@ -65,7 +71,7 @@ class UserVehicleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateVehicleRequest $request, $userId) {
+    public function store(Request $request, $userId) {
         $useraccount = User::find($userId);
 
         if (!$useraccount) {
@@ -79,10 +85,11 @@ class UserVehicleController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'plate_number' => 'required|unique:plate_number|alpha_num|max:7|min:6',
+            'plate_number' => 'required|unique:vehicles|alpha_num|max:7|min:6',
             'color' => 'required',
             'model' => 'required',
-            'brand' => 'required'
+            'brand' => 'required',
+            'image_uri' => 'url'
         ]);
 
         if ($validator->fails()) {
@@ -176,10 +183,10 @@ class UserVehicleController extends Controller
         }
 
         $validator = Validator::make($values, [
-                    'plate_number' => 'string|max:11|alpha_num|unique:vehicles,plate_number',
-                    'color' => 'string|max:255',
-                    'model' => 'string|max:255',
-                    'brand' => 'string|max:255'
+            'plate_number' => 'string|max:11|alpha_num|unique:vehicles,plate_number|filled',
+            'color' => 'string|max:255|filled',
+            'model' => 'string|max:255|filled',
+            'brand' => 'string|max:255|filled'
         ]);
 
         if ($validator->fails()) {
@@ -193,14 +200,9 @@ class UserVehicleController extends Controller
 
         $vehicle->update($values);
 
-        //log transaction
-        DB::connection()->enableQueryLog();
-        $this->_logger = new Logger('vehicles-update');
-        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
-
         //stream logging
         $this->_logger->addInfo('Request: ' . serialize($values));
-        $this->_logger->addInfo();
+        $this->_logger->addInfo('Query: ' . serialize(DB::getQueryLog()));
 
         return response()->json([
                     'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),

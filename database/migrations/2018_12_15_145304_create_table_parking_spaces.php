@@ -12,6 +12,7 @@ class CreateTableParkingSpaces extends Migration
     {
         Schema::create('parkingspaces', function (Blueprint $table) {
             $table->increments('id', 1);
+            $table->text('image_uri')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->text('address');
             $table->string('city', 255);

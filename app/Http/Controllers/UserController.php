@@ -393,12 +393,13 @@ class UserController extends Controller
                             ], Copywrite::HTTP_CODE_404);
         }
 
-        $values = $request->except(['password', 'email']);
+        $values = $request->except(['password']);
 
         $validator = Validator::make($values, [
-                    'email' => 'email|max:255|unique:users,email',
-                    'mobile_number' => 'min:11|max:11|unique:users,mobile_number',
-                    'full_name' => 'string|max:255'
+                    'email' => 'email|max:255|unique:users,email|filled',
+                    'mobile_number' => 'min:11|max:11|unique:users,mobile_number|filled',
+                    'full_name' => 'string|max:255|filled',
+                    'image_uri' => 'url|filled'
         ]);
 
         if ($validator->fails()) {

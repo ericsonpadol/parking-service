@@ -61,7 +61,25 @@ class UserParkingSpaceController extends Controller
                 'messages' => Copywrite::USER_NOT_FOUND,
             ];
 
-            return response()->json(compact('messages'));
+            return response()->json(compact('messages'), Copywrite::HTTP_CODE_404);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'city' => 'required|max:255',
+            'establishment_type' => 'required',
+            'parking_slot' => 'required|string',
+            'building_name' => 'required',
+            'space_lat' => 'required',
+            'space_long' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422);
         }
 
         $values = $request->all();
@@ -71,8 +89,8 @@ class UserParkingSpaceController extends Controller
         return response()->json([
                     'messages' => Copywrite::VEHICLE_CREATE_SUCCESS,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'http_code' => Copywrite::HTTP_CODE_201
-                        ], Copywrite::HTTP_CODE_201);
+                    'http_code' => Copywrite::HTTP_CODE_200
+                        ], Copywrite::HTTP_CODE_200);
     }
 
     /**
@@ -205,7 +223,7 @@ class UserParkingSpaceController extends Controller
             ]);
         }
 
-//replace this with booking transactions
+        //replace this with booking transactions
 //        if (sizeof($parkingSpace->user) > 0) {
 //            return response()->json([
 //                        'messages' => str_replace(':parkingspace:', $parkingSpace->parking_slot, Copywrite::PARKING_SPACE_DELETE_RESTRICT),

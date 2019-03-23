@@ -22,6 +22,8 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     protected $dataResult = '';
     protected $userTable = 'users';
+    protected $table = 'users';
+    protected $tblVehicle = 'vehicles';
     private $_logger = '';
     protected $resetPasswordColumns = [
         'email', 'reset_token'
@@ -43,7 +45,8 @@ class User extends Authenticatable
         'is_activated',
         'is_lock',
         'is_lock_count',
-        'activation_token'
+        'activation_token',
+        'image_uri'
     ];
 
     /**
@@ -58,13 +61,13 @@ class User extends Authenticatable
     /**
      * User Constructor
      */
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
+    // public function __construct(array $attributes = []) {
+    //     parent::__construct($attributes);
 
-        DB::connection()->enableQueryLog();
-        $this->_logger = new Logger('user-module');
-        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
-    }
+    //     DB::connection()->enableQueryLog();
+    //     $this->_logger = new Logger('user-module');
+    //     $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    // }
 
     /**
      * User & Vehicle Relationship
