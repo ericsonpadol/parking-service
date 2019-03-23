@@ -87,10 +87,10 @@ class UserParkingSpaceController extends Controller
         $userAccount->parkingspaces()->create($values);
 
         return response()->json([
-                    'messages' => Copywrite::VEHICLE_CREATE_SUCCESS,
-                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'http_code' => Copywrite::HTTP_CODE_200
-                        ], Copywrite::HTTP_CODE_200);
+            'messages' => Copywrite::PARKING_SPACE_CREATE_SUCCESS,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200);
     }
 
     /**
