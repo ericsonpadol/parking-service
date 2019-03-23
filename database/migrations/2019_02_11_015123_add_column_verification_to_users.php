@@ -23,6 +23,7 @@ class AddColumnVerificationToUsers extends Migration
                 ->default(0);
             $table->string('activation_token', 255);
             $table->time('lockout');
+            $table->text('image_uri')->nullable();
             $table->index(['email', 'mobile_number'], 'users_index');
         });
     }

@@ -22,6 +22,8 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     protected $dataResult = '';
     protected $userTable = 'users';
+    protected $table = 'users';
+    protected $tblVehicle = 'vehicles';
     private $_logger = '';
     protected $resetPasswordColumns = [
         'email', 'reset_token'
@@ -43,7 +45,8 @@ class User extends Authenticatable
         'is_activated',
         'is_lock',
         'is_lock_count',
-        'activation_token'
+        'activation_token',
+        'image_uri'
     ];
 
     /**
