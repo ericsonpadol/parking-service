@@ -9,6 +9,42 @@ use DB;
 class CustomQueryBuilder extends Model
 {
     /**
+     *  this query string will get the nearest parking space of the user provided by the latitude and longtitude
+     *  @param Double $fromLang : user selected latitude
+     *  @param Double $fromLot : user selected longtitude
+     *  @param Decimal $earthRadius : this is a constant value if earthRadius is KM use 6371
+     *      else if earthRadius is Miles use 3959
+     *  @param Decimal $precision : is the border radius of all returned value to the user, this is default to 10 KM/MILES.
+     */
+
+     public function getNearbyParkingSpaces($fromLat, $fromLon, $earthRadius = 6371, $precision = 10) {
+        $queryTable = 'parkingspaces';
+        $joinTable = 'parkspace_pricing';
+        $mainColumn = ['id, address, city, parking_slot'];
+        $joinColumn = ['pspace_price'];
+        $mainColumnString = implode(',', $mainColumn);
+        $joinColumnString = implode(',', $joinColumn);
+        try{
+            $distance = '( '. $earthRadius .' * acos( cos( RADIANS( '. $fromLat .') ) * '
+            . 'cos( RADIANS( '. $queryTable .'.space_lat) ) *'
+            . 'cos( radians( '. $queryTable .'.space_lon) - RADIANS('. $fromLon .') ) + '
+            . 'sin( RADIANS('. $fromLat .') ) *'
+            . 'sin( RADIANS('. $queryTable .'.space_lat) ) ) ) AS DISTANCE';
+            $from = 'FROM ' . $queryTable . ',' . $joinTable;
+            $where = $queryTable . '.id = ' . $joinColumn . '.parking_space_id';
+            $having = 'HAVING DISTANCE < ' . $precision;
+            $orderLimit = 'ORDER BY DISTANCE LIMIT 0, 20'; //limit the result to 20
+
+            $queryString = "SELECT " . $mainColumnString . ', ' . $distance . ' ' . $from . ' ' . $where
+            . ' ' . $having . ' ' . $orderLimit;
+
+
+        } catch(Exception $e) {
+
+        }
+     }
+
+    /**
      * this function activates the reset password token
      */
     public function activatePasswordToken(array $params) {
