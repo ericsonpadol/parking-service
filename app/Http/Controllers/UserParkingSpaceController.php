@@ -182,9 +182,9 @@ class UserParkingSpaceController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'messages' => $validator->errors(),
-                            ], Copywrite::HTTP_CODE_400);
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'messages' => $validator->errors(),
+            ], Copywrite::HTTP_CODE_400);
         }
 
         $parkingSpace->update($values);
