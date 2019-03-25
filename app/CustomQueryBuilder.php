@@ -14,14 +14,14 @@ class CustomQueryBuilder extends Model
      *  @param Double $fromLot : user selected longtitude
      *  @param Decimal $earthRadius : this is a constant value if earthRadius is KM use 6371
      *      else if earthRadius is Miles use 3959
-     *  @param Decimal $precision : is the border radius of all returned value to the user, this is default to 10 KM/MILES.
+     *  @param Decimal $precision : is the border radius of all returned value to the user, this is default to 5 KM/MILES.
      */
 
-     public function getNearbyParkingSpaces($fromLat, $fromLon, $earthRadius = 6371, $precision = 10) {
+     public function getNearbyParkingSpaces($fromLat, $fromLon, $earthRadius = 6371, $precision = 5) {
         $queryTable = 'parkingspaces';
         $joinTable = 'parkspace_pricing';
-        $mainColumn = ['id, address, city, parking_slot'];
-        $joinColumn = ['pspace_price'];
+        $mainColumn = [$queryTable . '.id', $queryTable . '.address', $queryTable . '.city', $queryTable . '.parking_slot'];
+        $joinColumn = [$joinTable . '.pspace_price'];
         $mainColumnString = implode(',', $mainColumn);
         $joinColumnString = implode(',', $joinColumn);
         try{
@@ -31,16 +31,21 @@ class CustomQueryBuilder extends Model
             . 'sin( RADIANS('. $fromLat .') ) *'
             . 'sin( RADIANS('. $queryTable .'.space_lat) ) ) ) AS DISTANCE';
             $from = 'FROM ' . $queryTable . ',' . $joinTable;
-            $where = $queryTable . '.id = ' . $joinColumn . '.parking_space_id';
+            $where = 'WHERE ' . $queryTable . '.id = ' . $joinTable . '.parking_space_id';
             $having = 'HAVING DISTANCE < ' . $precision;
             $orderLimit = 'ORDER BY DISTANCE LIMIT 0, 20'; //limit the result to 20
 
-            $queryString = "SELECT " . $mainColumnString . ', ' . $distance . ' ' . $from . ' ' . $where
+            $queryString = "SELECT " . $mainColumnString . ', ' . $joinColumnString . ', ' . $distance . ' ' . $from . ' ' . $where
             . ' ' . $having . ' ' . $orderLimit;
 
-
+            return $queryString;
         } catch(Exception $e) {
-
+            return [
+                'error_code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine()
+            ];
         }
      }
 

@@ -87,4 +87,13 @@ class ParkingSpaceController extends Controller
         //
     }
 
+    /**
+     *
+     */
+    public function getNearbyParkingSpace() {
+        $parkingSpace = new ParkingSpace();
+
+        $parkingSpace->getNearbyParkingSpace();
+    }
+
 }

@@ -240,5 +240,4 @@ class UserParkingSpaceController extends Controller
                     'http_code' => Copywrite::HTTP_CODE_200
                         ], Copywrite::HTTP_CODE_200);
     }
-
 }

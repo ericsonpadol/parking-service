@@ -85,6 +85,15 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
     });
 });
 
+/**
+ * Booking Service
+ */
+Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+    Route::group(['middleware' => 'jwt-verify'], function() {
+        Route::get('parkingspace.nearby', 'ParkingSpaceController@getNearbyParkingSpace');
+    });
+});
+
 
 /*
  * Dingo Api Routes
