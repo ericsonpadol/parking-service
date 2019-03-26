@@ -14,7 +14,7 @@ class TopUpSeed extends Seeder
     public function run() {
         $faker = Faker::create();
         $key = ['topup', 'penalty', 'tax', 'cancellation_fee'];
-        $value = ['0.30', '0.30', '0.10', '0.10'];
+        $value = ['0.30', '0.30', '0.12', '0.10'];
         for ($x = 0; $x < 4; $x++) {
             $seed = [
                'topup_key' => $key[$x],

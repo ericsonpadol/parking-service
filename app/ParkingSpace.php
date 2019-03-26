@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Copywrite;
+use App\CustomQueryBuilder;
+use Tymon\JWTAuth\Claims\Custom;
+use DB;
 
 class ParkingSpace extends Model
 {
@@ -31,5 +35,26 @@ class ParkingSpace extends Model
 
     public function user() {
         return $this->belongsTo('App\User');
+    }
+
+    /***
+     * this method will list down the list of nearby parking space
+     *
+     * @return Array $params
+     * @return Mixed
+     */
+    public function getNearbyParkingSpace($params = []) {
+        /**
+         * Note: @EBP you might want to refactor this in the near future since we do not want to use
+         * raw sqls, we might find an ORM work around | 03252019
+         */
+        $sql = new CustomQueryBuilder();
+
+        //expected query parameters
+        $sqlQuery = $sql->getNearbyParkingSpaces($params['fromLat'], $params['fromLon']);
+
+        $result = DB::select(DB::raw($sqlQuery));
+
+        return $result;
     }
 }

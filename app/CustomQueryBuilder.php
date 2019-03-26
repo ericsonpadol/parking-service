@@ -9,6 +9,67 @@ use DB;
 class CustomQueryBuilder extends Model
 {
     /**
+     *  this query string will get the nearest parking space of the user provided by the latitude and longtitude
+     *  @param Double $fromLang : user selected latitude
+     *  @param Double $fromLot : user selected longtitude
+     *  @param Decimal $earthRadius : this is a constant value if earthRadius is KM use 6371
+     *      else if earthRadius is Miles use 3959
+     *  @param Decimal $precision : is the border radius of all returned value to the user, this is default to 5 KM/MILES.
+     */
+
+     public function getNearbyParkingSpaces($fromLat, $fromLon, $earthRadius = 6371, $precision = 5) {
+        $queryTable = 'parkingspaces';
+        $joinTable = 'parkspace_pricing';
+        $mainColumn = [
+            $queryTable . '.id',
+            $queryTable . '.address',
+            $queryTable . '.city',
+            $queryTable . '.parking_slot',
+            $queryTable . '.building_name',
+            $queryTable . '.establishment_type',
+            $queryTable . '.description',
+            $queryTable . '.image_uri'
+        ];
+
+        $joinColumn = [
+            $joinTable . '.pspace_base_price',
+            $joinTable . '.pspace_calc_price',
+            $joinTable . '.avail_start_datetime',
+            $joinTable . '.avail_end_datetime'
+        ];
+
+        $mainColumnString = implode(',', $mainColumn);
+        $joinColumnString = implode(',', $joinColumn);
+
+        try{
+
+            $distance = '( '. $earthRadius .' * acos( cos( RADIANS( '. $fromLat .') ) * '
+            . 'cos( RADIANS( '. $queryTable .'.space_lat) ) *'
+            . 'cos( radians( '. $queryTable .'.space_lon) - RADIANS('. $fromLon .') ) + '
+            . 'sin( RADIANS('. $fromLat .') ) *'
+            . 'sin( RADIANS('. $queryTable .'.space_lat) ) ) ) AS distance';
+            $from = 'FROM ' . $queryTable . ',' . $joinTable;
+            $where = 'WHERE ' . $queryTable . '.id = ' . $joinTable . '.parking_space_id' .
+                ' AND ' . $queryTable . '.status = "active" ';
+            $having = 'HAVING DISTANCE < ' . $precision;
+            $orderLimit = 'ORDER BY DISTANCE LIMIT 0, 20'; //limit the result to 20
+
+            $queryString = "SELECT " . $mainColumnString . ', ' . $joinColumnString . ', ' . $distance . ' ' . $from . ' ' . $where
+            . ' ' . $having . ' ' . $orderLimit;
+
+            return $queryString;
+
+        } catch(Exception $e) {
+            return [
+                'error_code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine()
+            ];
+        }
+     }
+
+    /**
      * this function activates the reset password token
      */
     public function activatePasswordToken(array $params) {
