@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ParkingSpace;
 use App\Http\Requests;
 use App\Copywrite;
+use Validator;
 
 class ParkingSpaceController extends Controller
 {
@@ -88,12 +89,40 @@ class ParkingSpaceController extends Controller
     }
 
     /**
-     *
+     * this method will return the nearby parking spaces with a radius of 5 KM
+     * @var Request $request
+     * @return Mixed
      */
-    public function getNearbyParkingSpace() {
+    public function getNearbyParkingSpace(Request $request) {
         $parkingSpace = new ParkingSpace();
 
-        $parkingSpace->getNearbyParkingSpace();
-    }
+        $validator = Validator::make($request->all(), [
+            'currentLat' => 'required',
+            'currentLong' => 'required'
+        ]);
 
+        $params = [
+            'fromLat' => $request->only(['currentLat']),
+            'fromLon' => $request->only(['currentLong'])
+        ];
+
+        if ($validator->fails()) {
+            //this coordinates will default to uptown mall bgc.
+            $params = [
+                'fromLat' => '14.5564973',
+                'fromLon' => '121.0520231'
+            ];
+        }
+
+        $markers = $parkingSpace->getNearbyParkingSpace($params);
+
+        $pspaceNearby = $markers ? $markers : Copywrite::NO_NEARBY_PARKINGSPACES;
+
+        return response()->json([
+            'data' => $pspaceNearby,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status_code' => Copywrite::STATUS_CODE_200
+        ], Copywrite::HTTP_CODE_200);
+    }
 }

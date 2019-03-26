@@ -39,19 +39,22 @@ class ParkingSpace extends Model
 
     /***
      * this method will list down the list of nearby parking space
-     * @var Array $params
-     * @return Array
+     *
+     * @return Array $params
+     * @return Mixed
      */
     public function getNearbyParkingSpace($params = []) {
+        /**
+         * Note: @EBP you might want to refactor this in the near future since we do not want to use
+         * raw sqls, we might find an ORM work around | 03252019
+         */
         $sql = new CustomQueryBuilder();
-        $params = [
-            'fromLat' => '-21.430013',
-            'fromLon' => '118.096038',
-        ];
 
-        $test = $sql->getNearbyParkingSpaces($params['fromLat'], $params['fromLon']);
-        $a = collect(DB::select(DB::raw($test)));
+        //expected query parameters
+        $sqlQuery = $sql->getNearbyParkingSpaces($params['fromLat'], $params['fromLon']);
 
-        print_r($a);
+        $result = DB::select(DB::raw($sqlQuery));
+
+        return $result;
     }
 }
