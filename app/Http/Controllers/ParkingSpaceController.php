@@ -102,8 +102,8 @@ class ParkingSpaceController extends Controller
         ]);
 
         $params = [
-            'fromLat' => $request->only(['currentLat']),
-            'fromLon' => $request->only(['currentLong'])
+            'fromLat' => $request->currentLat,
+            'fromLon' => $request->currentLong
         ];
 
         if ($validator->fails()) {
