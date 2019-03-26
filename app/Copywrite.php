@@ -66,6 +66,7 @@ class Copywrite extends Model
     const INVALID_ANSWER_SECURITY_QUESTIONS = 'wrong answer to security question :secques:';
     const INVALID_PARAMETER = 'no data found';
     const ACCOUNT_SECURITY_ANSWER_NOT_FOUND = 'security questions answer cannot be blank';
+    const NO_NEARBY_PARKINGSPACES = 'there are no parking space nearby';
 
 
 
