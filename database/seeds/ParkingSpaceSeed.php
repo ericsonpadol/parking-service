@@ -13,14 +13,14 @@ class ParkingSpaceSeed extends Seeder
     {
         $faker = Faker::create();
 
-        for ($x = 0; $x < 20; ++$x) {
+        for ($x = 0; $x < 50; ++$x) {
             $seed = [
                 'address' => $faker->streetAddress,
                 'city' => $faker->city,
                 'zipcode' => $faker->postcode,
                 'building_name' => $faker->buildingNumber,
-                'space_lat' => $faker->latitude,
-                'space_lon' => $faker->longitude,
+                'space_lat' => $faker->latitude(14.000000, 14.999999),
+                'space_lon' => $faker->longitude(121.000000, 121.999999),
                 'establishment_type' => $faker->randomElement(['resident', 'commercial', 'public']),
                 'description' => $faker->text($maxNbChars = 255),
                 'parking_slot' => $faker->randomLetter.$faker->numberBetween(1, 200),

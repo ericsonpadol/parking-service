@@ -17,7 +17,8 @@ class CreateParkingspacePricingTable extends Migration
             $table->double('pspace_calc_price')->nullable();
             $table->dateTime('avail_start_datetime');
             $table->dateTime('avail_end_datetime');
-            $table->integer('parking_space_id')->unsigned();
+            $table->integer('parking_space_id')
+                ->unsigned();
             $table->integer('user_id')->unsigned();
             $table->foreign('parking_space_id')
                 ->references('id')

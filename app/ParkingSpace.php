@@ -8,6 +8,10 @@ use App\Copywrite;
 use App\CustomQueryBuilder;
 use Tymon\JWTAuth\Claims\Custom;
 use DB;
+use Log;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 
 class ParkingSpace extends Model
 {
@@ -37,6 +41,14 @@ class ParkingSpace extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function parkingspacepricing() {
+        return $this->hasOne('App\ParkingSpacePrice');
+    }
+
+    public function vehicles() {
+        return $this->hasMany('App\Vehicles');
+    }
+
     /***
      * this method will list down the list of nearby parking space
      *
@@ -52,6 +64,8 @@ class ParkingSpace extends Model
 
         //expected query parameters
         $sqlQuery = $sql->getNearbyParkingSpaces($params['fromLat'], $params['fromLon']);
+
+        print_r($sqlQuery);
 
         $result = DB::select(DB::raw($sqlQuery));
 
