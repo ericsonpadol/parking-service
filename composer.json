@@ -18,7 +18,7 @@
         "guzzlehttp/guzzle": "6.3.2",
         "mediaburst/clockworksms": "2.0.*",
         "stevenmaguire/laravel-middleware-csp": "0.1.1",
-        "farhanwazir/laravelgooglemaps" : "^2.3@master"
+        "farhanwazir/laravelgooglemaps" : "^2.3"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
