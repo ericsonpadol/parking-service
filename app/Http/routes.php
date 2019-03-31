@@ -1,6 +1,7 @@
 <?php
 
 use App\Copywrite;
+use FarhanWazir\GoogleMaps\GMaps;
 
 /*
   |--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ use App\Copywrite;
  */
 
 // Health Check
-Route::get('/', function () {
+Route::get('/app.info', function () {
     $cow = Cowsayphp\Farm::create(\Cowsayphp\Farm\Cow::class);
     echo '<pre>';
     echo '<b>PARKING SERVICE</b>';
@@ -23,6 +24,38 @@ Route::get('/', function () {
         echo $cowResponse;
     }
     echo '</pre>';
+});
+
+Route::get('/test-map', function() {
+    $gmaps = new GMaps();
+    $config = array();
+    $config['center'] = '14.5581629, 121.0241867';
+    $config['zoom'] = '16';
+    $config['map_width'] = '900px';
+    $config['scrollwheel'] = false;
+
+    //marker
+    $marker = array();
+    $marker['position'] = '14.5581629, 121.0241867';
+    $marker['animation'] = 'DROP';
+    $marker['title'] = 'test 1';
+    $marker['infowindow_content'] = '<p> <b>Building Name </b> : 51639 <br><br> <b>Parking Slot</b> : p180, <br><br> <b>Price Per Hour</b> : 136 </p>';
+
+    $gmaps->initialize($config);
+    $gmaps->add_marker($marker);
+
+    $marker = array();
+
+    $marker['position'] = '14.5577893, 121.0251628';
+    $marker['animation'] = 'DROP';
+    $marker['title'] = 'test 2';
+    $marker['infowindow_content'] = '<p> <b>Building Name </b> : 71565 <br><br> <b>Parking Slot</b> : p190 <br><br> Price Per Hour : 60 </p>';
+    $gmaps->add_marker($marker);
+
+    $map = $gmaps->create_map();
+
+    return view('welcome')->with('map', $map);
+
 });
 
 //none token based routes via web
@@ -61,6 +94,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::resource('parking_space', 'ParkingSpaceController', ['only' => ['index', 'show']]);
         Route::resource('user.parkingspace', 'UserParkingSpaceController', ['except' => 'create', 'edit']);
+        Route::resource('parkspace.pricing', 'ParkingSpacePricingController', ['only' => ['store', 'update', 'show', 'index']]);
     });
 });
 

@@ -70,7 +70,7 @@ class UserParkingSpaceController extends Controller
             'parking_slot' => 'required|string',
             'building_name' => 'required',
             'space_lat' => 'required',
-            'space_long' => 'required',
+            'space_lon' => 'required',
         ]);
 
         if ($validator->fails()) {
