@@ -27,6 +27,8 @@ class Copywrite extends Model
     const PASSWORD_UPDATE_SUCCESS = 'password changed successfully';
     const ACTIVATION_STATUS_SUCCESS = 'user account activated';
     const UNLOCK_STATUS_SUCCESS = 'congratulations, you\'re account is unlocked.';
+    const CREATED_PSPACE_PRICE = 'added parking space pricing';
+    const UPDATED_PSPACE_PRICE = 'parking space info updated successfully';
 
     /**
      * LOGGING
@@ -44,6 +46,8 @@ class Copywrite extends Model
     const MOBILE_NUMBER_NOT_FOUND = 'mobile number not found';
     const INVALID_MOBILE_NUMBER = 'invalid mobile number';
     const SERVER_DOWNTIME = 'server is down';
+    const SERVER_MAINTENANCE = 'server is under maintenance';
+    const SERVER_ERROR = 'cannot process your request, please contact our system administrator';
     const PASSWORD_FORMAT_ERROR = 'Password requires one uppercase, one numeric, one special character';
     const USER_NOT_FOUND = 'user not found';
     const PARKING_SPACE_NOT_FOUND = 'parking space not found';
@@ -67,6 +71,8 @@ class Copywrite extends Model
     const INVALID_PARAMETER = 'no data found';
     const ACCOUNT_SECURITY_ANSWER_NOT_FOUND = 'security questions answer cannot be blank';
     const NO_NEARBY_PARKINGSPACES = 'there are no parking space nearby';
+    const PSPACE_PRICE_CHECK = 'price is already set on this parking space';
+    const DEFAULT_NO_ENTRY_FOUND = 'no entry was found';
 
 
 

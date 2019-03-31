@@ -4,7 +4,6 @@
         <title>Laravel</title>
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
         <style>
             html, body {
                 height: 100%;
@@ -34,11 +33,13 @@
                 font-size: 96px;
             }
         </style>
+        {!! $map['js'] !!}
     </head>
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Laravel 5</div>
+                <div class="title">Test Map</div>
+                <div>{!! $map['html'] !!}</div>
             </div>
         </div>
     </body>

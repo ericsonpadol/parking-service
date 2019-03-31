@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Vehicle;
 use App\Http\Requests;
+use App\Copywrite;
 
 class VehicleController extends Controller
 {
@@ -49,12 +50,22 @@ class VehicleController extends Controller
         $vehicles = Vehicle::where('plate_number', '=', $vehiclePlate)->get();
 
         if (!$vehicles || $vehicles->isEmpty()) {
+
+            //returning empty array
             $response = response()->json([
-                'message' => 'Vehicle not found!',
-                'code' => 404
-                    ], 404);
+                'message' => [],
+                'http_code' => Copywrite::HTTP_CODE_200,
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+            ], Copywrite::HTTP_CODE_200);
+
         } else {
-            $response = response()->json(['data' => $vehicles], 200);
+
+            $response = response()->json([
+                'data' => $vehicles,
+                'http_code' => Copywrite::HTTP_CODE_200,
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+            ], Copywrite::HTTP_CODE_200);
+
         }
 
         return $response;
