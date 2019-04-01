@@ -28,7 +28,9 @@ class CustomQueryBuilder extends Model
             $queryTable . '.building_name',
             $queryTable . '.establishment_type',
             $queryTable . '.description',
-            $queryTable . '.image_uri'
+            $queryTable . '.image_uri',
+            $queryTable . '.space_lat',
+            $queryTable . '.space_lon'
         ];
 
         $joinColumn = [
@@ -52,7 +54,7 @@ class CustomQueryBuilder extends Model
             $where = 'WHERE ' . $queryTable . '.id = ' . $joinTable . '.parking_space_id' .
                 ' AND ' . $queryTable . '.status = "active" ';
             $having = 'HAVING DISTANCE < ' . $precision;
-            $orderLimit = 'ORDER BY ' . $joinTable . '.avail_start_datetime ASC,  distance ASC LIMIT 0, 20'; //limit the result to 20
+            $orderLimit = 'ORDER BY ' . $joinTable . '.avail_start_datetime ASC,  distance ASC LIMIT 0, 10'; //limit the result to 10
 
             $queryString = "SELECT " . $mainColumnString . ', ' . $joinColumnString . ', ' . $distance . ' ' . $from . ' ' . $where
             . ' ' . $having . ' ' . $orderLimit;
