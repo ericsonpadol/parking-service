@@ -39,6 +39,24 @@ class Copywrite extends Model
     const LOGGER_WARN = 'logged warn';
     const LOGGER_ERROR = 'logged error';
 
+    /**
+     * HEADERS
+     */
+     const HEADER_CONVID = 'X-Conversation-ID';
+
+     /**
+      * MAP
+      */
+    const MAP_INFOWINDOW_CONTENT = '<p> <b>BUILDING NAME: </b> :map_buildingname: ' .
+        '<br><br> <b>Address: </b> :map_address:' .
+        '<br><br> <b>Parking Slot:</b> :map_parkingslot:' .
+        '<br><br> <b>Price per hour: PHP:map_calcprice:</b>' .
+        '<br><br> <b>Distance: </b> :map_distance:' .
+        '</p>';
+
+    const MAP_TITLE = ':map_parkingslot: (Price per hour: PHP:map_calcprice:)';
+
+
 
     /**
      * ERROR COPYWRITES
