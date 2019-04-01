@@ -15,15 +15,18 @@ use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use DB;
+use App\CustomLogger;
+use Session;
 
 class ParkingSpacePricingController extends Controller
 {
     private $_topUp = array();
+    private $_logger = '';
 
     public function __construct()
     {
         DB::connection()->enableQueryLog();
-        $this->_logger = new Logger('parkspace-pricing');
+        $this->_logger = new Logger('ParkingSpacePricingController');
         $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
     }
 
@@ -36,13 +39,31 @@ class ParkingSpacePricingController extends Controller
     {
         $pspacePriceList = ParkingSpacePrice::where(['user_id' => $id])->get();
 
+        //log
+        Log::info(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+        Log::info(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::RESULT . serialize($pspacePriceList));
+
+        $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+        $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::RESULT . serialize($pspacePriceList));
+
         return response()->json([
             'data' => $pspacePriceList,
             'data_count' => count($pspacePriceList),
             'http_code' => Copywrite::HTTP_CODE_200,
             'status_code' => Copywrite::STATUS_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
-        ], Copywrite::HTTP_CODE_200);
+        ], Copywrite::HTTP_CODE_200)
+            ->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
     /**
@@ -72,7 +93,8 @@ class ParkingSpacePricingController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
                 'status_code' => Copywrite::STATUS_CODE_404
-            ], Copywrite::HTTP_CODE_404);
+            ], Copywrite::HTTP_CODE_404)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         //store parking space pricing
@@ -89,7 +111,8 @@ class ParkingSpacePricingController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_422,
                 'status_code' => Copywrite::STATUS_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_422);
+            ], Copywrite::HTTP_CODE_422)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         if ($foundPspace->user['id'] != $request->user_id) {
@@ -98,7 +121,8 @@ class ParkingSpacePricingController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
                 'status_code' => Copywrite::STATUS_CODE_404
-            ], Copywrite::HTTP_CODE_404);
+            ], Copywrite::HTTP_CODE_404)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         //calculate parking space calculated price
@@ -137,23 +161,44 @@ class ParkingSpacePricingController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_422,
                 'status_code' => Copywrite::STATUS_CODE_500,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_422);
+            ], Copywrite::HTTP_CODE_422)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         if (ParkingSpacePrice::create($params)) {
+            //log
+            Log::info(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+            $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
             return response()->json([
                 'message' => Copywrite::CREATED_PSPACE_PRICE,
                 'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                 'http_code' => Copywrite::HTTP_CODE_200,
                 'status_code' => Copywrite::STATUS_CODE_200
-            ], Copywrite::HTTP_CODE_200);
+            ], Copywrite::HTTP_CODE_200)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         } else {
+            //log
+            Log::info(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+            $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
             return response()->json([
                 'message' => Copywrite::SERVER_ERROR,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
                 'http_code' => Copywrite::HTTP_CODE_500,
                 'status_code' => Copywrite::STATUS_CODE_500
-            ], Copywrite::HTTP_CODE_500);
+            ], Copywrite::HTTP_CODE_500)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
     }
 
@@ -170,13 +215,31 @@ class ParkingSpacePricingController extends Controller
             ['parking_space_id', '=', $parkspace]
         ])->get();
 
+        //log
+        Log::info(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+        Log::info(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::RESULT . serialize($parkspacePricing));
+
+        $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+        $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+            CustomLogger::getConversationId() .
+            CustomLogger::RESULT . serialize($parkspacePricing));
+
         if (!$parkspacePricing) {
             return response()->json([
                 'message' => Copywrite::PSPACE_PRICE_CHECK,
                 'http_code' => Copywrite::HTTP_CODE_422,
                 'status_code' => Copywrite::STATUS_CODE_500,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_422);
+            ], Copywrite::HTTP_CODE_422)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         return response()->json([
@@ -184,7 +247,7 @@ class ParkingSpacePricingController extends Controller
             'http_code' => Copywrite::HTTP_CODE_200,
             'status_code' => Copywrite::STATUS_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
-        ]);
+        ])->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
     /**
@@ -220,7 +283,8 @@ class ParkingSpacePricingController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_422,
                 'status_code' => Copywrite::STATUS_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_422);
+            ], Copywrite::HTTP_CODE_422)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         //check if pricing entry exists
@@ -232,7 +296,8 @@ class ParkingSpacePricingController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_404,
                 'status_code' => Copywrite::STATUS_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ]);
+            ])->header(Copywrite::HEADER_CONVID, Session::getId());
+
         }
 
         //calculate markup price
@@ -259,19 +324,39 @@ class ParkingSpacePricingController extends Controller
         ];
 
         if ($pSpacePricing->update($params)) {
+             //log
+             Log::info(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+             $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
             return response()->json([
                 'message' => Copywrite::UPDATED_PSPACE_PRICE,
                 'http_code' => Copywrite::HTTP_CODE_200,
                 'status_code' => Copywrite::STATUS_CODE_200,
                 'status' => Copywrite::RESPONSE_STATUS_SUCCESS
-            ], Copywrite::HTTP_CODE_200);
+            ], Copywrite::HTTP_CODE_200)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         } else {
+             //log
+             Log::info(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+             $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
             return response()->json([
                 'message' => Copywrite::SERVER_ERROR,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
                 'http_code' => Copywrite::HTTP_CODE_500,
                 'status_code' => Copywrite::STATUS_CODE_500
-            ], Copywrite::HTTP_CODE_500);
+            ], Copywrite::HTTP_CODE_500)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
     }
 

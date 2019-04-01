@@ -11,6 +11,8 @@ use DB;
 use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use App\CustomLogger;
+use FarhanWazir\GoogleMaps\GMaps;
 
 
 class ParkingSpace extends Model
@@ -37,15 +39,32 @@ class ParkingSpace extends Model
         'created_at',
     ];
 
-    public function user() {
+    private $_logger = '';
+
+    /**
+     * parking space constructor
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        DB::connection()->enableQueryLog();
+        $this->_logger = new Logger('ParkingSpace');
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    }
+
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
-    public function parkingspacepricing() {
+    public function parkingspacepricing()
+    {
         return $this->hasOne('App\ParkingSpacePrice');
     }
 
-    public function vehicles() {
+    public function vehicles()
+    {
         return $this->hasMany('App\Vehicles');
     }
 
@@ -55,7 +74,8 @@ class ParkingSpace extends Model
      * @return Array $params
      * @return Mixed
      */
-    public function getNearbyParkingSpace($params = []) {
+    public function getNearbyParkingSpace($params = [])
+    {
         /**
          * Note: @EBP you might want to refactor this in the near future since we do not want to use
          * raw sqls, we might find an ORM work around | 03252019
@@ -65,10 +85,47 @@ class ParkingSpace extends Model
         //expected query parameters
         $sqlQuery = $sql->getNearbyParkingSpaces($params['fromLat'], $params['fromLon']);
 
-        print_r($sqlQuery);
-
         $result = DB::select(DB::raw($sqlQuery));
 
+        //application log
+        Log::info(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        Log::info(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
+
+        //stream logging
+        $this->_logger->addInfo(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        $this->_logger->addInfo(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
+
         return $result;
+    }
+
+    /**
+     * test map function
+     * @param Array $config
+     * @param Array $markers
+     * @return Mixed $map
+     */
+    public function testMap(array $config, array $markers)
+    {
+        $gmaps = new GMaps();
+
+        $gmaps->initialize($config);
+
+        //create 10 markers
+        foreach($markers as $marker) {
+            $gmaps->add_marker($marker);
+        }
+
+        //create map
+        $map = $gmaps->create_map();
+
+        return $map;
     }
 }
