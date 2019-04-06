@@ -40,16 +40,8 @@ class UserVehicleController extends Controller
                             ], Copywrite::HTTP_CODE_404);
         }
 
-        if ($userAccount->vehicles->isEmpty()) {
-            return response()->json([
-                'message' => Copywrite::VEHICLE_NOT_FOUND,
-                'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'http_code' => Copywrite::HTTP_CODE_404
-            ], Copywrite::HTTP_CODE_404);
-        }
-
         return response()->json([
-                    'data' => $userAccount->vehicles,
+                    'data' => $userAccount->vehicles ? $userAccount->vehicles : [],
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
                     'http_code' => Copywrite::HTTP_CODE_200
                         ], Copywrite::HTTP_CODE_200);

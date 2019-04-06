@@ -35,7 +35,7 @@ class UserSeed extends Seeder
 
         User::create($userConnector);
 
-        for ($x = 0; $x < 6; $x++) {
+        for ($x = 0; $x < 20; $x++) {
             $seed = [
                 'mobile_number' => str_pad($faker->randomNumber(), 11, '09', STR_PAD_LEFT),
                 'email' => $faker->safeEmail,
