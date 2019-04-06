@@ -8,6 +8,19 @@ use DB;
 
 class CustomQueryBuilder extends Model
 {
+
+    public static function getParkingSpaceDistance($fromLat, $fromLon, $earthRadius = 6371) {
+        $queryTable = 'parkingspaces';
+
+        $distance = 'ROUND(( '. $earthRadius .' * acos( cos( RADIANS( '. $fromLat .') ) * '
+        . 'cos( RADIANS( '. $queryTable .'.space_lat) ) *'
+        . 'cos( radians( '. $queryTable .'.space_lon) - RADIANS('. $fromLon .') ) + '
+        . 'sin( RADIANS( '. $fromLat .') ) *'
+        . 'sin( RADIANS('. $queryTable .'.space_lat) ) ) ), 4) AS distance';
+
+        return $distance;
+    }
+
     /**
      *  this query string will get the nearest parking space of the user provided by the latitude and longtitude
      *  @param Double $fromLang : user selected latitude

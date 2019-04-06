@@ -18,7 +18,7 @@ class ParkingSpacePriceSeed extends Seeder
         $startDate = new DateTime('NOW');
         $endDate = new DateTime('NOW');
 
-        for ($x = 0; $x < 10; ++$x) {
+        for ($x = 0; $x < 50; ++$x) {
             $basePrice =  $faker->numberBetween(40, 100);
             $seed = [
                 'pspace_base_price' => $basePrice,
@@ -26,8 +26,8 @@ class ParkingSpacePriceSeed extends Seeder
                     + ($basePrice * $topups[2]->topup_value)),
                 'avail_start_datetime' => $startDate->modify('+1 day'),
                 'avail_end_datetime' => $endDate->modify('+2 days'),
-                'parking_space_id' => ($faker->numberBetween(1, 50) * 10) + 1,
-                'user_id' => ($faker->numberBetween(1, 50) * 10) + 1,
+                'parking_space_id' => ($faker->numberBetween(1, 100) * 10) + 1,
+                'user_id' => ($faker->numberBetween(1, 6) * 10) + 1,
             ];
 
             ParkingSpacePrice::create($seed);

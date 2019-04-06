@@ -13,7 +13,7 @@ class ParkingSpaceSeed extends Seeder
     {
         $faker = Faker::create();
 
-        for ($x = 0; $x < 50; ++$x) {
+        for ($x = 0; $x < 100; ++$x) {
             $seed = [
                 'address' => $faker->streetAddress,
                 'city' => $faker->city,
@@ -25,6 +25,7 @@ class ParkingSpaceSeed extends Seeder
                 'description' => $faker->text($maxNbChars = 255),
                 'parking_slot' => $faker->randomLetter.$faker->numberBetween(1, 200),
                 'user_id' => ($faker->numberBetween(1, 5) * 10) + 1,
+                'ratings' => $faker->numberBetween(1,5),
             ];
 
             ParkingSpace::create($seed);

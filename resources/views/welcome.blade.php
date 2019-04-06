@@ -40,6 +40,7 @@
             <div class="content">
                 <div class="title">Test Map</div>
                 <div>{!! $map['html'] !!}</div>
+                <div id="directions"></div>
             </div>
         </div>
     </body>

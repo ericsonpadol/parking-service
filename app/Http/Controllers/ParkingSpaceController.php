@@ -13,6 +13,7 @@ use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use App\CustomLogger;
+use function GuzzleHttp\json_decode;
 
 class ParkingSpaceController extends Controller
 {
@@ -167,6 +168,11 @@ class ParkingSpaceController extends Controller
             ->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
+    /**
+     * test nearby map
+     * @param Request $request
+     * @return View Html
+     */
     public function testMap(Request $request) {
         $parkingSpace = new ParkingSpace();
 
@@ -183,6 +189,8 @@ class ParkingSpaceController extends Controller
             'zoom' => 16,
             'map_width' => '800px',
             'cluster' => false,
+            'geocodeCaching' => true,
+            // 'minifyJS' => true
         ];
 
         //markers limit to 10
@@ -208,5 +216,80 @@ class ParkingSpaceController extends Controller
         }
 
         return view('welcome')->with('map', $parkingSpace->testMap($config, $marker));
+    }
+
+    /**
+     * search for parking space using a wildcard, coordinates should be passed
+     * @param Request $request
+     * @return Mixed
+     */
+    public function findParkingSpace(Request $request) {
+        $parkingSpace = new ParkingSpace();
+
+        $validator = Validator::make($request->all(), [
+            'currentLat' => 'required',
+            'currentLon' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => Copywrite::HTTP_CODE_422,
+                'status_code' => Copywrite::STATUS_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_422)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
+        }
+
+        $params = [
+            'wildcard' => $request->wildcard,
+            'fromLat' => $request->currentLat,
+            'fromLon' => $request->currentLon
+        ];
+
+        $data = $parkingSpace->findParkingSpace($params);
+
+        return response()->json([
+            'data' => $data,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ], Copywrite::HTTP_CODE_200)
+            ->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     *this method will return the selected parking space
+     *@param Integer $parkingspace
+     *@return Response
+     */
+    public function getSelectedParkingSpace($parkspace) {
+        $parkingSpace = new ParkingSpace();
+        $result = $parkingSpace->getSelectedParkingSpace($parkspace);
+
+        return response()->json($result, Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     * test distance mapping
+     */
+    public function testDistanceMapping(Request $request) {
+        $parkingSpace = new ParkingSpace();
+        $result = $this->getSelectedParkingSpace($request->id);
+        $data = json_decode($result->content());
+
+        //map config
+        $config = [
+            'center' => $data->data->space_lat . ',' . $data->data->space_lon,
+            'zoom' => 16,
+            'map_width' => '800px',
+            'directions' => true,
+            'directionsStart' => $request->fromLat . ', ' . $request->fromLon,
+            'directionsEnd' => $data->data->space_lat . ',' . $data->data->space_lon,
+            'directionsMode' => 'DRIVING',
+            'directionsDivID' => 'directions',
+        ];
+
+        return view('welcome')->with('map', $parkingSpace->testMap($config));
     }
 }

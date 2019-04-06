@@ -27,6 +27,7 @@ Route::get('/app.info', function () {
 });
 
 Route::get('/test-map', 'ParkingSpaceController@testMap');
+Route::get('/test-distance-mapping', 'ParkingSpaceController@testDistanceMapping');
 
 //none token based routes via web
 Route::get('user/verify', 'APIController@userVerify');
@@ -62,7 +63,7 @@ Route::group(['middleware' => ['api', 'secure.content'], 'prefix' => Copywrite::
  */
 Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::group(['middleware' => 'jwt-verify'], function() {
-        Route::resource('parking_space', 'ParkingSpaceController', ['only' => ['index', 'show']]);
+        Route::resource('parking_space', 'ParkingSpaceController', ['only' => ['index']]);
         Route::resource('user.parkingspace', 'UserParkingSpaceController', ['except' => 'create', 'edit']);
         Route::resource('parkspace.pricing', 'ParkingSpacePricingController', ['only' => ['store', 'update', 'show', 'index']]);
     });
@@ -95,6 +96,8 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
 Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::get('parkingspace.nearby', 'ParkingSpaceController@getNearbyParkingSpace');
+        Route::post('parkingspace.find', 'ParkingSpaceController@findParkingSpace');
+        Route::get('parkingspace.select/{parkspace}', 'ParkingSpaceController@getSelectedParkingSpace');
     });
 });
 
