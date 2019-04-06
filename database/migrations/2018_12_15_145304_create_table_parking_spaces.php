@@ -22,6 +22,7 @@ class CreateTableParkingSpaces extends Migration
             $table->float('space_lon', 10, 6);
             $table->enum('establishment_type', ['resident', 'commercial', 'public']);
             $table->text('description');
+            $table->integer('ratings');
             $table->string('parking_slot', 255);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')
