@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Session;
 use App\CustomQueryBuilder;
 
 class ParkingAuditLog extends Model
@@ -22,7 +23,7 @@ class ParkingAuditLog extends Model
 
     public function __construct()
     {
-        $this->conversationId = hash('md5', rand(111111, 999999) . rand(111111, 999999));
+        $this->conversationId = Session::getId();
     }
 
     public function auditLogger(array $params) {

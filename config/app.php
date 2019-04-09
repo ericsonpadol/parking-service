@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -109,6 +109,19 @@ return [
 
     'log' => env('APP_LOG', 'daily'),
     'log_max_files' => 15,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Custom Config
+    |--------------------------------------------------------------------------
+    |
+    | Here are the list of custom config the app is using
+    |
+    |
+    |
+    */
+    'admin_email' => 'ask.parkit@yahoo.com',
+    'admin_email_name' => 'admin.parkit',
 
     /*
     |--------------------------------------------------------------------------
