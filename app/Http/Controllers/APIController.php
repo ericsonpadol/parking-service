@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\Copywrite;
+use App\CustomLogger;
 use App\MailHelper;
 use App\CustomQueryBuilder;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -15,6 +16,7 @@ use App\Http\Requests\RequestResetPassword;
 use App\ParkingAuditLog;
 use Validator;
 use DB;
+use Session;
 use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -50,10 +52,10 @@ class APIController extends Controller
 
         if (!$verifiedUser) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
-                        'http_code' => Copywrite::HTTP_CODE_404,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED
-                            ], Copywrite::HTTP_CODE_404);
+                'message' => Copywrite::USER_NOT_FOUND,
+                'http_code' => Copywrite::HTTP_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         //update user account
@@ -129,7 +131,8 @@ class APIController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_422,
                 'status_code' => Copywrite::STATUS_CODE_101,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_422);
+            ], Copywrite::HTTP_CODE_422)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         $userInput = $request->only([
@@ -153,6 +156,7 @@ class APIController extends Controller
             'is_activated' => 'false',
             'is_lock' => 'false',
             'is_lock_count' => 0,
+            'is_approved' => 'false',
             'activation_token' => $activationString,
         ];
 
@@ -193,6 +197,15 @@ class APIController extends Controller
 
         $conversationId = $logger->auditLogger($logParams);
 
+        //fire a mail for approval
+        $approvalMailParams = [
+            'user_email' => $request['email'],
+            'user_fullname' => $request['full_name'],
+            'approval_link' => url('user/approval') . '?approve=true&useremail=' . $request['email'],
+        ];
+
+        $fireAppovalMailbox = $emailHelper->approvedUserMail($approvalMailParams);
+
         return response()->json([
                     'user_id' => $user->id,
                     'message' => $token ? Copywrite::USER_CREATED_SUCCESS : Copywrite::USER_NOT_ACTIVATED,
@@ -200,8 +213,10 @@ class APIController extends Controller
                     'token' => $token,
                     'http_code' => Copywrite::HTTP_CODE_200,
                     'mail_result' => $fireMailbox,
+                    'approval_mail_result' => $fireAppovalMailbox,
                     'status' => Copywrite::RESPONSE_STATUS_SUCCESS
-            ], Copywrite::HTTP_CODE_200);
+            ], Copywrite::HTTP_CODE_200)
+                ->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
     public function login(Request $request) {
@@ -329,8 +344,8 @@ class APIController extends Controller
 
     /**
      * this function will activate the created user account
-     * @param $request Request
-     * @return json
+     * @param Request $equest
+     * @return mixed
      */
     public function userVerify(Request $request) {
         $uriRequest = $request->only([

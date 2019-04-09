@@ -29,6 +29,7 @@ class Copywrite extends Model
     const UNLOCK_STATUS_SUCCESS = 'congratulations, you\'re account is unlocked.';
     const CREATED_PSPACE_PRICE = 'added parking space pricing';
     const UPDATED_PSPACE_PRICE = 'parking space info updated successfully';
+    const ACCOUNT_APPROVED = 'user account is approved';
 
     /**
      * LOGGING
@@ -92,8 +93,6 @@ class Copywrite extends Model
     const PSPACE_PRICE_CHECK = 'price is already set on this parking space';
     const DEFAULT_NO_ENTRY_FOUND = 'no entry was found';
 
-
-
     /**
      * HTTP CODES
      */
@@ -155,6 +154,16 @@ class Copywrite extends Model
         . '<b>Temporary Password:</b> :reset_token:<br><br>'
         . 'If you did not request a password reset, please ignore this email';
 
+    const MAIL_ACCOUNT_APPROVAL_SUBJECT = 'LGPARK IT: ACCOUNT APPROVAL';
+    const MAIL_ACCOUNT_APPROVAL_BODY_HTML = 'Please approved :user_email:, that belongs to :user_fullname: <br><br>'
+        . '<a href=":approval_link:">:approval_spiel:</a><br>'
+        . 'If account is approved please ignore this email';
+
+    const MAIL_ACCOUNT_APPROVED_SUBJECT = 'LGPARK IT: USER ACCOUNT APPROVED';
+    const MAIL_ACCOUNT_APPROVED_BODY_HTML = '<p>Hi <b>:user_fullname:</b>, <br><br>'
+        . 'Congratulations! your account is approved by our PARKIT Admin. <br>'
+        . '<b>Do not reply to this email</b></p>';
+
     /**
      * Custom Spiel
      */
@@ -162,6 +171,10 @@ class Copywrite extends Model
     const MAIL_ACTIVATED_TITLE_FAIL = 'Ooppss! Something just broke.';
     const MAIL_ACTIVATED_TITLE_SUCCESS = 'Welcome <b>:full_name:</b> to PARK-IT!';
     const MAIL_ACTIVATED_BODY = 'We\'re so happy you have joined us. You\'re account is now activated.';
+    const MAIL_APPROVAL_SPIEL = 'Click to approve the account';
+    const MAIL_APPROVED_TITLE_SUCCESS = 'Account is approved';
+    const MAIL_APPROVED_BODY = 'The account of :user_email: is approved successfully.';
+
 
     /***
      * EULA
