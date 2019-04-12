@@ -31,7 +31,7 @@ Route::get('/test-distance-mapping', 'ParkingSpaceController@testDistanceMapping
 //none token based routes via web
 Route::get('user/verify', 'APIController@userVerify');
 Route::get('eula', 'AccountSecurityController@generateEula');
-Route::get('user/approval', 'AdminController@approvedAccount');
+Route::get('user/approval', 'AdminController@approvedAccount'); //email approval only
 
 /**
  * none token based routing
@@ -77,6 +77,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
     Route::group(['middleware' => 'jwt-verify'], function() {
         Route::resource('users', 'UserController', ['except' => ['store']]);
         Route::put('update_password', 'UserController@updatePassword');
+        Route::resource('user.document', 'UserDocumentController', ['except' => 'create', 'edit']);
     });
 });
 

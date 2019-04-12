@@ -10,6 +10,38 @@ use Illuminate\Support\Facades\Mail;
 class MailHelper extends Model
 {
     /**
+     * this mail helper is use to notify the admin that a document has been submitted by
+     * the user for review
+     * @param array $mailParams
+     * @return mixed
+     */
+    public function reviewUserDocumentMail(array $mailParams) {
+        $toReplaceSubject = ['/:docu_title:/', '/:user_fullname:/'];
+        $fromReplaceSubject = [$mailParams['docu_title'], $mailParams['user_fullname']];
+        $subjectContent = preg_replace($toReplaceSubject, $fromReplaceSubject, Copywrite::MAIL_DOCUMENT_REVIEW_SUBJECT);
+        $toReplaceMail = ['/:docu_title:/', '/:user_fullname:/', '/:user_email:/', '/:docu_uri:/', '/:docu_message:/'];
+        $fromReplaceMail = [$mailParams['docu_title'], $mailParams['user_fullname'],  $mailParams['user_email'], $mailParams['docu_uri'] ,$mailParams['docu_message']];
+        $emailContent = preg_replace($toReplaceMail, $fromReplaceMail, Copywrite::MAIL_DOCUMENT_REVIEW_BODY);
+
+        $mailboxParams = [
+            'mail_subject' => $subjectContent,
+            'mail_content' => $emailContent,
+            'email_to' => config('app.admin_email'),
+            'name_to' => config('app.admin_email_name'),
+            'email_from' => env('MAIL_FROM_ADDRESS'),
+            'name_from' => env('MAIL_FROM_NAME')
+        ];
+
+        $fireMailbox = Mail::send('document_review_mail', $mailboxParams, function ($message) use ($mailboxParams) {
+            $message->from($mailboxParams['email_from'], $mailboxParams['name_from']);
+            $message->to($mailboxParams['email_to'], $mailboxParams['name_to'])
+                ->subject($mailboxParams['mail_subject']);
+        });
+
+        return $fireMailbox;
+    }
+
+    /**
      * this mail helper is use to notify the user that his account is approved
      * @param array $mailParams
      * @return mixed

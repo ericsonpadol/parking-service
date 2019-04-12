@@ -28,6 +28,7 @@ class UserDocument extends Model
         'docu_desc',
         'user_id',
         'docu_encrypt',
+        'user_message',
     ];
 
     protected $date = [
@@ -52,4 +53,5 @@ class UserDocument extends Model
     {
         return $this->belongsTo('App\User');
     }
+
 }
