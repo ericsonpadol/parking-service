@@ -30,6 +30,8 @@ class Copywrite extends Model
     const CREATED_PSPACE_PRICE = 'added parking space pricing';
     const UPDATED_PSPACE_PRICE = 'parking space info updated successfully';
     const ACCOUNT_APPROVED = 'user account is approved';
+    const USER_DOCUMENT_ADD_SUCCESS = 'user document is successfully added';
+    const USER_DOCUMENT_DELETE_SUCCESS = 'user document deleted successfully';
 
     /**
      * LOGGING
@@ -92,6 +94,7 @@ class Copywrite extends Model
     const NO_NEARBY_PARKINGSPACES = 'there are no parking space nearby';
     const PSPACE_PRICE_CHECK = 'price is already set on this parking space';
     const DEFAULT_NO_ENTRY_FOUND = 'no entry was found';
+    const USER_DOCUMENT_NOT_FOUND = 'no document found';
 
     /**
      * HTTP CODES
@@ -163,6 +166,10 @@ class Copywrite extends Model
     const MAIL_ACCOUNT_APPROVED_BODY_HTML = '<p>Hi <b>:user_fullname:</b>, <br><br>'
         . 'Congratulations! your account is approved by our PARKIT Admin. <br>'
         . '<b>Do not reply to this email</b></p>';
+
+    const MAIL_DOCUMENT_REVIEW_SUBJECT = 'LGPARKT IT: REVIEW :docu_title: OF :user_fullname:';
+    const MAIL_DOCUMENT_REVIEW_BODY = '<p>Please review the <b>:docu_title:</b> of :user_fullname: with account :user_email:. '
+        .  '<br> <i>:docu_message:</i> <br> <a href=":docu_uri:">:docu_uri:</a></p>';
 
     /**
      * Custom Spiel

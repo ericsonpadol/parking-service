@@ -27,6 +27,7 @@ class CreateUsersDocumentsTable extends Migration
                 ->on('users');
             $table->timestamps();
             $table->softDeletes();
+            $table->text('user_message')->nullable();
             $table->index(['id', 'user_id', 'created_at']);
         });
     }
