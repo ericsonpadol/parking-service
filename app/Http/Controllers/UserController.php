@@ -206,7 +206,7 @@ class UserController extends Controller
 
     /**
      * get security question
-     * @param Int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function getSecurityQuestions($id) {

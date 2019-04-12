@@ -45,8 +45,10 @@ class User extends Authenticatable
         'is_activated',
         'is_lock',
         'is_lock_count',
+        'is_approved',
+        'access_type',
         'activation_token',
-        'image_uri'
+        'image_uri',
     ];
 
     /**
@@ -61,7 +63,8 @@ class User extends Authenticatable
     /**
      * User Constructor
      */
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
 
         DB::connection()->enableQueryLog();
@@ -71,19 +74,30 @@ class User extends Authenticatable
 
     /**
      * User & Vehicle Relationship
-     * @return Object
+     * @return Collection
      */
-    public function vehicles() {
+    public function vehicles()
+    {
         return $this->hasMany('App\Vehicle');
     }
 
     /**
      * User & Parkingspace Relationship
      *
-     * @return Object
+     * @return Collection
      */
-    public function parkingspaces() {
+    public function parkingspaces()
+    {
         return $this->hasMany('App\ParkingSpace');
+    }
+
+    /**
+     * User & User document relationship
+     * @return Collection
+     */
+    public function userdocuments()
+    {
+        return $this->hasMany('App\UserDocument');
     }
 
     /**
@@ -91,7 +105,8 @@ class User extends Authenticatable
      *
      * @return Array
      */
-    public function getUserVehicle($userId, $vehicleId) {
+    public function getUserVehicle($userId, $vehicleId)
+    {
         $vehicle = User::find($userId)->vehicles()->where('id', '=', $vehicleId)->get();
 
         /**
@@ -110,17 +125,17 @@ class User extends Authenticatable
         ];
     }
 
-    public function resetPassword(array $params, array $columns) {
+    public function resetPassword(array $params, array $columns)
+    {
         try {
 
             $result = User::where($columns)->update($params);
 
             $response = $result > 0
-                    ? Copywrite::RESPONSE_STATUS_SUCCESS
-                    : Copywrite::RESPONSE_STATUS_FAILED;
+                ? Copywrite::RESPONSE_STATUS_SUCCESS
+                : Copywrite::RESPONSE_STATUS_FAILED;
 
             return $response;
-
         } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
@@ -133,9 +148,13 @@ class User extends Authenticatable
     }
 
     /**
-     *
+     * unlock user account
+     * @param Array $params
+     * @param String $table
+     * @return void
      */
-    public static function unlockAccount(array $params = [], $table = 'users') {
+    public static function unlockAccount(array $params = [], $table = 'users')
+    {
         try {
 
             DB::table($table)->where('email', $params['email'])
@@ -143,8 +162,7 @@ class User extends Authenticatable
                     'is_lock_count' => 0,
                     'is_lock' => 'false'
                 ]);
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
@@ -155,9 +173,13 @@ class User extends Authenticatable
         }
     }
     /**
-     *
+     * set lock counter to database
+     * @param Array $params
+     * @param String $table
+     * @return void
      */
-    public static function setLockCounter(array $params = [], $table = 'users') {
+    public static function setLockCounter(array $params = [], $table = 'users')
+    {
         try {
             //get the lock counter and check if it is 3
 
@@ -173,10 +195,9 @@ class User extends Authenticatable
                 //update the counter
                 DB::table($table)->where('email', $params['email'])
                     ->increment('is_lock_count');
-
             } else {
 
-                $lockoutTime = strtotime(date("H:i:s"))+120; //30 minutes lockout period
+                $lockoutTime = strtotime(date("H:i:s")) + 120; //30 minutes lockout period
                 $lockoutPeriod = date('H:i:s', $lockoutTime);
 
                 //lock the account
@@ -187,8 +208,7 @@ class User extends Authenticatable
                         'lockout' => $lockoutPeriod,
                     ]);
             }
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
@@ -200,16 +220,20 @@ class User extends Authenticatable
     }
 
     /**
-     *
+     * check if account is active
+     * @param Array $params
+     * @param String $table
+     * @return mixed
      */
-    public static function isAccountActive(array $params = [], $table = 'users') {
+    public static function isAccountActive(array $params = [], $table = 'users')
+    {
         try {
 
             $result = DB::table($table)->where([
                 ['email', $params['email']]
             ])->first();
 
-            if(!$result) {
+            if (!$result) {
                 return $result;
             }
 
@@ -231,8 +255,7 @@ class User extends Authenticatable
                     'http_code' => Copywrite::HTTP_CODE_401
                 ];
             }
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
@@ -244,13 +267,18 @@ class User extends Authenticatable
     }
 
     /**
-     *
+     * verify user account
+     * @param Array $params
+     * @param String $table
+     * @return mixed
      */
-    public static function verifyUserAccount(array $params = [], $table = 'users') {
+    public static function verifyUserAccount(array $params = [], $table = 'users')
+    {
         try {
             $result = DB::table($table)->where([
                 ['activation_token', $params['active']],
-                ['is_activated', 'false']])->first();
+                ['is_activated', 'false']
+            ])->first();
 
             //if result returns null break the verification flow
             if (!$result) {
@@ -265,7 +293,6 @@ class User extends Authenticatable
 
             //continue activation flow
             //activate account
-
 
             $activate = DB::table($table)->where('id', $result->id)->update(['is_activated' => 'true']);
 
@@ -284,7 +311,6 @@ class User extends Authenticatable
                 'status_code' => Copywrite::STATUS_CODE_105,
                 'status' => Copywrite::DEFAULT_UPDATE_SUCCESS
             ];
-
         } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
@@ -296,11 +322,18 @@ class User extends Authenticatable
         }
     }
 
-    /***
-     *
+    /**
+     * set answer to security question
+     * @param array $params
+     * @param array $customColumns
+     * @param string $table
+     * @return mixed
      */
-    public function setAnswerSecurityQuestions(array $params = [],
-        array $customColumns = [], $table = 'accountsecurity_user') {
+    public function setAnswerSecurityQuestions(
+        array $params = [],
+        array $customColumns = [],
+        $table = 'accountsecurity_user'
+    ) {
         try {
             $columns = implode(',', $customColumns);
 
@@ -308,7 +341,7 @@ class User extends Authenticatable
 
             $pdoValues = [];
 
-            for ($a=0; $a < $columnCount; $a++) {
+            for ($a = 0; $a < $columnCount; $a++) {
                 array_push($pdoValues, '?');
             }
 
@@ -333,8 +366,7 @@ class User extends Authenticatable
                 'http_code' => Copywrite::HTTP_CODE_200,
                 'message' => Copywrite::SECURITY_QUESTION_SUCCESS
             ];
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
@@ -346,11 +378,17 @@ class User extends Authenticatable
     }
 
     /**
-     *
+     * get security questions
+     * @param array $params
+     * @param string $table
+     * @param string $tblAccountSec
+     * @return mixed
      */
-    public function getSecurityQuestions(array $params = [],
+    public function getSecurityQuestions(
+        array $params = [],
         $table = 'accountsecurity_user',
-        $tblAccountSec = 'accountsecurities') {
+        $tblAccountSec = 'accountsecurities'
+    ) {
         try {
 
             $result = DB::table($table)
@@ -374,7 +412,6 @@ class User extends Authenticatable
                 'http_code' => Copywrite::HTTP_CODE_200,
                 'status_code' => Copywrite::STATUS_CODE_200
             ];
-
         } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
@@ -393,10 +430,12 @@ class User extends Authenticatable
      * @param String $table
      * @return Array
      */
-    public function verifySecurityQuestions(array $params = [],
+    public function verifySecurityQuestions(
+        array $params = [],
         $table = 'accountsecurity_user',
         $userTbl = 'users',
-        $accountsecTbl = 'accountsecurities') {
+        $accountsecTbl = 'accountsecurities'
+    ) {
         try {
 
             $whereClause = array(
@@ -425,14 +464,14 @@ class User extends Authenticatable
                     ->where('sec_id', $params['secques_id'])
                     ->get();
 
-               if (!$secques) {
+                if (!$secques) {
                     return [
                         'status' => Copywrite::RESPONSE_STATUS_FAILED,
                         'status_code' => Copywrite::STATUS_CODE_109,
                         'http_code' => Copywrite::HTTP_CODE_404,
                         'message' => Copywrite::ACCOUNT_SECURITY_QUESTION_NOT_FOUND
                     ];
-               }
+                }
 
                 $toReplace = ['/:secques:/'];
                 //@EBP 03092019: this will result only to one wrong answer so forcing to look into array index[0] should not break any logic
@@ -450,7 +489,6 @@ class User extends Authenticatable
                 'data' => $result,
                 'status' => Copywrite::RESPONSE_STATUS_SUCCESS
             ];
-
         } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),

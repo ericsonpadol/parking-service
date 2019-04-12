@@ -12,6 +12,7 @@ use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use DB;
+use Session;
 
 class UserVehicleController extends Controller
 {
@@ -34,17 +35,17 @@ class UserVehicleController extends Controller
 
         if (!$userAccount) {
             return response()->json([
-                        'messages' => Copywrite::USER_NOT_FOUND,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_404
-                            ], Copywrite::HTTP_CODE_404);
+                'messages' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         return response()->json([
-                    'data' => $userAccount->vehicles ? $userAccount->vehicles : [],
-                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'http_code' => Copywrite::HTTP_CODE_200
-                        ], Copywrite::HTTP_CODE_200);
+            'data' => $userAccount->vehicles ? $userAccount->vehicles : [],
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
     /**
@@ -68,12 +69,13 @@ class UserVehicleController extends Controller
 
         if (!$useraccount) {
             $messages = [
-                'code' => Copywrite::HTTP_CODE_404,
+                'http_code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                'messages' => Copywrite::USER_NOT_FOUND,
+                'message' => Copywrite::USER_NOT_FOUND,
+                'status_code' => Copywrite::STATUS_CODE_404
             ];
 
-            return response()->json(compact('messages'));
+            return response()->json(compact('messages'),  Copywrite::HTTP_CODE_404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -90,7 +92,7 @@ class UserVehicleController extends Controller
                 'http_code' => Copywrite::HTTP_CODE_422,
                 'status_code' => Copywrite::STATUS_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_422);
+            ], Copywrite::HTTP_CODE_422)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         $values = $request->all();
@@ -98,10 +100,10 @@ class UserVehicleController extends Controller
         $useraccount->vehicles()->create($values);
 
         return response()->json([
-                    'message' => Copywrite::VEHICLE_CREATE_SUCCESS,
-                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'http_code' => Copywrite::HTTP_CODE_201
-                        ], Copywrite::HTTP_CODE_201);
+            'message' => Copywrite::VEHICLE_CREATE_SUCCESS,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_201
+        ], Copywrite::HTTP_CODE_201)->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
     /**
@@ -120,7 +122,7 @@ class UserVehicleController extends Controller
                 'message' => Copywrite::USER_NOT_FOUND,
                 'http_code' => Copywrite::HTTP_CODE_404,
                 'status' => Copywrite::RESPONSE_STATUS_FAILED
-            ], Copywrite::HTTP_CODE_404);
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
         $oUser = new User();

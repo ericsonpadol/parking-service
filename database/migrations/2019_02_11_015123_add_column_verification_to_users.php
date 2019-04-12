@@ -18,6 +18,10 @@ class AddColumnVerificationToUsers extends Migration
                 ->default('false');
             $table->enum('is_lock', ['true', 'false'])
                 ->default('false');
+            $table->enum('is_approved', ['true', 'false'])
+                ->default('false');
+            $table->enum('access_type', ['subscriber', 'admin'])
+                ->default('subscriber');
             $table->integer('is_lock_count')
                 ->unsigned()
                 ->default(0);
