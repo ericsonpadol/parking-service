@@ -228,6 +228,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'GMaps' => FarhanWazir\GoogleMaps\Facades\GMapsFacade::class,
+        'Pusher' => Pusher\Pusher::class,
     ],
 
 ];

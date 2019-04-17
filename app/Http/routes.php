@@ -25,6 +25,15 @@ Route::get('/app.info', function () {
     echo '</pre>';
 });
 
+Route::get('testpush', function () {
+    event(new App\Events\testpush());
+    return "Event has been sent!";
+});
+
+Route::get('test', function() {
+    return view('testpush');
+});
+
 Route::get('/test-map', 'ParkingSpaceController@testMap');
 Route::get('/test-distance-mapping', 'ParkingSpaceController@testDistanceMapping');
 
