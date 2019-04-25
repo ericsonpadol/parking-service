@@ -16,7 +16,8 @@ class Messages extends Migration
         Schema::create('messages', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->enum('message_type', ['incoming', 'outgoing', 'blast']);
+            $table->enum('message_type', ['incoming', 'outgoing', 'blast', 'draft'])
+                ->default('blast');
             $table->string('message', 160);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')
