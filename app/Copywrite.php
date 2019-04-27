@@ -34,6 +34,10 @@ class Copywrite extends Model
     const USER_DOCUMENT_DELETE_SUCCESS = 'user document deleted successfully';
 
     /**
+     * Message
+     */
+    const MESSAGE_SENT = 'message sent';
+    /**
      * LOGGING
      */
     const LOG_RESET_TOKEN_SUCCESS = 'token generated successfully';

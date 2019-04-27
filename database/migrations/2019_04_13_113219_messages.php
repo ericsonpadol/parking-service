@@ -19,8 +19,12 @@ class Messages extends Migration
             $table->enum('message_type', ['incoming', 'outgoing', 'blast', 'draft'])
                 ->default('blast');
             $table->string('message', 160);
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')
+            $table->integer('to_user_id')->unsigned();
+            $table->integer('from_user_id')->unsigned();
+            $table->foreign('to_user_id')
+                ->references('id')
+                ->on('users');
+            $table->foreign('from_user_id')
                 ->references('id')
                 ->on('users');
             $table->timestamps();
