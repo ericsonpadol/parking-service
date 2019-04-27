@@ -397,7 +397,7 @@ class UserController extends Controller
 
         $validator = Validator::make($values, [
                     'email' => 'email|max:255|unique:users,email|filled',
-                    'mobile_number' => 'min:11|max:11|unique:users,mobile_number|filled',
+                    'mobile_number' => 'min:11|max:11|unique:users,mobile_number|filled|numeric',
                     'full_name' => 'string|max:255|filled',
                     'image_uri' => 'url|filled'
         ]);

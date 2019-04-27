@@ -25,6 +25,15 @@ Route::get('/app.info', function () {
     echo '</pre>';
 });
 
+Route::get('testpush', function () {
+    event(new App\Events\testpush());
+    return "Event has been sent!";
+});
+
+Route::get('test', function() {
+    return view('testpush');
+});
+
 Route::get('/test-map', 'ParkingSpaceController@testMap');
 Route::get('/test-distance-mapping', 'ParkingSpaceController@testDistanceMapping');
 
@@ -99,6 +108,11 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::get('parkingspace.nearby', 'ParkingSpaceController@getNearbyParkingSpace');
         Route::post('parkingspace.find', 'ParkingSpaceController@findParkingSpace');
         Route::get('parkingspace.select/{parkspace}', 'ParkingSpaceController@getSelectedParkingSpace');
+
+        //messaging
+        Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
+        Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
+        Route::get('user/{userId}/outgoing-message', 'UserMessageController@fetchOutgoingMessages');
     });
 });
 
