@@ -15,10 +15,10 @@ class MessagesStatus extends Migration
         Schema::create('messages_status', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('message_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('to_user_id')->unsigned();
             $table->enum('message_status', ['read', 'unread'])->default('unread');
-            $table->foreign('user_id')
-                ->references('user_id')
+            $table->foreign('to_user_id')
+                ->references('to_user_id')
                 ->on('messages');
             $table->foreign('message_id')
                 ->references('id')

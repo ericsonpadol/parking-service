@@ -73,6 +73,15 @@ class User extends Authenticatable
     }
 
     /**
+     * User and Message relationship
+     * @return collection
+     */
+    public function messages()
+    {
+        return $this->hasMany('App\Message', 'to_user_id', 'from_user_Id');
+    }
+
+    /**
      * User & Vehicle Relationship
      * @return Collection
      */

@@ -108,6 +108,11 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::get('parkingspace.nearby', 'ParkingSpaceController@getNearbyParkingSpace');
         Route::post('parkingspace.find', 'ParkingSpaceController@findParkingSpace');
         Route::get('parkingspace.select/{parkspace}', 'ParkingSpaceController@getSelectedParkingSpace');
+
+        //messaging
+        Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
+        Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
+        Route::get('user/{userId}/outgoing-message', 'UserMessageController@fetchOutgoingMessages');
     });
 });
 
