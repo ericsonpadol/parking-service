@@ -116,7 +116,7 @@ class UserMessageController extends Controller
 
         //validate input file
         $validator = Validator::make($request->all(), [
-            'to_user_id' => 'required|integer',
+            'to_email' => 'required|email',
             'message' => 'required'
         ]);
 
@@ -132,10 +132,13 @@ class UserMessageController extends Controller
             }
         }
 
+        //get user id from email address
+        $toUserId = User::where('email', $request->to_email)->first();
+
         //prepare data
         $messageInput = [
             'message' => $request->message,
-            'to_user_id' => $request->to_user_id,
+            'to_user_id' => $toUserId->id,
             'from_user_id' => $userId
         ];
 
