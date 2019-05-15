@@ -135,6 +135,14 @@ class UserMessageController extends Controller
         //get user id from email address
         $toUserId = User::where('email', $request->to_email)->first();
 
+        if (!$toUserId) {
+            return response()->json([
+                'messages' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
+        }
+
         //prepare data
         $messageInput = [
             'message' => $request->message,
