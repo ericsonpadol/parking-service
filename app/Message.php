@@ -137,6 +137,7 @@ class Message extends Model
 
         return [
             'message' => Copywrite::MESSAGE_SENT,
+            'message_status' => $msgParams['message_status'],
             'http_code' => Copywrite::HTTP_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
         ];
