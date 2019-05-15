@@ -165,7 +165,10 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $incomingMessage = UserMessage::where('to_user_id', $userId)->get();
+        $incomingMessage = UserMessage::where([
+            ['to_user_id', $userId],
+            ['message_type', 'incoming']
+        ])->get();
 
         return response()->json([
             'data' => $incomingMessage,
@@ -174,6 +177,11 @@ class UserMessageController extends Controller
         ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
+    /**
+     * get user outgoing messages
+     * @param int $userId
+     * @return mixed
+     */
     public function fetchOutgoingMessages($userId)
     {
         $user = User::find($userId);
@@ -186,12 +194,44 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $outgoingMessage = UserMessage::where('from_user_id', $userId)->get();
+        $outgoingMessage = UserMessage::where([
+            ['to_user_id', $userId],
+            ['message_type', 'outgoing']
+        ])->get();
 
         return response()->json([
             'data' => $outgoingMessage,
             'http_code' => Copywrite::HTTP_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
         ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     * set inbox message to read
+     * @param int $messageId
+     * @return boolean
+     */
+    public function setMessageStatusToRead($messageId) {
+        //check if user message exists
+        $userMsg = UserMessage::find($messageId);
+
+        if (!$userMsg) {
+            return response()->json([
+                'messages' => Copywrite::MESSAGE_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_200,
+            ], Copywrite::HTTP_CODE_200);
+        }
+
+        //set message status to read
+        $usermessage = new UserMessage();
+        $msgParams = array('message_id' => $messageId);
+        $result = $usermessage->setToRead($msgParams);
+
+        return response()->json([
+            'message' => $result ? true : false,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200);
     }
 }
