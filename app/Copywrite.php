@@ -99,6 +99,7 @@ class Copywrite extends Model
     const PSPACE_PRICE_CHECK = 'price is already set on this parking space';
     const DEFAULT_NO_ENTRY_FOUND = 'no entry was found';
     const USER_DOCUMENT_NOT_FOUND = 'no document found';
+    const MESSAGE_NOT_FOUND = 'message not found';
 
     /**
      * HTTP CODES

@@ -113,6 +113,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
         Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
         Route::get('user/{userId}/outgoing-message', 'UserMessageController@fetchOutgoingMessages');
+        Route::put('messages/{messageId}/set-to-read', 'UserMessageController@setMessageStatusToRead');
     });
 });
 
