@@ -23,6 +23,7 @@ class Message extends Model
     ];
     protected $table = 'messages';
     protected $messageStatusTable = 'messages_status';
+    protected $userTable = 'users';
     protected $primaryKey = 'id';
     protected $fillable = [
         'message_type',
@@ -150,11 +151,9 @@ class Message extends Model
      * @return mixed
     */
     public function fetchMessageInbox(array $params) {
-        $userTable = 'users';
-
         $result = DB::table($this->table)
             ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
-            ->join($userTable, $this->table . '.to_user_id', '=', $userTable . '.id')
+            ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
             ->select(
                 $this->table . '.id',
                 $this->table . '.message',
@@ -162,11 +161,54 @@ class Message extends Model
                 $this->table . '.from_user_id',
                 $this->table . '.created_at',
                 $this->messageStatusTable . '.message_status',
-                $userTable . '.email',
-                $userTable . '.full_name'
+                $this->userTable . '.email',
+                $this->userTable . '.full_name'
             )
             ->where([
                 [$this->table . '.to_user_id' , '=', $params['to_user_id']],
+                [$this->table . '.message_type', '=', $params['message_type']]
+            ])
+            ->orderBy($this->table . '.created_at', 'desc')
+            ->get();
+
+        //application logging
+        Log::info(CustomLogger::getConversationId() .
+        CustomLogger::getCurrentRoute() .
+        CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        Log::info(CustomLogger::getConversationId() .
+        CustomLogger::getCurrentRoute() .
+        CustomLogger::RESULT . serialize($result));
+
+        //stream logging
+        $this->_logger->addInfo(CustomLogger::getConversationId() .
+        CustomLogger::getCurrentRoute() .
+        CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        $this->_logger->addInfo(CustomLogger::getConversationId() .
+        CustomLogger::getCurrentRoute() .
+        CustomLogger::RESULT . serialize($result));
+
+        return $result ? $result : [];
+    }
+
+    /**
+     * return message outbox
+     * @param array $params
+     * @return mixed
+     */
+    public function fetchMessageOutbox(array $params) {
+        $result = DB::table($this->table)
+            ->join($this->userTable, $this->table . '.to_user_id', '=', $this->userTable . '.id')
+            ->select(
+                $this->table . '.id',
+                $this->table . '.message',
+                $this->table . '.to_user_id',
+                $this->table . '.from_user_id',
+                $this->table . '.created_at',
+                $this->userTable . '.email',
+                $this->userTable . '.full_name'
+            )
+            ->where([
+                [$this->table . '.from_user_id' , '=', $params['from_user_id']],
                 [$this->table . '.message_type', '=', $params['message_type']]
             ])
             ->orderBy($this->table . '.created_at', 'desc')

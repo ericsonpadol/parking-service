@@ -191,6 +191,7 @@ class UserMessageController extends Controller
      */
     public function fetchOutgoingMessages($userId)
     {
+        $message = new UserMessage();
         $user = User::find($userId);
 
         if (!$user) {
@@ -201,10 +202,8 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $outgoingMessage = UserMessage::where([
-            ['to_user_id', $userId],
-            ['message_type', 'outgoing']
-        ])->get();
+        $msgParams = array('from_user_id' => $userId, 'message_type' => 'outgoing');
+        $outgoingMessage = $message->fetchMessageOutbox($msgParams);
 
         return response()->json([
             'data' => $outgoingMessage,
