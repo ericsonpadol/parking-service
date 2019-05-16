@@ -163,6 +163,7 @@ class UserMessageController extends Controller
      */
     public function fetchIncomingMessages($userId)
     {
+        $message = new UserMessage();
         $user = User::find($userId);
 
         if (!$user) {
@@ -173,10 +174,8 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $incomingMessage = UserMessage::where([
-            ['to_user_id', $userId],
-            ['message_type', 'incoming']
-        ])->get();
+        $msgParams = array('to_user_id' => $userId, 'message_type' => 'incoming');
+        $incomingMessage = $message->fetchMessageInbox($msgParams);
 
         return response()->json([
             'data' => $incomingMessage,
