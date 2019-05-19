@@ -30,6 +30,11 @@ Route::get('testpush', function () {
     return "Event has been sent!";
 });
 
+Route::get('/fire', function () {
+    event(new App\Events\AppNotify);
+    return 'fired';
+});
+
 Route::get('test', function() {
     return view('testpush');
 });
