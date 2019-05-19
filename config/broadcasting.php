@@ -30,12 +30,13 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => '2f043596f3e76d105f3e',
-            'secret' => '0864293aab4a45e19d03',
-            'app_id' => '761497',
+            'key' => '0c90dea9181e27899209',
+            'secret' => 'ce8e86bb880dcf0933f3',
+            'app_id' => '761489',
             'options' => [
                 'cluster' => 'ap1',
-                'useTLS' => true
+                'useTLS' => true,
+                'ecnrypted' => true,
             ],
         ],
 

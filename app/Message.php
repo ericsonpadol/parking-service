@@ -54,14 +54,14 @@ class Message extends Model
      * @param array $params
      * @return mixed
      */
-    public function setToUnread(array $params) {
+    public function setToUnread(array $params)
+    {
         try {
 
             $result = DB::table($this->messageStatusTable)->insertGetId($params);
 
             return $result;
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
@@ -77,7 +77,8 @@ class Message extends Model
      * @param array $params
      * @return mixed
      */
-    public function setToRead(array $params) {
+    public function setToRead(array $params)
+    {
         try {
             $result = DB::table($this->messageStatusTable)
                 ->where('message_id', $params['message_id'])
@@ -86,7 +87,7 @@ class Message extends Model
                 ]);
 
             return $result;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
@@ -110,8 +111,8 @@ class Message extends Model
         //get last
         $lastMsgId = $this->create($params)->id;
 
-         //set the message to unread
-         $msgParams = [
+        //set the message to unread
+        $msgParams = [
             'message_id' => $lastMsgId,
             'to_user_id' => $params['to_user_id'],
             'message_status' => 'unread'
@@ -119,7 +120,7 @@ class Message extends Model
 
         $unreadMsgResult = $this->setToUnread($msgParams);
 
-        if(!$lastMsgId && !$unreadMsgResult) {
+        if (!$lastMsgId && !$unreadMsgResult) {
             return [
                 'message' => Copywrite::SERVER_ERROR,
                 'http_code' => Copywrite::HTTP_CODE_500,
@@ -129,7 +130,7 @@ class Message extends Model
 
         //create outgoing message
         $params['message_type'] = 'outgoing';
-        if(!$this->create($params)) {
+        if (!$this->create($params)) {
             return [
                 'message' => Copywrite::SERVER_ERROR,
                 'http_code' => Copywrite::HTTP_CODE_500,
@@ -149,8 +150,9 @@ class Message extends Model
      * returns user inbox messages
      * @param array $params
      * @return mixed
-    */
-    public function fetchMessageInbox(array $params) {
+     */
+    public function fetchMessageInbox(array $params)
+    {
         $result = DB::table($this->table)
             ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
             ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
@@ -165,7 +167,7 @@ class Message extends Model
                 $this->userTable . '.full_name'
             )
             ->where([
-                [$this->table . '.to_user_id' , '=', $params['to_user_id']],
+                [$this->table . '.to_user_id', '=', $params['to_user_id']],
                 [$this->table . '.message_type', '=', $params['message_type']]
             ])
             ->orderBy($this->table . '.created_at', 'desc')
@@ -173,19 +175,19 @@ class Message extends Model
 
         //application logging
         Log::info(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
         Log::info(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::RESULT . serialize($result));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
 
         //stream logging
         $this->_logger->addInfo(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
         $this->_logger->addInfo(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::RESULT . serialize($result));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
 
         return $result ? $result : [];
     }
@@ -195,7 +197,8 @@ class Message extends Model
      * @param array $params
      * @return mixed
      */
-    public function fetchMessageOutbox(array $params) {
+    public function fetchMessageOutbox(array $params)
+    {
         $result = DB::table($this->table)
             ->join($this->userTable, $this->table . '.to_user_id', '=', $this->userTable . '.id')
             ->select(
@@ -208,7 +211,7 @@ class Message extends Model
                 $this->userTable . '.full_name'
             )
             ->where([
-                [$this->table . '.from_user_id' , '=', $params['from_user_id']],
+                [$this->table . '.from_user_id', '=', $params['from_user_id']],
                 [$this->table . '.message_type', '=', $params['message_type']]
             ])
             ->orderBy($this->table . '.created_at', 'desc')
@@ -216,20 +219,30 @@ class Message extends Model
 
         //application logging
         Log::info(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
         Log::info(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::RESULT . serialize($result));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
 
         //stream logging
         $this->_logger->addInfo(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
         $this->_logger->addInfo(CustomLogger::getConversationId() .
-        CustomLogger::getCurrentRoute() .
-        CustomLogger::RESULT . serialize($result));
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
 
         return $result ? $result : [];
+    }
+
+    /**
+     * send public announcement messages / App Blast Messaging
+     * @param array $params
+     * @return mixed
+     */
+    public function createAnnouncement(array $params)
+    {
+        //create an announcement
     }
 }

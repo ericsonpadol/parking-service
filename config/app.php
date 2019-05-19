@@ -122,7 +122,11 @@ return [
     */
     'admin_email' => 'ask.parkit@yahoo.com',
     'admin_email_name' => 'admin.parkit',
-
+    'core_events' => [
+        'chat_message',
+        'app_notification',
+        'news_events',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
