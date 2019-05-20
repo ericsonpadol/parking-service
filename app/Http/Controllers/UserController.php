@@ -21,7 +21,8 @@ class UserController extends Controller
     private $_streamLogger;
     private $_sqlCustom;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->_sqlCustom = new CustomQueryBuilder();
         $this->_streamLogger = new Logger($this);
         $this->_streamLogger->pushHandler(new StreamHandler('php://stderr', LOGGER::INFO));
@@ -32,15 +33,19 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function accountRecovery(Request $request) {
+    public function accountRecovery(Request $request)
+    {
         //validate request
-        $validator = Validator::make($request->all(),
-        [
-            'mobile_number' => 'required|min:11|max:11'
-        ], [
-            'mobile_number.min' => Copywrite::INVALID_MOBILE_NUMBER,
-            'mobile_number.max' => Copywrite::INVALID_MOBILE_NUMBER
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'mobile_number' => 'required|min:11|max:11'
+            ],
+            [
+                'mobile_number.min' => Copywrite::INVALID_MOBILE_NUMBER,
+                'mobile_number.max' => Copywrite::INVALID_MOBILE_NUMBER
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json([
@@ -79,10 +84,11 @@ class UserController extends Controller
      * @param mixed $value
      * @return mixed
      */
-    private function _getSecurityInformation($value) {
+    private function _getSecurityInformation($value)
+    {
         $o = array();
 
-        foreach($value as $v) {
+        foreach ($value as $v) {
             array_push($o, $v);
         }
 
@@ -95,7 +101,8 @@ class UserController extends Controller
      * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function verifySecurityQuestions($id, Request $request) {
+    public function verifySecurityQuestions($id, Request $request)
+    {
         $oUser = new User();
         $userInput = $request->only([
             'data'
@@ -114,7 +121,7 @@ class UserController extends Controller
         }
 
         //loop thru the security questions if one security question return an error
-        foreach($userInput['data'] as $key) {
+        foreach ($userInput['data'] as $key) {
             $params = [
                 'user_id' => $id,
                 'secques_id' => $key['secques_id'],
@@ -139,7 +146,8 @@ class UserController extends Controller
             }
         }
 
-        function _getSecurityInformation($value) {
+        function _getSecurityInformation($value)
+        {
             return $value;
         }
 
@@ -165,15 +173,13 @@ class UserController extends Controller
         $resetPasswordLogs = array();
         $resetTable = 'reset_password';
         $customColumns = ['email', 'reset_token'];
-        foreach($securityinfo as $key=>$resetValues) {
-           if ($key === 1) {
-            $resetPasswordLogs = [
-                $resetValues,
-                $resetToken
-            ];
-           }
-
-
+        foreach ($securityinfo as $key => $resetValues) {
+            if ($key === 1) {
+                $resetPasswordLogs = [
+                    $resetValues,
+                    $resetToken
+                ];
+            }
         }
         $resetLog = $this->_sqlCustom->resetPasswordQuery($resetPasswordLogs, $resetTable, $customColumns);
 
@@ -209,7 +215,8 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function getSecurityQuestions($id) {
+    public function getSecurityQuestions($id)
+    {
         $oUser = new User();
 
         $params = ['user_id' => $id];
@@ -228,7 +235,8 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function storeSecurityQuestions(Request $request) {
+    public function storeSecurityQuestions(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'data.*.secques_id' => 'required',
             'data.*.user_id' => 'required',
@@ -264,7 +272,7 @@ class UserController extends Controller
         $columns = ['secques_id', 'user_id', 'answer_value', 'created_at', 'updated_at'];
         $keys = array_map(create_function('$o', 'return $o;'), $data['data']);
 
-       foreach($keys as $index => $value) {
+        foreach ($keys as $index => $value) {
             $params = [
                 $value['secques_id'],
                 $value['user_id'],
@@ -278,7 +286,7 @@ class UserController extends Controller
             if ($result['status'] === 'failed') {
                 return response()->json($result, Copywrite::HTTP_CODE_500);
             }
-       }
+        }
 
         return response()->json($result, Copywrite::HTTP_CODE_200);
     }
@@ -288,7 +296,8 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function updatePassword(Request $request) {
+    public function updatePassword(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'password' => 'required|min:8|regex:/(\d+)/u|regex:/([a-z]+)/u|regex:/([A-Z]+)/u|regex:/(\W+)/u',
@@ -327,7 +336,8 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         $users = User::all();
 
         return response()->json(['data' => $users], Copywrite::HTTP_CODE_200);
@@ -338,7 +348,8 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //
     }
 
@@ -348,7 +359,8 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         /**
          * Note:
          * That new user registration are found on the APIController
@@ -361,7 +373,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         //
     }
 
@@ -371,7 +384,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         //
     }
 
@@ -382,24 +396,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $userId) {
+    public function update(Request $request, $userId)
+    {
         $userAccount = User::find($userId);
 
         if (!$userAccount) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_404
-                            ], Copywrite::HTTP_CODE_404);
+                'message' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404);
         }
 
         $values = $request->except(['password']);
 
         $validator = Validator::make($values, [
-                    'email' => 'email|max:255|unique:users,email|filled',
-                    'mobile_number' => 'string|unique:users,mobile_number|filled|numeric',
-                    'full_name' => 'string|max:255|filled',
-                    'image_uri' => 'url|filled'
+            'email' => 'email|max:255|unique:users,email|filled',
+            'mobile_number' => 'string|unique:users,mobile_number|filled|numeric',
+            'full_name' => 'string|max:255|filled',
+            'image_uri' => 'url|filled'
         ]);
 
         if ($validator->fails()) {
@@ -414,9 +429,10 @@ class UserController extends Controller
         $userAccount->update($values);
 
         return response()->json([
-                    'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
-                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'http_code' => Copywrite::HTTP_CODE_200], Copywrite::HTTP_CODE_200);
+            'messages' => Copywrite::DEFAULT_UPDATE_SUCCESS . ' ' . $request->get('id'),
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200);
     }
 
     /**
@@ -425,15 +441,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $userAccount = User::find($id);
 
         if (!$userAccount) {
             return response()->json([
-                        'message' => Copywrite::USER_NOT_FOUND,
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_404
-                            ], Copywrite::HTTP_CODE_404);
+                'message' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404);
         }
 
         //validate user has no transactions
@@ -442,19 +459,18 @@ class UserController extends Controller
 
         if (sizeof($parkingspaces) > 0 && sizeof($vehicles) > 0) {
             return response()->json([
-                        'message' => str_replace(':useraccount:', $userAccount->email, Copywrite::USER_DELETE_RESTRICT),
-                        'status' => Copywrite::RESPONSE_STATUS_FAILED,
-                        'http_code' => Copywrite::HTTP_CODE_409
-                            ], Copywrite::HTTP_CODE_409);
+                'message' => str_replace(':useraccount:', $userAccount->email, Copywrite::USER_DELETE_RESTRICT),
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_409
+            ], Copywrite::HTTP_CODE_409);
         }
 
         $userAccount->delete();
 
         return response()->json([
-                    'message' => Copywrite::USER_DELETE_ALLOWED,
-                    'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
-                    'http_code' => Copywrite::HTTP_CODE_200
-                        ], Copywrite::HTTP_CODE_200);
+            'message' => Copywrite::USER_DELETE_ALLOWED,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
+            'http_code' => Copywrite::HTTP_CODE_200
+        ], Copywrite::HTTP_CODE_200);
     }
-
 }

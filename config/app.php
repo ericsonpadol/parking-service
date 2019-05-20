@@ -127,6 +127,7 @@ return [
         'app_notification',
         'news_events',
     ],
+    'application_name' => 'parkit',
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -233,6 +234,7 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'GMaps' => FarhanWazir\GoogleMaps\Facades\GMapsFacade::class,
         'Pusher' => Pusher\Pusher::class,
+        'Carbon' => Carbon\Carbon::class,
     ],
 
 ];

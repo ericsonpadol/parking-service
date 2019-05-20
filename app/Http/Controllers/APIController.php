@@ -20,6 +20,7 @@ use Session;
 use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use App\PushChannel;
 
 // use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
 // use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
@@ -296,6 +297,30 @@ class APIController extends Controller
 
         //unlock account every successful login
         User::unlockAccount($userInput);
+
+        //get user details
+        $userDetails = User::where('email', $userInput['email'])->first();
+
+        //prepare push channel data
+        $pushChannelParams = [
+            'channel_name' => config('app.application_name') . 'pre' . $userDetails->id,
+            'channel_type' => 'presence',
+            'ch_desc' => Copywrite::PRESENCE_CHANNEL_PRE . $userDetails->id,
+            'created_by' => $userDetails->id
+        ];
+
+        //check if presence channel is already available
+        $presenceChannel = PushChannel::where('channel_name', $pushChannelParams['channel_name'])->first();
+
+        if (!$presenceChannel) {
+            //create presence channel
+            PushChannel::create($pushChannelParams);
+
+            //subscribe user to push channel
+        }
+
+        //map user/subscriber to push channels
+        //default main channel is park-it main, then presence channel
 
         return response()->json([
             'token' => $token,

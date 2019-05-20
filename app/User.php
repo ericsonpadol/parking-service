@@ -73,6 +73,15 @@ class User extends Authenticatable
     }
 
     /**
+     * user and push channel relationship
+     * @return collection
+     */
+    public function pushchannels()
+    {
+        return $this->hasMany('App\PushChannel');
+    }
+
+    /**
      * User and Message relationship
      * @return collection
      */

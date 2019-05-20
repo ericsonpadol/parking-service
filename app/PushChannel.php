@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Model;
+
 use App\User;
 use App\CustomQueryBuilder;
 use App\CustomLogger;
@@ -11,11 +13,19 @@ use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-use Illuminate\Database\Eloquent\Model;
-
 class PushChannel extends Model
 {
+    protected $table = 'push_channels';
+    protected $subscriberChannelTable = 'subscribers_channels';
+    protected $primaryKey = 'id';
     private $_logger = '';
+
+    protected $fillable = [
+        'channel_name',
+        'channel_type',
+        'ch_desc',
+        'created_by'
+    ];
 
     public function __construct($attributes = [])
     {
@@ -27,23 +37,43 @@ class PushChannel extends Model
     }
 
     /**
+     * subscriber / channel relationship
+     */
+    public function createSubChannelRelationship(array $params)
+    {
+        try {
+            $result = DB::table($this->subscriberChannelTable)->insert($params);
+
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
+    }
+
+    /**
      * creates public push channel
      * @param array $params
      * @return mixed
      */
     public function createPublicChannel(array $params)
     {
+        //create public channel
+        try {
 
-    }
-
-    /**
-     * creates presence push channel
-     * @param array $params
-     * @return mixed
-     */
-    public function createPresenceChannel(array $params)
-    {
-
+        }catch(Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
     }
 
     /**
@@ -52,7 +82,5 @@ class PushChannel extends Model
      * @return mixed
      */
     public function createPrivateChannel(array $params)
-    {
-
-    }
+    { }
 }
