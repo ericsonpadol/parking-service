@@ -19,7 +19,8 @@
         "mediaburst/clockworksms": "2.0.*",
         "stevenmaguire/laravel-middleware-csp": "0.1.1",
         "farhanwazir/laravelgooglemaps" : "^2.3",
-        "pusher/pusher-php-server": "3.4.0"
+        "pusher/pusher-php-server": "3.4.0",
+        "nesbot/carbon" : "^1.37"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",

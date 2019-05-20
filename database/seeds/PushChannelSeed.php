@@ -18,17 +18,20 @@ class PushChannelSeed extends Seeder
             array(
                 'channel_name' => 'parkit-main',
                 'channel_type' => 'public',
-                'ch_desc' => 'park-it main channel, for news and updates.'
+                'ch_desc' => 'park-it main channel, for news and updates.',
+                'created_by' => 1
             ),
             array(
                 'channel_name' => 'parkit-taguig',
                 'channel_type' => 'public',
-                'ch_desc' => 'channel for taguig users.'
+                'ch_desc' => 'channel for taguig users.',
+                'created_by' => 1
             ),
             array(
                 'channel_name' => 'parkit-makati',
                 'channel_type' => 'public',
-                'ch_desc' => 'channel for makati users.'
+                'ch_desc' => 'channel for makati users.',
+                'created_by' => 1
             )
         ];
 

@@ -122,6 +122,16 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
     });
 });
 
+/**
+ * Push Notification Channel
+ */
+Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+    Route::group(['middleware' => 'jwt-verify'], function() {
+        Route::resource('channels', 'PushChannelController', ['except' => 'create', 'edit']);
+        Route::resource('subscriber.pushchannel', 'UserPushchannelController', ['except' => 'create', 'edit']);
+    });
+});
+
 
 /*
  * Dingo Api Routes

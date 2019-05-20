@@ -19,6 +19,10 @@ class CreatePushChannelsTable extends Migration
             $table->string('channel_name');
             $table->enum('channel_type', ['public', 'private', 'presence']);
             $table->text('ch_desc');
+            $table->integer('created_by')->unsigned();
+            $table->foreign('created_by')
+                ->references('id')
+                ->on('users');
             $table->timestamps();
         });
     }
