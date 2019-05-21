@@ -17,6 +17,8 @@ use App\CustomLogger;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Session;
+use Carbon\Carbon;
+use Faker\Provider\cs_CZ\DateTime;
 
 class UserPushchannelController extends Controller
 {
@@ -24,6 +26,8 @@ class UserPushchannelController extends Controller
     private $_logger = '';
     private $_sqlCustom;
     private $_channelType = array('public', 'private', 'presence');
+
+    protected $dateNow = '';
 
     public function __construct()
     {
@@ -58,9 +62,9 @@ class UserPushchannelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $userId)
+    public function store(Request $request, $userid)
     {
-        $user = User::find($userId);
+        $user = User::find($userid);
 
         if (!$user) {
             return response()->json([
@@ -71,7 +75,29 @@ class UserPushchannelController extends Controller
         }
 
         //create channel parameters
+        $pushChannel = new PushChannel();
+        $this->dateNow = Carbon::today();
+        $channelParameters = [
+            'channel_id' => $request->channel_id,
+            'user_id' => $userid,
+            'created_at' => new \DateTime(),
+            'updated_at' => new \DateTime(),
+        ];
 
+        //check if there is already a subscription available
+
+        $result = $pushChannel->createSubChannelRelationship($channelParameters);
+
+        if (!$result) {
+            return response()->json([
+                'message' => Copywrite::SERVER_ERROR,
+                'http_code' => Copywrite::HTTP_CODE_500,
+                'status_code' => Copywrite::STATUS_CODE_500,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
+            ], Copywrite::HTTP_CODE_500)->header(Copywrite::HEADER_CONVID, Session::getId());
+        }
+
+        return response()->json($result, $result['http_code'])->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 
     /**

@@ -19,6 +19,7 @@ class PushChannel extends Model
     protected $subscriberChannelTable = 'subscribers_channels';
     protected $primaryKey = 'id';
     private $_logger = '';
+    public $timestamps = true;
 
     protected $fillable = [
         'channel_name',
@@ -38,12 +39,44 @@ class PushChannel extends Model
 
     /**
      * subscriber / channel relationship
+     * @param array $params
+     * @return mixed
      */
     public function createSubChannelRelationship(array $params)
     {
         try {
+            //check first if user is already subscribe to the channel
+            $getSubChannel = DB::table($this->subscriberChannelTable)
+                ->where([
+                    ['channel_id', '=', $params['channel_id']],
+                    ['user_id', '=', $params['user_id']]
+                ])
+                ->first();
+
+            if ($getSubChannel) {
+                return [
+                    'message' => Copywrite::CHANNEL_SUBSCRIBER_SUBCRIBED,
+                    'http_code' => Copywrite::HTTP_CODE_400,
+                    'status' => Copywrite::RESPONSE_STATUS_FAILED
+                ];
+            }
+
             $result = DB::table($this->subscriberChannelTable)->insert($params);
 
+            //log
+            Log::info(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+            $this->_logger->addInfo(CustomLogger::getCurrentRoute() .
+                CustomLogger::getConversationId() .
+                CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+
+            return [
+                'message' => Copywrite::CHANNEL_SUBSCRIBER_SUCCESS,
+                'http_code' => Copywrite::HTTP_CODE_200,
+                'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+            ];
         } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
@@ -56,31 +89,46 @@ class PushChannel extends Model
     }
 
     /**
-     * creates public push channel
+     * this method will get the list of user's subcribed channels
      * @param array $params
-     * @return mixed
+     * @return array
      */
-    public function createPublicChannel(array $params)
+    public function getSubscriberPushChannel(array $params)
     {
-        //create public channel
-        try {
+        $result = DB::table($this->table)
+            ->join($this->subscriberChannelTable, $this->table . '.id', '=', $this->subscriberChannelTable . '.channel_id')
+            ->select($this->table . '.*')
+            ->where(array([$this->subscriberChannelTable . '.user_id', '=', $params['user_id']]))
+            ->get();
 
-        }catch(Exception $e) {
+        //application log
+        Log::info(CustomLogger::getConversationId() .' '.
+            CustomLogger::getCurrentRoute() .' '.
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        Log::info(CustomLogger::getConversationId() .' '.
+            CustomLogger::getCurrentRoute() .' '.
+            CustomLogger::RESULT .' '. serialize($result));
+
+        //stream logging
+        $this->_logger->addInfo(CustomLogger::getConversationId() .' '.
+            CustomLogger::getCurrentRoute() .' '.
+            CustomLogger::DB_CALL .' '. serialize(DB::getQueryLog()));
+        $this->_logger->addInfo(CustomLogger::getConversationId() .' '.
+            CustomLogger::getCurrentRoute() .' '.
+            CustomLogger::RESULT .' '. serialize($result));
+
+        if (!$result) {
             return [
-                'message' => $e->getMessage(),
-                'error_code' => $e->getCode(),
-                'stack_trace' => $e->getTraceAsString(),
-                'line' => $e->getLine(),
-                'http_code' => Copywrite::HTTP_CODE_500
+                'message' => Copywrite::DEFAULT_NO_ENTRY_FOUND,
+                'http_code' => Copywrite::HTTP_CODE_404,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED
             ];
         }
-    }
 
-    /**
-     * create private push channel
-     * @param array $params
-     * @return mixed
-     */
-    public function createPrivateChannel(array $params)
-    { }
+        return [
+            'data' => $result,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ];
+    }
 }

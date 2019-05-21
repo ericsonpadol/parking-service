@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     private $_messageTable = 'messages';
     private $_messageStatus = 'messages_status';
     private $_coreEventsTable = 'core_events';
+    private $_subcribersChannelsTable = 'subscribers_channels';
     /**
      * Run the database seeds.
      */
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
         DB::table($this->_messageTable)->truncate();
         DB::table($this->_messageStatus)->truncate();
         DB::table($this->_coreEventsTable)->truncate();
+        DB::table($this->_subcribersChannelsTable)->truncate();
         Model::unguard();
 
         $this->call('UserSeed');

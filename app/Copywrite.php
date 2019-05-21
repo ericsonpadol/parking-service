@@ -33,6 +33,8 @@ class Copywrite extends Model
     const USER_DOCUMENT_ADD_SUCCESS = 'user document is successfully added';
     const USER_DOCUMENT_DELETE_SUCCESS = 'user document deleted successfully';
     const CHANNEL_CREATE_SUCCESS = 'push channel created successfully';
+    const CHANNEL_SUBSCRIBER_SUCCESS = 'user successfully subscribe to the channels';
+    const CHANNEL_SUBSCRIBER_SUBCRIBED = 'user is already subscriber to this channel';
 
     /**
      * Message
