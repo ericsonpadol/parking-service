@@ -169,7 +169,7 @@ class APIController extends Controller
 
         //catch insert error if user is not successfully created
         //pending changes will needs to be done asap
-        $user = User::orderBy('created_at', 'DESC')->first();
+        $user = User::find($cUser['id']);
         $token = JWTAuth::fromUser($user);
 
         //fire an email that the user is not activated
@@ -198,6 +198,42 @@ class APIController extends Controller
 
         $conversationId = $logger->auditLogger($logParams);
 
+        //create channel and subscribe to channel
+        $pushChannel = new PushChannel();
+        $pushChannelParams = [
+            'channel_name' => config('app.application_name') . '-pre-' . $user->id,
+            'channel_type' => 'presence',
+            'ch_desc' => Copywrite::PRESENCE_CHANNEL_PRE .$user->id,
+            'created_by' => $user->id
+        ];
+
+        $channelId = PushChannel::create($pushChannelParams)->id;
+
+        //subscribe user to push channel
+        $subChannelParams = [
+            array(
+             'channel_id' => $channelId,
+             'user_id' => $user->id,
+             'created_at' => new \DateTime(),
+             'updated_at' => new \DateTime(),
+            ),
+            array(
+             'channel_id' => 1,
+             'user_id' => $user->id,
+             'created_at' => new \DateTime(),
+             'updated_at' => new \DateTime(),
+            ),
+         ];
+
+         foreach($subChannelParams as $channelParams) {
+             //create relationship
+             //map user/subscriber to push channels
+             //default main channel is park-it main, then presence channel
+             $pushChannel->createSubChannelRelationship($channelParams);
+         }
+
+         $userChannelSub = $pushChannel->getSubscriberPushChannel(array('user_id' => $user->id));
+
         //fire a mail for approval
         $approvalMailParams = [
             'user_email' => $request['email'],
@@ -212,6 +248,7 @@ class APIController extends Controller
                     'message' => $token ? Copywrite::USER_CREATED_SUCCESS : Copywrite::USER_NOT_ACTIVATED,
                     'conv_id' => $conversationId,
                     'token' => $token,
+                    'subcribed_channels' => $userChannelSub['data'],
                     'http_code' => Copywrite::HTTP_CODE_200,
                     'mail_result' => $fireMailbox,
                     'approval_mail_result' => $fireAppovalMailbox,
@@ -302,28 +339,50 @@ class APIController extends Controller
         $userDetails = User::where('email', $userInput['email'])->first();
 
         //prepare push channel data
+        $pushChannel = new PushChannel();
         $pushChannelParams = [
-            'channel_name' => config('app.application_name') . 'pre' . $userDetails->id,
+            'channel_name' => config('app.application_name') . '-pre-' . $userDetails->id,
             'channel_type' => 'presence',
             'ch_desc' => Copywrite::PRESENCE_CHANNEL_PRE . $userDetails->id,
             'created_by' => $userDetails->id
         ];
 
-        //check if presence channel is already available
-        $presenceChannel = PushChannel::where('channel_name', $pushChannelParams['channel_name'])->first();
+        //check if user is subscribe to some channels
+        $userChannelSub = $pushChannel->getSubscriberPushChannel(array('user_id' => $userDetails->id));
 
-        if (!$presenceChannel) {
+        if (empty($userChannelSub['data']) || $userChannelSub['data'] <= 0) {
             //create presence channel
-            PushChannel::create($pushChannelParams);
+            $channelId = PushChannel::create($pushChannelParams)->id;
 
             //subscribe user to push channel
-        }
+            $subChannelParams = [
+               array(
+                'channel_id' => $channelId,
+                'user_id' => $userDetails->id,
+                'created_at' => new \DateTime(),
+                'updated_at' => new \DateTime(),
+               ),
+               array(
+                'channel_id' => 1,
+                'user_id' => $userDetails->id,
+                'created_at' => new \DateTime(),
+                'updated_at' => new \DateTime(),
+               ),
+            ];
 
-        //map user/subscriber to push channels
-        //default main channel is park-it main, then presence channel
+            foreach($subChannelParams as $channelParams) {
+                //create relationship
+                //map user/subscriber to push channels
+                //default main channel is park-it main, then presence channel
+                $pushChannel->createSubChannelRelationship($channelParams);
+            }
+
+            $userChannelSub = $pushChannel->getSubscriberPushChannel(array('user_id' => $userDetails->id));
+        }
 
         return response()->json([
             'token' => $token,
+            'subcribed_channels' => $userChannelSub['data'],
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
             'status_code' => $resetAccount,
             'http_code' => Copywrite::HTTP_CODE_200,

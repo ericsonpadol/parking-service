@@ -13,7 +13,7 @@ class CreateSubscribersEventsChannelTable extends Migration
     public function up()
     {
         //create table
-        Schema::create('subcribers_events_channels', function (Blueprint $table) {
+        Schema::create('subscribers_events_channels', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('event_id')->unsigned();
             $table->integer('channel_id')->unsigned();
@@ -25,10 +25,10 @@ class CreateSubscribersEventsChannelTable extends Migration
                 ->on('core_events');
             $table->foreign('channel_id')
                 ->references('channel_id')
-                ->on('subcribers_channels');
+                ->on('subscribers_channels');
             $table->foreign('user_id')
                 ->references('user_id')
-                ->on('subcribers_channels');
+                ->on('subscribers_channels');
         });
     }
 
@@ -40,6 +40,6 @@ class CreateSubscribersEventsChannelTable extends Migration
     public function down()
     {
         //drop schema
-        Schema::drop('subcribers_events_channels');
+        Schema::drop('subscribers_events_channels');
     }
 }

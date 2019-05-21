@@ -13,7 +13,7 @@ class CreateSubscribersChannelsTable extends Migration
     public function up()
     {
         //create table
-        Schema::create('subcribers_channels', function (Blueprint $table)
+        Schema::create('subscribers_channels', function (Blueprint $table)
         {
             $table->increments('id');
             $table->integer('channel_id')->unsigned();
@@ -36,6 +36,6 @@ class CreateSubscribersChannelsTable extends Migration
     public function down()
     {
         //drop schema
-        Schema::drop('subcribers_channels');
+        Schema::drop('subscribers_channels');
     }
 }
