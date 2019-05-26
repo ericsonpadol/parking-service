@@ -30,6 +30,11 @@ Route::get('testpush', function () {
     return "Event has been sent!";
 });
 
+Route::get('/fire', function () {
+    event(new App\Events\AppNotify);
+    return 'fired';
+});
+
 Route::get('test', function() {
     return view('testpush');
 });
@@ -110,10 +115,21 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::get('parkingspace.select/{parkspace}', 'ParkingSpaceController@getSelectedParkingSpace');
 
         //messaging
+        Route::get('user/{toUserId}/{fromUserId}/messages', 'UserMessageController@getAllMessages');
         Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
         Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
         Route::get('user/{userId}/outgoing-message', 'UserMessageController@fetchOutgoingMessages');
         Route::put('messages/{messageId}/set-to-read', 'UserMessageController@setMessageStatusToRead');
+    });
+});
+
+/**
+ * Push Notification Channel
+ */
+Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], function() {
+    Route::group(['middleware' => 'jwt-verify'], function() {
+        Route::resource('channels', 'PushChannelController', ['except' => 'create', 'edit']);
+        Route::resource('subscriber.pushchannel', 'UserPushchannelController', ['except' => 'create', 'edit']);
     });
 });
 

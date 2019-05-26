@@ -217,7 +217,8 @@ class UserMessageController extends Controller
      * @param int $messageId
      * @return boolean
      */
-    public function setMessageStatusToRead($messageId) {
+    public function setMessageStatusToRead($messageId)
+    {
         //check if user message exists
         $userMsg = UserMessage::find($messageId);
 
@@ -239,5 +240,33 @@ class UserMessageController extends Controller
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS,
             'http_code' => Copywrite::HTTP_CODE_200
         ], Copywrite::HTTP_CODE_200);
+    }
+
+    /**
+     * get all messages
+     * @param int $userId
+     * @return mixed
+     */
+    public function getAllMessages($toUserId, $fromUserId)
+    {
+        $message = new UserMessage();
+        $user = User::find($fromUserId);
+
+        if (!$user) {
+            return response()->json([
+                'messages' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
+        }
+
+        $msgParams = array('to_user_id' => $toUserId, 'from_user_id' => $user->id);
+        $allMessages = $message->getAllMessage($msgParams);
+
+        return response()->json([
+            'data' => $allMessages,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 }

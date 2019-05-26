@@ -122,7 +122,12 @@ return [
     */
     'admin_email' => 'ask.parkit@yahoo.com',
     'admin_email_name' => 'admin.parkit',
-
+    'core_events' => [
+        'chat_message',
+        'app_notification',
+        'news_events',
+    ],
+    'application_name' => 'parkit',
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -229,6 +234,7 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'GMaps' => FarhanWazir\GoogleMaps\Facades\GMapsFacade::class,
         'Pusher' => Pusher\Pusher::class,
+        'Carbon' => Carbon\Carbon::class,
     ],
 
 ];

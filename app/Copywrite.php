@@ -32,6 +32,9 @@ class Copywrite extends Model
     const ACCOUNT_APPROVED = 'user account is approved';
     const USER_DOCUMENT_ADD_SUCCESS = 'user document is successfully added';
     const USER_DOCUMENT_DELETE_SUCCESS = 'user document deleted successfully';
+    const CHANNEL_CREATE_SUCCESS = 'push channel created successfully';
+    const CHANNEL_SUBSCRIBER_SUCCESS = 'user successfully subscribe to the channels';
+    const CHANNEL_SUBSCRIBER_SUBCRIBED = 'user is already subscriber to this channel';
 
     /**
      * Message
@@ -186,6 +189,7 @@ class Copywrite extends Model
     const MAIL_APPROVAL_SPIEL = 'Click to approve the account';
     const MAIL_APPROVED_TITLE_SUCCESS = 'Account is approved';
     const MAIL_APPROVED_BODY = 'The account of :user_email: is approved successfully.';
+    const PRESENCE_CHANNEL_PRE = 'presence channel created for user id ';
 
 
     /***
