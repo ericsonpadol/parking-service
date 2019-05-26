@@ -164,7 +164,8 @@ class Message extends Model
                 $this->table . '.created_at',
                 $this->messageStatusTable . '.message_status',
                 $this->userTable . '.email',
-                $this->userTable . '.full_name'
+                $this->userTable . '.full_name',
+                $this->table . '.message_type'
             )
             ->where([
                 [$this->table . '.to_user_id', '=', $params['to_user_id']],
@@ -208,7 +209,8 @@ class Message extends Model
                 $this->table . '.from_user_id',
                 $this->table . '.created_at',
                 $this->userTable . '.email',
-                $this->userTable . '.full_name'
+                $this->userTable . '.full_name',
+                $this->table . '.message_type'
             )
             ->where([
                 [$this->table . '.from_user_id', '=', $params['from_user_id']],
@@ -216,6 +218,42 @@ class Message extends Model
             ])
             ->orderBy($this->table . '.created_at', 'desc')
             ->get();
+
+        //application logging
+        Log::info(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        Log::info(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
+
+        //stream logging
+        $this->_logger->addInfo(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::DB_CALL . serialize(DB::getQueryLog()));
+        $this->_logger->addInfo(CustomLogger::getConversationId() .
+            CustomLogger::getCurrentRoute() .
+            CustomLogger::RESULT . serialize($result));
+
+        return $result ? $result : [];
+    }
+
+    /**
+     * return all messages
+     * @param array $params
+     * @return mixed
+     */
+    public function getAllMessage(array $params)
+    {
+        //fetch incoming messages
+        $incomingParams = array('to_user_id' => $params['to_user_id'], 'message_type' => 'incoming');
+        $incomingMessages = $this->fetchMessageInbox($incomingParams);
+
+        //fetch outgoing messages
+        $outgoingParams = array('from_user_id' => $params['from_user_id'], 'message_type' => 'outgoing');
+        $outgoingMessages = $this->fetchMessageOutbox($outgoingParams);
+
+        $result = array_merge($incomingMessages, $outgoingMessages);
 
         //application logging
         Log::info(CustomLogger::getConversationId() .

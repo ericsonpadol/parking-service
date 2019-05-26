@@ -115,6 +115,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::get('parkingspace.select/{parkspace}', 'ParkingSpaceController@getSelectedParkingSpace');
 
         //messaging
+        Route::get('user/{toUserId}/{fromUserId}/messages', 'UserMessageController@getAllMessages');
         Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
         Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
         Route::get('user/{userId}/outgoing-message', 'UserMessageController@fetchOutgoingMessages');
