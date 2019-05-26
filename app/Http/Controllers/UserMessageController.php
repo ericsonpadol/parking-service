@@ -247,7 +247,7 @@ class UserMessageController extends Controller
      * @param int $userId
      * @return mixed
      */
-    public function getAllMessages($fromUserId)
+    public function getAllMessages($toUserId, $fromUserId)
     {
         $message = new UserMessage();
         $user = User::find($fromUserId);
@@ -260,7 +260,7 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $msgParams = array('from_user_id' => $user->id);
+        $msgParams = array('to_user_id' => $toUserId, 'from_user_id' => $user->id);
         $allMessages = $message->getAllMessage($msgParams);
 
         return response()->json([
