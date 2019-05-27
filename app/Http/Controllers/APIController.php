@@ -21,7 +21,7 @@ use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use App\PushChannel;
-
+use App\Events\UserLogin;
 // use mediaburst\ClockworkSMS\Clockwork as SMSGenerator;
 // use mediaburst\ClockworkSMS\ClockworkException as SMSGeneratorException;
 
@@ -379,6 +379,13 @@ class APIController extends Controller
 
             $userChannelSub = $pushChannel->getSubscriberPushChannel(array('user_id' => $userDetails->id));
         }
+
+        $loginParams = [
+            'message' => 'test',
+            'channels' => $userChannelSub
+        ];
+
+        event(new UserLogin($userDetails, $loginParams));
 
         return response()->json([
             'token' => $token,

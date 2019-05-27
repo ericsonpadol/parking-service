@@ -39,6 +39,10 @@ Route::get('test', function() {
     return view('testpush');
 });
 
+Route::get('presence-test', function() {
+    return view('presence_channel');
+});
+
 Route::get('/test-map', 'ParkingSpaceController@testMap');
 Route::get('/test-distance-mapping', 'ParkingSpaceController@testDistanceMapping');
 
@@ -115,6 +119,7 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
         Route::get('parkingspace.select/{parkspace}', 'ParkingSpaceController@getSelectedParkingSpace');
 
         //messaging
+        Route::post('messages/blast-message', 'UserMessageController@sendBlastMessage');
         Route::get('user/{fromUserId}/messages', 'UserMessageController@getAllMessages');
         Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
         Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
