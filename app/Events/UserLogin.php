@@ -3,25 +3,27 @@
 namespace App\Events;
 
 use App\User;
-use App\Message;
 use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Announcement extends Event implements ShouldBroadcast
+class UserLogin extends Event implements ShouldBroadcast
 {
     use SerializesModels;
 
-    public $params;
+    public $user;
+    public $params = [];
+    public $message;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(array $params)
+    public function __construct(User $user, $params)
     {
+        $this->user = $user;
         $this->params = $params;
-        $this->params['event'] = 'message-blast';
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\CoreEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\CustomQueryBuilder;
@@ -329,5 +330,43 @@ class Message extends Model
             CustomLogger::RESULT . serialize($result));
 
         return $result ? $result : [];
+    }
+
+    /**
+     * App Blast Message
+     * @param array $param
+     * @return mixed
+     */
+    public function createBlastMessage(array $params)
+    {
+        //get all users
+        $allUsers = User::all();
+
+        foreach ($allUsers as $user) {
+            $params['to_user_id'] = $user->id;
+            $lastMsg = $this->create($params)->id;
+
+            $msgParams = [
+                'message_id' => $lastMsg,
+                'to_user_id' => $user->id,
+                'message_status' => 'unread'
+            ];
+
+            $unreadMsgResult = $this->setToUnread($msgParams);
+
+            if (!$lastMsg && !$unreadMsgResult) {
+                return [
+                    'message' => Copywrite::SERVER_ERROR,
+                    'http_code' => Copywrite::HTTP_CODE_500,
+                    'status' => Copywrite::RESPONSE_STATUS_FAILED
+                ];
+            }
+        }
+
+        return [
+            'message' => Copywrite::MESSAGE_SENT,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ];
     }
 }

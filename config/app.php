@@ -127,6 +127,12 @@ return [
         'app_notification',
         'news_events',
     ],
+    'pusher_details' => [
+        'app_id' => "761489",
+        'key' => "0c90dea9181e27899209",
+        'secret' => "ce8e86bb880dcf0933f3",
+        'cluster' => "ap1",
+    ],
     'application_name' => 'parkit',
     /*
     |--------------------------------------------------------------------------

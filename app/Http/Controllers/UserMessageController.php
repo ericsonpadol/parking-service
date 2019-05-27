@@ -16,6 +16,9 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use App\CustomLogger;
 
+//events
+use App\Events\Announcement;
+
 class UserMessageController extends Controller
 {
     /**
@@ -268,5 +271,37 @@ class UserMessageController extends Controller
             'http_code' => Copywrite::HTTP_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
         ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     * create a blast message
+     * @param array Request
+     * @return mixed
+     */
+    public function sendBlastMessage(Request $request)
+    {
+        $message = new UserMessage();
+
+        $blastMessageParams = [
+            'message' => $request->message,
+            'message_type' => 'blast',
+            'from_user_id' => 1,
+        ];
+
+        //send a blast message
+        $result = $message->createBlastMessage($blastMessageParams);
+
+        $announceParams = [
+            'channel' => $request->push_channel,
+            'subject' => $request->subject,
+            'message' => $request->message,
+        ];
+
+        //blast event notification parameters
+        event(new Announcement($announceParams));
+
+        $httpCode = $result['status'] === 'success' ? Copywrite::HTTP_CODE_200 : Copywrite::HTTP_CODE_500;
+
+        return response()->json($result, $httpCode)->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 }

@@ -12,6 +12,7 @@ use DB;
 use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Pusher\Pusher;
 
 class PushChannel extends Model
 {
@@ -35,6 +36,46 @@ class PushChannel extends Model
         DB::connection()->enableQueryLog();
         $this->_logger = new Logger('PushChannel');
         $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    }
+
+    /**
+     * return syndicated push channel configuration
+     * @return object $pusher
+     */
+    public function syndicatedPushConfig()
+    {
+        //create pusher configuration
+        $options = [
+            'cluster' => config('app.pusher_details.cluster'),
+            'useTLS' => true
+        ];
+
+        $pusher = new Pusher(
+            config('app.pusher_details.key'),
+            config('app.pusher_details.secret'),
+            config('app.pusher_details.app_id'),
+            $options
+        );
+
+        return $pusher;
+    }
+
+    /**
+     * return all user public channels
+     * @param array $params
+     * @return array
+     */
+    public function getUserPublicChannel($params)
+    {
+        $publicChannels = [];
+
+        foreach($params as $value) {
+            if ($value->channel_type === 'public') {
+                array_push($publicChannels, $value);
+            }
+        }
+
+        return $publicChannels;
     }
 
     /**

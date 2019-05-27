@@ -22,7 +22,7 @@ class CoreEvents extends Migration
             $table->string('event-subject');
             $table->text('event_text');
             $table->integer('user_id')->unsigned();
-            $table->enum('event-type', ['booking', 'payment', 'news', 'message', 'login', 'logout']);
+            $table->enum('event-type', ['booking', 'payment', 'blast', 'message', 'login', 'logout']);
             $table->timestamps();
             $table->foreign('user_id')
                 ->references('id')
