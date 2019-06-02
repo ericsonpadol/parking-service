@@ -134,6 +134,11 @@ return [
         'cluster' => "ap1",
     ],
     'application_name' => 'parkit',
+    'channel_type' => [
+        'channel_presence' => 'presence',
+        'channel_public' => 'public',
+        'channel_private' => 'private',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

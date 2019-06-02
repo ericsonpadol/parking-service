@@ -201,7 +201,7 @@ class APIController extends Controller
         //create channel and subscribe to channel
         $pushChannel = new PushChannel();
         $pushChannelParams = [
-            'channel_name' => config('app.application_name') . '-pre-' . $user->id,
+            'channel_name' => config('app.channel_type.channel_presence') . '-' . config('app.application_name') . $user->id,
             'channel_type' => 'presence',
             'ch_desc' => Copywrite::PRESENCE_CHANNEL_PRE .$user->id,
             'created_by' => $user->id
