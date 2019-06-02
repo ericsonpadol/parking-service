@@ -361,6 +361,9 @@ class Message extends Model
                     'status' => Copywrite::RESPONSE_STATUS_FAILED
                 ];
             }
+
+            //create notification request here
+
         }
 
         return [
