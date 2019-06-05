@@ -351,7 +351,7 @@ class Message extends Model
     {
         $result = DB::table($this->table)
             ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
-            ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
+            ->join($this->userTable, $this->table . '.to_user_id', '=', $this->userTable . '.id')
             ->select(
                 $this->userTable . '.full_name',
                 $this->userTable . '.email',
@@ -365,9 +365,9 @@ class Message extends Model
                 $this->messageStatusTable . '.message_status'
             )
             ->where([
-                [$this->table . '.to_user_id', '=', $params['user_id']]
+                [$this->table . '.from_user_id', '=', $params['user_id']]
             ])
-            ->groupBy($this->table . '.from_user_id')
+            ->groupBy($this->table . '.to_user_id')
             ->orderBy($this->table . '.created_at', 'desc')
             ->get();
 
