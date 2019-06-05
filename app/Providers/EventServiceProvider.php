@@ -16,6 +16,15 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Announcement' => [
             'App\Listeners\AnnoucementListener',
         ],
+        'App\Events\UserLogin' => [
+            'App\Listeners\LoginListener',
+        ],
+        'App\Events\UserApproval' => [
+            'App\Listeners\UserApprovalListener'
+        ],
+        'App\Events\AppNotification' => [
+            'App\Listeners\AppNotificationListener'
+        ],
     ];
 
     /**

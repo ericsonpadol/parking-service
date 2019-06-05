@@ -13,7 +13,7 @@
     });
 
     var channel = pusher.subscribe('parkit-main');
-    channel.bind('message-blast', function(data) {
+    channel.bind('App\\Events\\UserLogin', function(data) {
       alert(JSON.stringify(data));
       alert('event fired');
     });

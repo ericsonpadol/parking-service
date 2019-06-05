@@ -16,6 +16,9 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use App\CustomLogger;
 
+//events
+use App\Events\Announcement;
+
 class UserMessageController extends Controller
 {
     /**
@@ -244,10 +247,10 @@ class UserMessageController extends Controller
 
     /**
      * get all messages
-     * @param int $userId
+     * @param int $fromUserId
      * @return mixed
      */
-    public function getAllMessages($fromUserId)
+    public function getAllMessages($fromUserId, $toUserId)
     {
         $message = new UserMessage();
         $user = User::find($fromUserId);
@@ -260,7 +263,7 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $msgParams = array('from_user_id' => $user->id);
+        $msgParams = array('from_user_id' => $user->id, 'to_user_id' => $toUserId);
         $allMessages = $message->getAllMessage($msgParams);
 
         return response()->json([
@@ -268,5 +271,65 @@ class UserMessageController extends Controller
             'http_code' => Copywrite::HTTP_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
         ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     * get all threaded messages
+     * @param int $fromUserId
+     * @return mixed
+     */
+    public function getAllThreadedMessages($fromUserId)
+    {
+        $message = new UserMessage();
+        $user = User::find($fromUserId);
+
+        if (!$user) {
+            return response()->json([
+                'messages' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
+        }
+
+        $msgParams = array('user_id' => $user->id);
+        $threadedMessages = $message->getUserLastMessages($msgParams);
+
+        return response()->json([
+            'data' => $threadedMessages,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     * create a blast message
+     * @param array Request
+     * @return mixed
+     */
+    public function sendBlastMessage(Request $request)
+    {
+        $message = new UserMessage();
+
+        $blastMessageParams = [
+            'message' => $request->message,
+            'message_type' => 'blast',
+            'from_user_id' => 1,
+        ];
+
+        //send a blast message
+        $result = $message->createBlastMessage($blastMessageParams);
+
+        $announceParams = [
+            'channel' => $request->push_channel,
+            'subject' => $request->subject,
+            'message' => $request->message,
+        ];
+
+        //blast event notification parameters
+        event(new Announcement($announceParams));
+
+        $httpCode = $result['status'] === 'success' ? Copywrite::HTTP_CODE_200 : Copywrite::HTTP_CODE_500;
+
+        return response()->json($result, $httpCode)->header(Copywrite::HEADER_CONVID, Session::getId());
     }
 }

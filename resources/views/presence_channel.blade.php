@@ -12,7 +12,7 @@
       forceTLS: true
     });
 
-    var channel = pusher.subscribe('parkit-main');
+    var channel = pusher.subscribe('parkit-pre-201');
     channel.bind('message-blast', function(data) {
       alert(JSON.stringify(data));
       alert('event fired');
