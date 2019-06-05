@@ -120,11 +120,12 @@ Route::group(['middleware' => ['api'], 'prefix' => Copywrite::API_PREFIX], funct
 
         //messaging
         Route::post('messages/blast-message', 'UserMessageController@sendBlastMessage');
-        Route::get('user/{fromUserId}/messages', 'UserMessageController@getAllMessages');
+        Route::get('user/{fromUserId}/recipient/{toUserId}/messages', 'UserMessageController@getAllMessages');
         Route::post('user/{userId}/send-message', 'UserMessageController@sendMessage');
         Route::get('user/{userId}/incoming-message', 'UserMessageController@fetchIncomingMessages');
         Route::get('user/{userId}/outgoing-message', 'UserMessageController@fetchOutgoingMessages');
         Route::put('messages/{messageId}/set-to-read', 'UserMessageController@setMessageStatusToRead');
+        Route::get('user/{fromUserId}/threaded-messages', 'UserMessageController@getAllThreadedMessages');
     });
 });
 

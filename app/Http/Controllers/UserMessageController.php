@@ -247,10 +247,10 @@ class UserMessageController extends Controller
 
     /**
      * get all messages
-     * @param int $userId
+     * @param int $fromUserId
      * @return mixed
      */
-    public function getAllMessages($fromUserId)
+    public function getAllMessages($fromUserId, $toUserId)
     {
         $message = new UserMessage();
         $user = User::find($fromUserId);
@@ -263,11 +263,39 @@ class UserMessageController extends Controller
             ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
         }
 
-        $msgParams = array('from_user_id' => $user->id);
+        $msgParams = array('from_user_id' => $user->id, 'to_user_id' => $toUserId);
         $allMessages = $message->getAllMessage($msgParams);
 
         return response()->json([
             'data' => $allMessages,
+            'http_code' => Copywrite::HTTP_CODE_200,
+            'status' => Copywrite::RESPONSE_STATUS_SUCCESS
+        ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
+    }
+
+    /**
+     * get all threaded messages
+     * @param int $fromUserId
+     * @return mixed
+     */
+    public function getAllThreadedMessages($fromUserId)
+    {
+        $message = new UserMessage();
+        $user = User::find($fromUserId);
+
+        if (!$user) {
+            return response()->json([
+                'messages' => Copywrite::USER_NOT_FOUND,
+                'status' => Copywrite::RESPONSE_STATUS_FAILED,
+                'http_code' => Copywrite::HTTP_CODE_404
+            ], Copywrite::HTTP_CODE_404)->header(Copywrite::HEADER_CONVID, Session::getId());
+        }
+
+        $msgParams = array('user_id' => $user->id);
+        $threadedMessages = $message->getUserLastMessages($msgParams);
+
+        return response()->json([
+            'data' => $threadedMessages,
             'http_code' => Copywrite::HTTP_CODE_200,
             'status' => Copywrite::RESPONSE_STATUS_SUCCESS
         ], Copywrite::HTTP_CODE_200)->header(Copywrite::HEADER_CONVID, Session::getId());
