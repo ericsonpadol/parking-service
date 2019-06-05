@@ -318,6 +318,7 @@ class Message extends Model
             )
             ->where([
                 [$this->table . '.from_user_id', '=', $params['from_user_id']],
+                [$this->table . '.to_user_id', '=', $params['to_user_id']],
                 [$this->table . '.message_type', '=', $params['message_type']]
             ])
             ->orderBy($this->table . '.created_at', 'asc')
