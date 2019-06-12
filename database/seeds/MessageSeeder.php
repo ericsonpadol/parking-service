@@ -18,7 +18,6 @@ class MessageSeeder extends Seeder
         $faker = Faker::create();
         $limitBreak = 500;
         $messageType = [
-            'blast',
             'incoming',
             'outgoing'
         ];
