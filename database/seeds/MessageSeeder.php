@@ -16,7 +16,7 @@ class MessageSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         $faker = Faker::create();
-        $limitBreak = 500000;
+        $limitBreak = 500;
         $messageType = [
             'blast',
             'incoming',

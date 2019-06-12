@@ -248,23 +248,35 @@ class Message extends Model
      */
     public function getAllMessage(array $params)
     {
-        //fetch incoming messages
-        $incomingParams = [
-            'from_user_id' => $params['from_user_id'],
-            'to_user_id' => $params['to_user_id'],
-            'message_type' => 'incoming'
-        ];
-        $incomingMessages = $this->fetchAllInbox($incomingParams);
+        $outgoingMessages = DB::table($this->table)
+            ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
+            ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
+            ->select(
+                $this->table . '.message_type AS TYPE',
+                $this->table . '.message AS MESSAGE',
+                $this->table . '.created_at AS CREATED_AT'
+            )
+            ->where([
+                [$this->table . '.message_type', '=', 'outgoing'],
+                [$this->table . '.from_user_id', '=', $params['from_user_id']],
+                [$this->table . '.to_user_id', '=', $params['to_user_id']]
+            ]);
 
-        //fetch outgoing messages
-        $outgoingParams = [
-            'from_user_id' => $params['from_user_id'],
-            'to_user_id' => $params['to_user_id'],
-            'message_type' => 'outgoing'
-        ];
-        $outgoingMessages = $this->fetchMessageOutbox($outgoingParams);
-
-        $result = array_merge($incomingMessages, $outgoingMessages);
+        $result = DB::table($this->table)
+            ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
+            ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
+            ->select(
+                $this->table . '.message_type AS TYPE',
+                $this->table . '.message AS MESSAGE',
+                $this->table . '.created_at AS CREATED_AT'
+            )
+            ->where([
+                [$this->table . '.message_type', '=', 'incoming'],
+                [$this->table . '.to_user_id', '=', $params['to_user_id']],
+                [$this->table . '.from_user_id', '=', $params['from_user_id']]
+            ])
+            ->union($outgoingMessages)
+            ->get();
 
         //application logging
         Log::info(CustomLogger::getConversationId() . ' ' .
