@@ -252,9 +252,9 @@ class Message extends Model
             ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
             ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
             ->select(
-                $this->table . '.message_type AS TYPE',
-                $this->table . '.message AS MESSAGE',
-                $this->table . '.created_at AS CREATED_AT'
+                $this->table . '.message_type AS type',
+                $this->table . '.message AS message',
+                $this->table . '.created_at AS message_created_at'
             )
             ->where([
                 [$this->table . '.message_type', '=', 'outgoing'],
@@ -266,9 +266,9 @@ class Message extends Model
             ->join($this->messageStatusTable, $this->table . '.id', '=', $this->messageStatusTable . '.message_id')
             ->join($this->userTable, $this->table . '.from_user_id', '=', $this->userTable . '.id')
             ->select(
-                $this->table . '.message_type AS TYPE',
-                $this->table . '.message AS MESSAGE',
-                $this->table . '.created_at AS CREATED_AT'
+                $this->table . '.message_type AS type',
+                $this->table . '.message AS message',
+                $this->table . '.created_at AS message_created_at'
             )
             ->where([
                 [$this->table . '.message_type', '=', 'incoming'],
@@ -276,6 +276,7 @@ class Message extends Model
                 [$this->table . '.from_user_id', '=', $params['from_user_id']]
             ])
             ->union($outgoingMessages)
+            ->orderBy('message_created_at', 'asc')
             ->get();
 
         //application logging
