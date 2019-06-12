@@ -9,14 +9,15 @@ use DB;
 class CustomQueryBuilder extends Model
 {
 
-    public static function getParkingSpaceDistance($fromLat, $fromLon, $earthRadius = 6371) {
+    public static function getParkingSpaceDistance($fromLat, $fromLon, $earthRadius = 6371)
+    {
         $queryTable = 'parkingspaces';
 
-        $distance = 'ROUND(( '. $earthRadius .' * acos( cos( RADIANS( '. $fromLat .') ) * '
-        . 'cos( RADIANS( '. $queryTable .'.space_lat) ) *'
-        . 'cos( radians( '. $queryTable .'.space_lon) - RADIANS('. $fromLon .') ) + '
-        . 'sin( RADIANS( '. $fromLat .') ) *'
-        . 'sin( RADIANS('. $queryTable .'.space_lat) ) ) ), 4) AS distance';
+        $distance = 'ROUND(( ' . $earthRadius . ' * acos( cos( RADIANS( ' . $fromLat . ') ) * '
+            . 'cos( RADIANS( ' . $queryTable . '.space_lat) ) *'
+            . 'cos( radians( ' . $queryTable . '.space_lon) - RADIANS(' . $fromLon . ') ) + '
+            . 'sin( RADIANS( ' . $fromLat . ') ) *'
+            . 'sin( RADIANS(' . $queryTable . '.space_lat) ) ) ), 4) AS distance';
 
         return $distance;
     }
@@ -30,7 +31,8 @@ class CustomQueryBuilder extends Model
      *  @param Decimal $precision : is the border radius of all returned value to the user, this is default to 5 KM/MILES.
      */
 
-     public function getNearbyParkingSpaces($fromLat, $fromLon, $earthRadius = 6371, $precision = 5) {
+    public function getNearbyParkingSpaces($fromLat, $fromLon, $earthRadius = 6371, $precision = 5)
+    {
         $queryTable = 'parkingspaces';
         $joinTable = 'parkspace_pricing';
         $mainColumn = [
@@ -56,13 +58,13 @@ class CustomQueryBuilder extends Model
         $mainColumnString = implode(',', $mainColumn);
         $joinColumnString = implode(',', $joinColumn);
 
-        try{
+        try {
 
-            $distance = '( '. $earthRadius .' * acos( cos( RADIANS( '. $fromLat .') ) * '
-            . 'cos( RADIANS( '. $queryTable .'.space_lat) ) *'
-            . 'cos( radians( '. $queryTable .'.space_lon) - RADIANS('. $fromLon .') ) + '
-            . 'sin( RADIANS('. $fromLat .') ) *'
-            . 'sin( RADIANS('. $queryTable .'.space_lat) ) ) ) AS distance';
+            $distance = '( ' . $earthRadius . ' * acos( cos( RADIANS( ' . $fromLat . ') ) * '
+                . 'cos( RADIANS( ' . $queryTable . '.space_lat) ) *'
+                . 'cos( radians( ' . $queryTable . '.space_lon) - RADIANS(' . $fromLon . ') ) + '
+                . 'sin( RADIANS(' . $fromLat . ') ) *'
+                . 'sin( RADIANS(' . $queryTable . '.space_lat) ) ) ) AS distance';
             $from = 'FROM ' . $queryTable . ',' . $joinTable;
             $where = 'WHERE ' . $queryTable . '.id = ' . $joinTable . '.parking_space_id' .
                 ' AND ' . $queryTable . '.status = "active" ';
@@ -70,11 +72,10 @@ class CustomQueryBuilder extends Model
             $orderLimit = 'ORDER BY ' . $joinTable . '.avail_start_datetime ASC,  distance ASC LIMIT 0, 10'; //limit the result to 10
 
             $queryString = "SELECT " . $mainColumnString . ', ' . $joinColumnString . ', ' . $distance . ' ' . $from . ' ' . $where
-            . ' ' . $having . ' ' . $orderLimit;
+                . ' ' . $having . ' ' . $orderLimit;
 
             return $queryString;
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return [
                 'error_code' => $e->getCode(),
                 'message' => $e->getMessage(),
@@ -82,18 +83,19 @@ class CustomQueryBuilder extends Model
                 'line' => $e->getLine()
             ];
         }
-     }
+    }
 
     /**
      * this function activates the reset password token
      */
-    public function activatePasswordToken(array $params) {
+    public function activatePasswordToken(array $params)
+    {
         $queryTable = 'reset_password';
 
         try {
             $result = DB::table($queryTable)
-                    ->where(['email' => $params['email']])
-                    ->update(['activation' => 1]);
+                ->where(['email' => $params['email']])
+                ->update(['activation' => 1]);
 
             if ($result) {
                 return [
@@ -119,13 +121,14 @@ class CustomQueryBuilder extends Model
     /**
      * this function returns the reset password details.
      */
-    public function getResetPasswordDetails(array $params, $queryTable, array $customColumns) {
+    public function getResetPasswordDetails(array $params, $queryTable, array $customColumns)
+    {
         $columns = implode(',', $customColumns);
         $whereClause = $params['where_clause'];
 
         $queryString = $whereClause
-                ? 'select ' . $columns . ' from ' . $queryTable . ' where ' . $whereClause . ' order by created_at desc limit 1'
-                : 'select ' . $columns . ' from ' . $queryTable . ' order by created_at desc limit 1';
+            ? 'select ' . $columns . ' from ' . $queryTable . ' where ' . $whereClause . ' order by created_at desc limit 1'
+            : 'select ' . $columns . ' from ' . $queryTable . ' order by created_at desc limit 1';
 
         $result = DB::select($queryString);
         $count = 0;
@@ -150,7 +153,8 @@ class CustomQueryBuilder extends Model
      * @param String $queryTable table to be triggered
      * @return Array database trigger result
      */
-    public function resetPasswordQuery(array $params, $queryTable, array $customColumns) {
+    public function resetPasswordQuery(array $params, $queryTable, array $customColumns)
+    {
         $columns = implode(',', $customColumns);
 
         //values modifier
@@ -198,7 +202,8 @@ class CustomQueryBuilder extends Model
      * @param String $queryTable table to be triggered
      * @return Array database trigger result
      */
-    public function loggerQuery(array $params, $queryTable, $customColumns) {
+    public function loggerQuery(array $params, $queryTable, $customColumns)
+    {
         $columns = implode(',', $customColumns);
 
         //values modifier
@@ -237,5 +242,4 @@ class CustomQueryBuilder extends Model
             ];
         }
     }
-
 }
